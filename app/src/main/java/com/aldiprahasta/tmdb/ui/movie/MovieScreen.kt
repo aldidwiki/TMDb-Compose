@@ -22,10 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
+import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -51,24 +54,24 @@ fun MovieScreen() {
             }
     ) { innerPadding ->
         val viewModel: MovieViewModel = viewModel()
-        MovieContent(viewModel = viewModel, modifier = Modifier.padding(innerPadding), onItemClicked = { movieId ->
-            // TODO movie detail
-        })
+        val popularMovieList by viewModel.popularMovieList.collectAsStateWithLifecycle()
+
+        MovieContent(
+                popularMovieList = popularMovieList,
+                modifier = Modifier.padding(innerPadding),
+                onItemClicked = { movieId ->
+                    // TODO movie detail
+                })
     }
 }
 
 @Composable
 fun MovieContent(
+        popularMovieList: UiState<List<MovieDomainModel>>,
         onItemClicked: (movieId: Int) -> Unit,
-        viewModel: MovieViewModel,
         modifier: Modifier = Modifier
 ) {
-    val popularMovieList by viewModel.popularMovieList.collectAsStateWithLifecycle()
-
-    Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier.fillMaxSize()
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         popularMovieList.doIfSuccess { movieList ->
             LazyColumn(contentPadding = PaddingValues(10.dp)) {
                 itemsIndexed(movieList) { index, movie ->
@@ -87,14 +90,52 @@ fun MovieContent(
         }
 
         popularMovieList.doIfError { _, _ ->
-            Text(
-                    text = "No Movies Found",
-                    style = MaterialTheme.typography.labelLarge
-            )
+            Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                        text = "No Movies Found",
+                        style = MaterialTheme.typography.displaySmall
+                )
+            }
         }
 
         popularMovieList.doIfLoading {
-            CircularProgressIndicator(Modifier.size(56.dp))
+            Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(Modifier.size(56.dp))
+            }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MovieContentPreview() {
+    MovieContent(
+            popularMovieList = UiState.Success(listOf(
+                    MovieDomainModel(
+                            "Dune: Part Two",
+                            "",
+                            "24 December 2023",
+                            12312
+                    ),
+                    MovieDomainModel(
+                            "Dune: Part Two",
+                            "",
+                            "24 December 2023",
+                            12312
+                    ),
+                    MovieDomainModel(
+                            "Dune: Part Two",
+                            "",
+                            "24 December 2023",
+                            12312
+                    )
+            )),
+            onItemClicked = {},
+    )
 }
