@@ -50,8 +50,9 @@ fun MovieScreen() {
                 )
             }
     ) { innerPadding ->
-        MovieContent(modifier = Modifier.padding(innerPadding), onItemClicked = { movieId ->
-
+        val viewModel: MovieViewModel = viewModel()
+        MovieContent(viewModel = viewModel, modifier = Modifier.padding(innerPadding), onItemClicked = { movieId ->
+            // TODO movie detail
         })
     }
 }
@@ -59,8 +60,8 @@ fun MovieScreen() {
 @Composable
 fun MovieContent(
         onItemClicked: (movieId: Int) -> Unit,
-        modifier: Modifier = Modifier,
-        viewModel: MovieViewModel = viewModel()
+        viewModel: MovieViewModel,
+        modifier: Modifier = Modifier
 ) {
     val popularMovieList by viewModel.popularMovieList.collectAsStateWithLifecycle()
 
