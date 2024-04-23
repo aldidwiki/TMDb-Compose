@@ -9,5 +9,6 @@ data class MovieDetailDomainModel(
         val overview: String,
         val id: Int,
         val voteAverage: Double,
-        val movieGenres: String
+        val movieGenres: String,
+        val movieCertification: String
 )

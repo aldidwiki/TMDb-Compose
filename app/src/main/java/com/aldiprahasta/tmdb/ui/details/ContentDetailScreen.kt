@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -59,7 +60,9 @@ fun ContentDetailScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
-            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = modifier
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -117,7 +120,8 @@ private fun ContentDetailCard(movieDetail: UiState<MovieDetailDomainModel>, modi
                     releaseDate = movieDetailDomainModel.releaseDate,
                     runtime = movieDetailDomainModel.runtime,
                     tagline = movieDetailDomainModel.tagline,
-                    genres = movieDetailDomainModel.movieGenres
+                    genres = movieDetailDomainModel.movieGenres,
+                    certification = movieDetailDomainModel.movieCertification
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentDetailUserScoreWithTrailer(voteAverage = movieDetailDomainModel.voteAverage)
@@ -187,6 +191,7 @@ private fun ContentDetailPosterWithInfo(
         runtime: String,
         tagline: String,
         genres: String,
+        certification: String,
         modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
@@ -219,7 +224,7 @@ private fun ContentDetailPosterWithInfo(
                         modifier = Modifier.padding(horizontal = 4.dp)
                 )
                 Text(
-                        text = "PG-13",
+                        text = certification,
                         style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -249,6 +254,7 @@ fun ContentDetailCardPreview() {
             overview = "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, Paul endeavors to prevent a terrible future only he can foresee.",
             id = 693134,
             voteAverage = 8.291,
-            movieGenres = "Adventures, Science Fiction"
+            movieGenres = "Adventures, Science Fiction",
+            movieCertification = "PG-13"
     )))
 }

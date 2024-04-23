@@ -26,6 +26,9 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             tagline = tagline ?: "",
             overview = overview ?: "",
             voteAverage = voteAverage ?: 0.0,
-            movieGenres = genres.convertGenreToSingleText()
+            movieGenres = genres.convertGenreToSingleText(),
+            movieCertification = (releaseDates?.results?.firstOrNull { item ->
+                item.iso31661 == "US"
+            }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" }
     )
 }
