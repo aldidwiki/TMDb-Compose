@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,6 +40,22 @@ fun ImageLoader(
                     .clip(RoundedCornerShape(6.dp))
                     .width(100.dp)
                     .height(150.dp)
+    )
+}
+
+@Composable
+fun ImageLoaderBackdrop(
+        imagePath: String,
+        imageType: ImageType,
+        modifier: Modifier = Modifier
+) {
+    AsyncImage(
+            model = "https://image.tmdb.org/t/p/${imageType.value}/$imagePath",
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
     )
 }
 

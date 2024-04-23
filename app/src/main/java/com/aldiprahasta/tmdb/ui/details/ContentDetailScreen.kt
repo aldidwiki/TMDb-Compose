@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
+import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.utils.UiState
@@ -87,7 +88,8 @@ fun ContentDetailScreen(
                                 Icon(
                                         imageVector = Icons.Default.Share,
                                         contentDescription = "Share Button",
-                                        tint = Color.White)
+                                        tint = Color.White
+                                )
                             }
                         }
                 )
@@ -100,11 +102,11 @@ fun ContentDetailScreen(
 }
 
 @Composable
-private fun ContentDetailCard(movieDetail: UiState<MovieDetailDomainModel>, modifier: Modifier = Modifier) {
-    Column(modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
+private fun ContentDetailCard(
+        movieDetail: UiState<MovieDetailDomainModel>,
+        modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
         movieDetail.doIfLoading {
             LoadingScreen()
         }
@@ -114,6 +116,12 @@ private fun ContentDetailCard(movieDetail: UiState<MovieDetailDomainModel>, modi
         }
 
         movieDetail.doIfSuccess { movieDetailDomainModel ->
+            movieDetailDomainModel.backdropPath?.let { path ->
+                ImageLoaderBackdrop(
+                        imagePath = path,
+                        imageType = ImageType.BACKDROP
+                )
+            }
             ContentDetailPosterWithInfo(
                     posterPath = movieDetailDomainModel.posterPath,
                     title = movieDetailDomainModel.title,
@@ -121,12 +129,23 @@ private fun ContentDetailCard(movieDetail: UiState<MovieDetailDomainModel>, modi
                     runtime = movieDetailDomainModel.runtime,
                     tagline = movieDetailDomainModel.tagline,
                     genres = movieDetailDomainModel.movieGenres,
-                    certification = movieDetailDomainModel.movieCertification
+                    certification = movieDetailDomainModel.movieCertification,
+                    modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 16.dp)
             )
             Spacer(modifier = Modifier.size(10.dp))
-            ContentDetailUserScoreWithTrailer(voteAverage = movieDetailDomainModel.voteAverage)
+            ContentDetailUserScoreWithTrailer(
+                    voteAverage = movieDetailDomainModel.voteAverage,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+            )
             Spacer(modifier = Modifier.size(10.dp))
-            ContentOverview(overview = movieDetailDomainModel.overview)
+            ContentOverview(
+                    overview = movieDetailDomainModel.overview,
+                    modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 16.dp)
+            )
         }
     }
 }
@@ -255,6 +274,7 @@ fun ContentDetailCardPreview() {
             id = 693134,
             voteAverage = 8.291,
             movieGenres = "Adventures, Science Fiction",
-            movieCertification = "PG-13"
+            movieCertification = "PG-13",
+            backdropPath = null
     )))
 }

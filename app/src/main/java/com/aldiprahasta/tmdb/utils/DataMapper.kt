@@ -27,6 +27,7 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             overview = overview ?: "",
             voteAverage = voteAverage ?: 0.0,
             movieGenres = genres.convertGenreToSingleText(),
+            backdropPath = backdropPath,
             movieCertification = (releaseDates?.results?.firstOrNull { item ->
                 item.iso31661 == "US"
             }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" }
