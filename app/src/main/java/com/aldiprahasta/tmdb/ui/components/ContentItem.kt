@@ -29,7 +29,7 @@ fun ContentItem(
                     .fillMaxWidth()
                     .clickable { onItemClicked() },
     ) {
-        ImageLoader(imageUrl = posterPath)
+        ImageLoader(imagePath = posterPath, imageType = ImageType.POSTER)
         Spacer(modifier = Modifier.size(16.dp))
         Column {
             Text(

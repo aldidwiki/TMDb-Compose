@@ -15,10 +15,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-fun ImageLoader(imageUrl: String?, modifier: Modifier = Modifier) {
+fun ImageLoader(
+        imagePath: String?,
+        imageType: ImageType,
+        modifier: Modifier = Modifier
+) {
     AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/w500/$imageUrl")
+                    .data("https://image.tmdb.org/t/p/${imageType.value}/$imagePath")
                     .placeholder(ColorDrawable(Color.GRAY))
                     .crossfade(true)
                     .build(),
@@ -29,4 +33,9 @@ fun ImageLoader(imageUrl: String?, modifier: Modifier = Modifier) {
                     .width(100.dp)
                     .height(150.dp)
     )
+}
+
+enum class ImageType(val value: String) {
+    POSTER("w500"),
+    BACKDROP("w780")
 }
