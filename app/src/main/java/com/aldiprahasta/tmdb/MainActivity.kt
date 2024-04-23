@@ -50,7 +50,9 @@ fun TMDbContent() {
                         arguments = MovieDetail.arguments
                 ) { navBackStateEntry ->
                     val movieId = navBackStateEntry.arguments?.getInt(MovieDetail.movieIdArg) ?: 0
-                    ContentDetailScreen(contentId = movieId)
+                    ContentDetailScreen(contentId = movieId, onBackPressed = {
+                        navController.navigateUp()
+                    })
                 }
             }
         }
