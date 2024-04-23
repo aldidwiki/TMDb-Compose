@@ -34,7 +34,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieScreen() {
+fun MovieScreen(onMovieClicked: (movieId: Int) -> Unit) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -59,7 +59,7 @@ fun MovieScreen() {
                 popularMovieList = popularMovieList,
                 modifier = Modifier.padding(innerPadding),
                 onItemClicked = { movieId ->
-                    // TODO movie detail
+                    onMovieClicked(movieId)
                 })
     }
 }
