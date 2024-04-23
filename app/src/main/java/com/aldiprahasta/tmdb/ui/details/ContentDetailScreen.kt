@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
@@ -31,6 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -106,7 +111,10 @@ private fun ContentDetailCard(
         movieDetail: UiState<MovieDetailDomainModel>,
         modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
         movieDetail.doIfLoading {
             LoadingScreen()
         }
@@ -163,7 +171,8 @@ private fun ContentOverview(
         Spacer(modifier = Modifier.size(4.dp))
         Text(
                 text = overview,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Justify
         )
     }
 }
@@ -223,10 +232,14 @@ private fun ContentDetailPosterWithInfo(
                 modifier = Modifier
                         .weight(1f)
                         .padding(top = 12.dp)
+                        .padding(horizontal = 16.dp)
         ) {
             Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
             )
             Text(
                     text = releaseDate,
@@ -249,13 +262,20 @@ private fun ContentDetailPosterWithInfo(
             }
             Text(
                     text = genres,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
             )
             Text(
                     text = tagline,
                     style = MaterialTheme.typography.bodySmall,
                     fontStyle = FontStyle.Italic,
-                    modifier = Modifier.padding(top = 4.dp)
+                    fontWeight = FontWeight.Light,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 6.dp)
             )
         }
     }
