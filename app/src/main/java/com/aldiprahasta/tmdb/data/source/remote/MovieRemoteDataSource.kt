@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.data.source.remote
 
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
+import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,18 @@ class MovieRemoteDataSource @Inject constructor(private val remoteService: Remot
         if (!response.isSuccessful) throw HttpException(response)
         else response.body()?.let { movieResponse ->
             emit(UiState.Success(movieResponse))
+        }
+    }.catch { t ->
+        Timber.e(t)
+        emit(UiState.Error(t))
+    }.flowOn(Dispatchers.IO)
+
+    fun getMovieDetail(movieId: Int): Flow<UiState<MovieDetailResponse>> = flow {
+        emit(UiState.Loading)
+        val response = remoteService.getMovieDetail(movieId)
+        if (!response.isSuccessful) throw HttpException(response)
+        else response.body()?.let { movieDetailResponse ->
+            emit(UiState.Success(movieDetailResponse))
         }
     }.catch { t ->
         Timber.e(t)

@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                 ) {
                     MovieScreen()
+//                    ContentDetailScreen(contentId = 693134)
                 }
             }
         }

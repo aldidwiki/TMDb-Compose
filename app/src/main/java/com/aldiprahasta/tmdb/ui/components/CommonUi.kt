@@ -2,10 +2,17 @@ package com.aldiprahasta.tmdb.ui.components
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +40,29 @@ fun ImageLoader(
                     .width(100.dp)
                     .height(150.dp)
     )
+}
+
+@Composable
+fun ErrorScreen(errorMessage: String, modifier: Modifier = Modifier) {
+    Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier.fillMaxSize()
+    ) {
+        Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.displaySmall
+        )
+    }
+}
+
+@Composable
+fun LoadingScreen(modifier: Modifier = Modifier) {
+    Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(Modifier.size(56.dp))
+    }
 }
 
 enum class ImageType(val value: String) {
