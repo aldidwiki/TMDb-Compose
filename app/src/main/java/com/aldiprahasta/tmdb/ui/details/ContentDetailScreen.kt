@@ -116,7 +116,8 @@ private fun ContentDetailCard(movieDetail: UiState<MovieDetailDomainModel>, modi
                     title = movieDetailDomainModel.title,
                     releaseDate = movieDetailDomainModel.releaseDate,
                     runtime = movieDetailDomainModel.runtime,
-                    tagline = movieDetailDomainModel.tagline
+                    tagline = movieDetailDomainModel.tagline,
+                    genres = movieDetailDomainModel.movieGenres
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentDetailUserScoreWithTrailer(voteAverage = movieDetailDomainModel.voteAverage)
@@ -185,6 +186,7 @@ private fun ContentDetailPosterWithInfo(
         releaseDate: String,
         runtime: String,
         tagline: String,
+        genres: String,
         modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
@@ -222,7 +224,7 @@ private fun ContentDetailPosterWithInfo(
                 )
             }
             Text(
-                    text = "Adventure, Science Fiction",
+                    text = genres,
                     style = MaterialTheme.typography.bodySmall
             )
             Text(
@@ -246,6 +248,7 @@ fun ContentDetailCardPreview() {
             tagline = "Long live the fighters.",
             overview = "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, Paul endeavors to prevent a terrible future only he can foresee.",
             id = 693134,
-            voteAverage = 8.291
+            voteAverage = 8.291,
+            movieGenres = "Adventures, Science Fiction"
     )))
 }

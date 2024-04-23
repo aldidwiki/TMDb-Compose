@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.utils
 
+import com.aldiprahasta.tmdb.data.source.remote.response.movie.GenresItem
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -30,4 +31,16 @@ fun Int?.runtimeFormat(): String {
 fun Double?.formatVoteAverage(): Int {
     val format = String.format("%.1f", this).toDouble() * 10
     return format.roundToInt()
+}
+
+fun List<GenresItem>?.convertGenreToSingleText(): String {
+    val outputGenre = StringBuilder()
+    this?.sortedBy { it.name }?.forEachIndexed { index, genresItem ->
+        outputGenre.append(genresItem.name)
+        if (index < this.lastIndex) {
+            outputGenre.append(", ")
+        }
+    }
+
+    return outputGenre.toString()
 }

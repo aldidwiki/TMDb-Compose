@@ -25,6 +25,7 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             runtime = runtime.runtimeFormat(),
             tagline = tagline ?: "",
             overview = overview ?: "",
-            voteAverage = voteAverage ?: 0.0
+            voteAverage = voteAverage ?: 0.0,
+            movieGenres = genres.convertGenreToSingleText()
     )
 }
