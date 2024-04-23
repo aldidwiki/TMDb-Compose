@@ -11,11 +11,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class MovieRemoteDataSource @Inject constructor(private val remoteService: RemoteService) {
+class MovieRemoteDataSource(private val remoteService: RemoteService) {
     fun getPopularMovies(): Flow<UiState<MovieResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getPopularMovies()

@@ -6,9 +6,8 @@ import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.domain.repository.MovieRepository
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class MovieRepositoryImpl @Inject constructor(
+class MovieRepositoryImpl(
         private val movieRemoteDataSource: MovieRemoteDataSource
 ) : MovieRepository {
     override fun getPopularMovie(): Flow<UiState<MovieResponse>> {

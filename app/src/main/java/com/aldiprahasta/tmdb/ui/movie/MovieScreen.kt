@@ -22,7 +22,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
@@ -31,6 +30,7 @@ import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +52,7 @@ fun MovieScreen() {
                 )
             }
     ) { innerPadding ->
-        val viewModel: MovieViewModel = viewModel()
+        val viewModel: MovieViewModel = koinViewModel()
         val popularMovieList by viewModel.popularMovieList.collectAsStateWithLifecycle()
 
         MovieContent(

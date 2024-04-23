@@ -2,15 +2,10 @@ package com.aldiprahasta.tmdb.di
 
 import com.aldiprahasta.tmdb.data.repository.MovieRepositoryImpl
 import com.aldiprahasta.tmdb.domain.repository.MovieRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-@InstallIn(SingletonComponent::class)
-@Module
-abstract class RepositoryModule {
-
-    @Binds
-    abstract fun provideMovieRepository(movieRepositoryImpl: MovieRepositoryImpl): MovieRepository
+val repositoryModule = module {
+    singleOf(::MovieRepositoryImpl) { bind<MovieRepository>() }
 }

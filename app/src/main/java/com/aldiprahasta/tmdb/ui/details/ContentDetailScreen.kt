@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
@@ -35,10 +34,11 @@ import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ContentDetailScreen(contentId: Int, modifier: Modifier = Modifier) {
-    val viewModel: ContentDetailViewModel = viewModel()
+    val viewModel: ContentDetailViewModel = koinViewModel()
     viewModel.setId(contentId)
     val movieDetail by viewModel.movieDetail.collectAsStateWithLifecycle()
 

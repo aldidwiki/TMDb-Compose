@@ -6,9 +6,8 @@ import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.mapMovieDetailResponseToMovieDetailDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class GetMovieDetail @Inject constructor(private val movieRepository: MovieRepository) {
+class GetMovieDetail(private val movieRepository: MovieRepository) {
     operator fun invoke(movieId: Int): Flow<UiState<MovieDetailDomainModel>> = movieRepository
             .getMovieDetail(movieId).map { state ->
                 when (state) {
