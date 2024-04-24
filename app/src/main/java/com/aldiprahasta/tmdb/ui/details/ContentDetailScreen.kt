@@ -3,7 +3,6 @@ package com.aldiprahasta.tmdb.ui.details
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -208,54 +208,57 @@ private fun ContentDetailCard(
         onSuccessFetch: (movieDetail: MovieDetailDomainModel) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier
-            .fillMaxWidth()
-            .background(colorPalette.first)
+    Surface(
+            color = colorPalette.first,
+            shadowElevation = 6.dp,
+            modifier = modifier.fillMaxWidth()
     ) {
-        movieDetail.doIfLoading {
-            LoadingScreen()
-        }
-
-        movieDetail.doIfError { throwable, _ ->
-            ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
-        }
-
-        movieDetail.doIfSuccess { movieDetailDomainModel ->
-            movieDetailDomainModel.backdropPath?.let { path ->
-                ImageLoaderBackdrop(
-                        imagePath = path,
-                        imageType = ImageType.BACKDROP
-                )
+        Column {
+            movieDetail.doIfLoading {
+                LoadingScreen()
             }
-            ContentDetailPosterWithInfo(
-                    posterPath = movieDetailDomainModel.posterPath,
-                    title = movieDetailDomainModel.title,
-                    releaseDate = movieDetailDomainModel.releaseDate,
-                    runtime = movieDetailDomainModel.runtime,
-                    tagline = movieDetailDomainModel.tagline,
-                    genres = movieDetailDomainModel.movieGenres,
-                    certification = movieDetailDomainModel.movieCertification,
-                    colorPalette = colorPalette,
-                    modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 16.dp)
-            )
-            Spacer(modifier = Modifier.size(10.dp))
-            ContentDetailUserScoreWithTrailer(
-                    voteAverage = movieDetailDomainModel.voteAverage,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    colorPalette = colorPalette
-            )
-            Spacer(modifier = Modifier.size(10.dp))
-            ContentOverview(
-                    overview = movieDetailDomainModel.overview,
-                    colorPalette = colorPalette,
-                    modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 16.dp)
-            )
 
-            onSuccessFetch(movieDetailDomainModel)
+            movieDetail.doIfError { throwable, _ ->
+                ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+            }
+
+            movieDetail.doIfSuccess { movieDetailDomainModel ->
+                movieDetailDomainModel.backdropPath?.let { path ->
+                    ImageLoaderBackdrop(
+                            imagePath = path,
+                            imageType = ImageType.BACKDROP
+                    )
+                }
+                ContentDetailPosterWithInfo(
+                        posterPath = movieDetailDomainModel.posterPath,
+                        title = movieDetailDomainModel.title,
+                        releaseDate = movieDetailDomainModel.releaseDate,
+                        runtime = movieDetailDomainModel.runtime,
+                        tagline = movieDetailDomainModel.tagline,
+                        genres = movieDetailDomainModel.movieGenres,
+                        certification = movieDetailDomainModel.movieCertification,
+                        colorPalette = colorPalette,
+                        modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 16.dp)
+                )
+                Spacer(modifier = Modifier.size(10.dp))
+                ContentDetailUserScoreWithTrailer(
+                        voteAverage = movieDetailDomainModel.voteAverage,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        colorPalette = colorPalette
+                )
+                Spacer(modifier = Modifier.size(10.dp))
+                ContentOverview(
+                        overview = movieDetailDomainModel.overview,
+                        colorPalette = colorPalette,
+                        modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 16.dp)
+                )
+
+                onSuccessFetch(movieDetailDomainModel)
+            }
         }
     }
 }
