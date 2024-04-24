@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
@@ -135,7 +137,7 @@ fun ContentDetailScreen(
                         }
                 )
             }) { innerPadding ->
-        ContentDetailCard(
+        ContentDetail(
                 movieDetail = movieDetail,
                 modifier = Modifier.padding(innerPadding),
                 colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
@@ -204,10 +206,45 @@ private fun SetStatusBarColor(rgbColorPalette: Int) {
 }
 
 @Composable
-private fun ContentDetailCard(
+private fun ContentDetail(
         movieDetail: UiState<MovieDetailDomainModel>,
         colorPalette: Triple<Color, Color, Color>,
         onSuccessFetch: (movieDetail: MovieDetailDomainModel) -> Unit,
+        modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        movieDetail.doIfLoading {
+            LoadingScreen()
+        }
+
+        movieDetail.doIfError { throwable, _ ->
+            ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+        }
+
+        movieDetail.doIfSuccess { movieDetailDomainModel ->
+            Column(modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()))
+            {
+                ContentDetailCard(
+                        movieDetailDomainModel = movieDetailDomainModel,
+                        colorPalette = colorPalette
+                )
+                Spacer(modifier = Modifier.size(20.dp))
+                ContentBilledCast(
+                        casts = movieDetailDomainModel.casts,
+                )
+            }
+
+            onSuccessFetch(movieDetailDomainModel)
+        }
+    }
+}
+
+@Composable
+private fun ContentDetailCard(
+        movieDetailDomainModel: MovieDetailDomainModel,
+        colorPalette: Triple<Color, Color, Color>,
         modifier: Modifier = Modifier
 ) {
     Surface(
@@ -216,51 +253,39 @@ private fun ContentDetailCard(
             modifier = modifier.fillMaxWidth()
     ) {
         Column {
-            movieDetail.doIfLoading {
-                LoadingScreen()
-            }
-
-            movieDetail.doIfError { throwable, _ ->
-                ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
-            }
-
-            movieDetail.doIfSuccess { movieDetailDomainModel ->
-                movieDetailDomainModel.backdropPath?.let { path ->
-                    ImageLoaderBackdrop(
-                            imagePath = path,
-                            imageType = ImageType.BACKDROP
-                    )
-                }
-                ContentDetailPosterWithInfo(
-                        posterPath = movieDetailDomainModel.posterPath,
-                        title = movieDetailDomainModel.title,
-                        releaseDate = movieDetailDomainModel.releaseDate,
-                        runtime = movieDetailDomainModel.runtime,
-                        tagline = movieDetailDomainModel.tagline,
-                        genres = movieDetailDomainModel.movieGenres,
-                        certification = movieDetailDomainModel.movieCertification,
-                        colorPalette = colorPalette,
-                        modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp)
+            movieDetailDomainModel.backdropPath?.let { path ->
+                ImageLoaderBackdrop(
+                        imagePath = path,
+                        imageType = ImageType.BACKDROP
                 )
-                Spacer(modifier = Modifier.size(10.dp))
-                ContentDetailUserScoreWithTrailer(
-                        voteAverage = movieDetailDomainModel.voteAverage,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        colorPalette = colorPalette
-                )
-                Spacer(modifier = Modifier.size(10.dp))
-                ContentOverview(
-                        overview = movieDetailDomainModel.overview,
-                        colorPalette = colorPalette,
-                        modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(bottom = 16.dp)
-                )
-
-                onSuccessFetch(movieDetailDomainModel)
             }
+            ContentDetailPosterWithInfo(
+                    posterPath = movieDetailDomainModel.posterPath,
+                    title = movieDetailDomainModel.title,
+                    releaseDate = movieDetailDomainModel.releaseDate,
+                    runtime = movieDetailDomainModel.runtime,
+                    tagline = movieDetailDomainModel.tagline,
+                    genres = movieDetailDomainModel.movieGenres,
+                    certification = movieDetailDomainModel.movieCertification,
+                    colorPalette = colorPalette,
+                    modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 10.dp)
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+            ContentDetailUserScoreWithTrailer(
+                    voteAverage = movieDetailDomainModel.voteAverage,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    colorPalette = colorPalette
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+            ContentOverview(
+                    overview = movieDetailDomainModel.overview,
+                    colorPalette = colorPalette,
+                    modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 16.dp)
+            )
         }
     }
 }
@@ -426,8 +451,8 @@ private fun ContentDetailPosterWithInfo(
 
 @Preview(showBackground = true, widthDp = 380)
 @Composable
-fun ContentDetailCardPreview() {
-    ContentDetailCard(
+fun ContentDetailPreview() {
+    ContentDetail(
             movieDetail = UiState.Success(data = MovieDetailDomainModel(
                     title = "Dune: Part Two",
                     posterPath = null,
@@ -439,7 +464,8 @@ fun ContentDetailCardPreview() {
                     voteAverage = 8.291,
                     movieGenres = "Adventures, Science Fiction",
                     movieCertification = "PG-13",
-                    backdropPath = null
+                    backdropPath = null,
+                    casts = emptyList()
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {}

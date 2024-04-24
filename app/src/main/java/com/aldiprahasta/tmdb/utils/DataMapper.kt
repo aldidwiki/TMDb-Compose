@@ -1,7 +1,9 @@
 package com.aldiprahasta.tmdb.utils
 
+import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
+import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 
@@ -28,8 +30,20 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             voteAverage = voteAverage ?: 0.0,
             movieGenres = genres.convertGenreToSingleText(),
             backdropPath = backdropPath,
+            casts = credits?.mapCreditResponseToCastDomainModelList() ?: emptyList(),
             movieCertification = (releaseDates?.results?.firstOrNull { item ->
                 item.iso31661 == "US"
             }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" }
     )
+}
+
+private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainModel> {
+    return casts?.map { castResponseModel ->
+        CastDomainModel(
+                name = castResponseModel.name ?: "",
+                characterName = castResponseModel.character ?: "",
+                profilePath = castResponseModel.profilePath,
+                order = castResponseModel.order
+        )
+    } ?: emptyList()
 }
