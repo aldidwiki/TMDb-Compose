@@ -37,9 +37,6 @@ fun ImageLoader(
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .width(100.dp)
-                    .height(150.dp)
     )
 }
 
@@ -84,5 +81,6 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 
 enum class ImageType(val value: String) {
     POSTER("w500"),
-    BACKDROP("w780")
+    BACKDROP("w780"),
+    PROFILE("h632")
 }
