@@ -1,5 +1,11 @@
 package com.aldiprahasta.tmdb.utils
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.GenresItem
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -43,4 +49,15 @@ fun List<GenresItem>?.convertGenreToSingleText(): String {
     }
 
     return outputGenre.toString()
+}
+
+suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
+    val loader = ImageLoader(this)
+    val request = ImageRequest.Builder(this)
+            .data("https://image.tmdb.org/t/p/w500/$imagePath")
+            .allowHardware(false)
+            .build()
+
+    val result = (loader.execute(request) as SuccessResult).drawable
+    return (result as BitmapDrawable).bitmap
 }

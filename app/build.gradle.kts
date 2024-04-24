@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.palette)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
