@@ -161,6 +161,16 @@ private fun SetStatusBarColor(rgbColorPalette: Int) {
                     SystemBarStyle.dark(
                             primaryColor
                     )
+                },
+                navigationBarStyle = if (!isDarkMode) {
+                    SystemBarStyle.light(
+                            rgbColorPalette,
+                            primaryColor
+                    )
+                } else {
+                    SystemBarStyle.dark(
+                            primaryColor
+                    )
                 }
         )
 
@@ -169,6 +179,16 @@ private fun SetStatusBarColor(rgbColorPalette: Int) {
                     statusBarStyle = if (!isDarkMode) {
                         SystemBarStyle.light(
                                 primaryColor,
+                                primaryColor
+                        )
+                    } else {
+                        SystemBarStyle.dark(
+                                primaryColor
+                        )
+                    },
+                    navigationBarStyle = if (!isDarkMode) {
+                        SystemBarStyle.light(
+                                rgbColorPalette,
                                 primaryColor
                         )
                     } else {
