@@ -227,8 +227,7 @@ private fun ContentDetail(
 @Composable
 fun ContentDetailPreview() {
     ContentDetail(
-            movieDetail = UiState.Success(data = MovieDetailDomainModel(
-                    title = "Dune: Part Two",
+            movieDetail = UiState.Success(data = MovieDetailDomainModel(title = "Dune: Part Two",
                     posterPath = null,
                     releaseDate = "27 February 2024",
                     runtime = "2h 27m",
@@ -257,7 +256,18 @@ fun ContentDetailPreview() {
                                     characterName = "Paul Atreides",
                                     profilePath = null,
                                     order = 0
-                            ))
+                            ),
+                            CastDomainModel(
+                                    name = "Timothée Chalamet",
+                                    characterName = "Paul Atreides",
+                                    profilePath = null,
+                                    order = 0
+                            )
+                    ),
+                    budget = 190000000,
+                    revenue = 696901644,
+                    originalLanguage = "English",
+                    status = "Released"
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {}

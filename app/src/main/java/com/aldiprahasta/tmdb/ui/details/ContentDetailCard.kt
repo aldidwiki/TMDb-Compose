@@ -258,7 +258,11 @@ fun ContentDetailCardPreview() {
                     genres = "Adventures, Science Fiction",
                     certification = "PG-13",
                     backdropPath = null,
-                    casts = emptyList()
+                    casts = emptyList(),
+                    budget = 190000000,
+                    revenue = 696901644,
+                    originalLanguage = "English",
+                    status = "Released"
             ),
             colorPalette = Triple(Color.White, Color.Black, Color.Black)
     )

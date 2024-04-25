@@ -33,7 +33,11 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             casts = credits?.mapCreditResponseToCastDomainModelList() ?: emptyList(),
             certification = (releaseDates?.results?.firstOrNull { item ->
                 item.iso31661 == "US"
-            }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" }
+            }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" },
+            budget = budget ?: 0L,
+            revenue = revenue ?: 0L,
+            originalLanguage = originalLanguage ?: "",
+            status = status ?: ""
     )
 }
 

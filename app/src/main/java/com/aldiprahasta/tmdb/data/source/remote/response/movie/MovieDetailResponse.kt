@@ -30,7 +30,7 @@ data class MovieDetailResponse(
         val spokenLanguages: List<SpokenLanguagesItem>?,
 
         @field:SerializedName("revenue")
-        val revenue: Int?,
+        val revenue: Long?,
 
         @field:SerializedName("release_date")
         val releaseDate: String?,
@@ -51,7 +51,7 @@ data class MovieDetailResponse(
         val id: Int,
 
         @field:SerializedName("budget")
-        val budget: Int?,
+        val budget: Long?,
 
         @field:SerializedName("status")
         val status: String?,
