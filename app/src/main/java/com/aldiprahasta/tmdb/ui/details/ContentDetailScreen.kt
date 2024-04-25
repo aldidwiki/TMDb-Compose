@@ -222,9 +222,12 @@ private fun ContentDetail(
                         originalLanguage = movieDetailDomainModel.originalLanguage,
                         budget = movieDetailDomainModel.budget,
                         revenue = movieDetailDomainModel.revenue,
-                        modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(bottom = 20.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.size(20.dp))
+                ContentDetailExternal(modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 20.dp)
                 )
             }
 
