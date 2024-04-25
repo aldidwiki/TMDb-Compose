@@ -14,70 +14,84 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.utils.Constant
 
 @Composable
 fun ContentDetailExternal(
-        instagramUrl: String,
-        facebookUrl: String,
-        twitterUrl: String,
-        imdbUrl: String,
-        googleUrl: String,
+        instagramId: String?,
+        facebookId: String?,
+        twitterId: String?,
+        imdbPair: Pair<Boolean, String?>,
+        googleId: String?,
         modifier: Modifier = Modifier
 ) {
     val uriHandler = LocalUriHandler.current
 
     Row(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
     ) {
-        IconButton(onClick = {
-            uriHandler.openUri(facebookUrl)
-        }) {
-            Image(
-                    painter = painterResource(id = R.drawable.facebook_logo),
-                    contentDescription = "Facebook",
-                    modifier = Modifier.size(25.dp)
-            )
+        facebookId?.let {
+            IconButton(onClick = {
+                uriHandler.openUri(Constant.FACEBOOK_BASE_URL + facebookId)
+            }) {
+                Image(
+                        painter = painterResource(id = R.drawable.facebook_logo),
+                        contentDescription = "Facebook",
+                        modifier = Modifier.size(25.dp)
+                )
+            }
         }
 
-        IconButton(onClick = {
-            uriHandler.openUri(instagramUrl)
-        }) {
-            Image(
-                    painter = painterResource(id = R.drawable.instagram_logo),
-                    contentDescription = "Instagram",
-                    modifier = Modifier.size(25.dp)
-            )
+        instagramId?.let {
+            IconButton(onClick = {
+                uriHandler.openUri(Constant.INSTAGRAM_BASE_URL + instagramId)
+            }) {
+                Image(
+                        painter = painterResource(id = R.drawable.instagram_logo),
+                        contentDescription = "Instagram",
+                        modifier = Modifier.size(25.dp)
+                )
+            }
         }
 
-        IconButton(onClick = {
-            uriHandler.openUri(googleUrl)
-        }) {
-            Image(
-                    painter = painterResource(id = R.drawable.ic_google),
-                    contentDescription = "Google",
-                    modifier = Modifier.size(25.dp)
-            )
+        googleId?.let {
+            IconButton(onClick = {
+                uriHandler.openUri(Constant.GOOGLE_SEARCH_BASE_URL + googleId)
+            }) {
+                Image(
+                        painter = painterResource(id = R.drawable.ic_google),
+                        contentDescription = "Google",
+                        modifier = Modifier.size(25.dp)
+                )
+            }
         }
 
-        IconButton(onClick = {
-            uriHandler.openUri(twitterUrl)
-        }) {
-            Image(
-                    painter = painterResource(id = R.drawable.twitter_logo),
-                    contentDescription = "Twitter",
-                    modifier = Modifier.size(25.dp)
-            )
+        twitterId?.let {
+            IconButton(onClick = {
+                uriHandler.openUri(Constant.TWITTER_BASE_URL + twitterId)
+            }) {
+                Image(
+                        painter = painterResource(id = R.drawable.twitter_logo),
+                        contentDescription = "Twitter",
+                        modifier = Modifier.size(25.dp)
+                )
+            }
         }
 
-        IconButton(onClick = {
-            uriHandler.openUri(imdbUrl)
-        }) {
-            Image(
-                    painter = painterResource(id = R.drawable.imdb_logo),
-                    contentDescription = "IMDb",
-                    modifier = Modifier.size(25.dp)
-            )
+        imdbPair.second?.let { imdbId ->
+            IconButton(onClick = {
+                uriHandler.openUri(
+                        if (imdbPair.first) Constant.IMDB_BASE_URL + imdbId
+                        else Constant.IMDB_PROFILE_URL + imdbId
+                )
+            }) {
+                Image(
+                        painter = painterResource(id = R.drawable.imdb_logo),
+                        contentDescription = "IMDb",
+                        modifier = Modifier.size(25.dp)
+                )
+            }
         }
     }
 }
@@ -86,10 +100,10 @@ fun ContentDetailExternal(
 @Composable
 fun ContentDetailExternalPreview() {
     ContentDetailExternal(
-            instagramUrl = "",
-            facebookUrl = "",
-            twitterUrl = "",
-            imdbUrl = "",
-            googleUrl = ""
+            instagramId = "",
+            facebookId = "",
+            twitterId = "",
+            imdbPair = Pair(true, ""),
+            googleId = ""
     )
 }

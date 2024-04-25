@@ -4,17 +4,17 @@ import com.google.gson.annotations.SerializedName
 
 data class ExternalIdResponse(
         @field:SerializedName("imdb_id")
-        val imdbId: String,
+        val imdbId: String?,
 
         @field:SerializedName("wikidata_id")
-        val wikidataId: String,
+        val wikidataId: String?,
 
         @field:SerializedName("twitter_id")
-        val twitterId: String,
+        val twitterId: String?,
 
         @field:SerializedName("facebook_id")
-        val facebookId: String,
+        val facebookId: String?,
 
         @field:SerializedName("instagram_id")
-        val instagramId: String
+        val instagramId: String?
 )

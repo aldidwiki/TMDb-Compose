@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.utils
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import coil.ImageLoader
@@ -61,6 +62,17 @@ fun String.getLanguageDisplayName(): String = if (this.isNotEmpty()) {
     Locale(this).displayLanguage
 } else {
     this
+}
+
+fun Context.shareIt(text: String) {
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, text)
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    startActivity(shareIntent)
 }
 
 suspend fun Context.getImageBitmap(imagePath: String): Bitmap {

@@ -51,6 +51,7 @@ import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.getImageBitmap
+import com.aldiprahasta.tmdb.utils.shareIt
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,10 +67,10 @@ fun ContentDetailScreen(
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
+    val context = LocalContext.current
     var posterPath by remember { mutableStateOf<String?>(null) }
     var palette by remember { mutableStateOf<Palette?>(null) }
     posterPath?.let {
-        val context = LocalContext.current
         val scope = rememberCoroutineScope()
         LaunchedEffect(scope) {
             val bitmap = context.getImageBitmap(it)
@@ -111,7 +112,9 @@ fun ContentDetailScreen(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = {
+                                context.shareIt("${Constant.SHARE_BASE_URL}/movie/$contentId")
+                            }) {
                                 Icon(
                                         imageVector = Icons.Default.Share,
                                         contentDescription = "Share Button",
@@ -228,11 +231,11 @@ private fun ContentDetail(
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentDetailExternal(
-                        instagramUrl = "${Constant.INSTAGRAM_BASE_URL}${movieDetailDomainModel.externalId.instragramId}",
-                        facebookUrl = "${Constant.FACEBOOK_BASE_URL}${movieDetailDomainModel.externalId.facebookId}",
-                        twitterUrl = "${Constant.TWITTER_BASE_URL}${movieDetailDomainModel.externalId.twitterId}",
-                        imdbUrl = "${Constant.IMDB_BASE_URL}${movieDetailDomainModel.externalId.imdbId}",
-                        googleUrl = "${Constant.GOOGLE_SEARCH_BASE_URL}${movieDetailDomainModel.title}",
+                        instagramId = movieDetailDomainModel.externalId.instragramId,
+                        facebookId = movieDetailDomainModel.externalId.facebookId,
+                        twitterId = movieDetailDomainModel.externalId.twitterId,
+                        imdbPair = Pair(true, movieDetailDomainModel.externalId.imdbId),
+                        googleId = movieDetailDomainModel.title,
                         modifier = Modifier
                                 .padding(horizontal = 16.dp)
                                 .padding(bottom = 20.dp)
