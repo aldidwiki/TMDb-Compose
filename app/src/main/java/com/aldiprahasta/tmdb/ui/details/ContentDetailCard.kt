@@ -259,8 +259,8 @@ fun ContentDetailCardPreview() {
                     certification = "PG-13",
                     backdropPath = null,
                     casts = emptyList(),
-                    budget = 190000000,
-                    revenue = 696901644,
+                    budget = "190000000",
+                    revenue = "696901644",
                     originalLanguage = "English",
                     status = "Released"
             ),

@@ -7,6 +7,7 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.GenresItem
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -49,6 +50,17 @@ fun List<GenresItem>?.convertGenreToSingleText(): String {
     }
 
     return outputGenre.toString()
+}
+
+fun Long.formatCurrency(): String {
+    val currency = NumberFormat.getCurrencyInstance(Locale.US)
+    return currency.format(this)
+}
+
+fun String.getLanguageDisplayName(): String = if (this.isNotEmpty()) {
+    Locale(this).displayLanguage
+} else {
+    this
 }
 
 suspend fun Context.getImageBitmap(imagePath: String): Bitmap {

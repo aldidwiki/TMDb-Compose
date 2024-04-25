@@ -216,6 +216,16 @@ private fun ContentDetail(
                 ContentBilledCast(
                         casts = movieDetailDomainModel.casts,
                 )
+                Spacer(modifier = Modifier.size(20.dp))
+                ContentDetailInfo(
+                        status = movieDetailDomainModel.status,
+                        originalLanguage = movieDetailDomainModel.originalLanguage,
+                        budget = movieDetailDomainModel.budget,
+                        revenue = movieDetailDomainModel.revenue,
+                        modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 20.dp)
+                )
             }
 
             onSuccessFetch(movieDetailDomainModel)
@@ -264,8 +274,8 @@ fun ContentDetailPreview() {
                                     order = 0
                             )
                     ),
-                    budget = 190000000,
-                    revenue = 696901644,
+                    budget = "$1,000,000.00",
+                    revenue = "$2,000,000.00",
                     originalLanguage = "English",
                     status = "Released"
             )),

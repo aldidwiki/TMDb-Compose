@@ -34,9 +34,9 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             certification = (releaseDates?.results?.firstOrNull { item ->
                 item.iso31661 == "US"
             }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" },
-            budget = budget ?: 0L,
-            revenue = revenue ?: 0L,
-            originalLanguage = originalLanguage ?: "",
+            budget = (budget ?: 0L).formatCurrency(),
+            revenue = (revenue ?: 0L).formatCurrency(),
+            originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
             status = status ?: ""
     )
 }

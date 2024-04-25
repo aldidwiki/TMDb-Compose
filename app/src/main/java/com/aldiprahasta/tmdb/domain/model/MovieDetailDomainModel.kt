@@ -12,8 +12,8 @@ data class MovieDetailDomainModel(
         val genres: String,
         val certification: String,
         val backdropPath: String?,
-        val budget: Long,
-        val revenue: Long,
+        val budget: String,
+        val revenue: String,
         val originalLanguage: String,
         val status: String,
         val casts: List<CastDomainModel>
