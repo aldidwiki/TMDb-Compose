@@ -16,5 +16,6 @@ data class MovieDetailDomainModel(
         val revenue: String,
         val originalLanguage: String,
         val status: String,
+        val externalId: ExternalIdDomainModel,
         val casts: List<CastDomainModel>
 )

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
@@ -262,7 +263,13 @@ fun ContentDetailCardPreview() {
                     budget = "190000000",
                     revenue = "696901644",
                     originalLanguage = "English",
-                    status = "Released"
+                    status = "Released",
+                    externalId = ExternalIdDomainModel(
+                            instragramId = "",
+                            facebookId = "",
+                            imdbId = "",
+                            twitterId = ""
+                    )
             ),
             colorPalette = Triple(Color.White, Color.Black, Color.Black)
     )

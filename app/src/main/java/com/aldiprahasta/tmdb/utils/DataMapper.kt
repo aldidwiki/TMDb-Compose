@@ -1,9 +1,11 @@
 package com.aldiprahasta.tmdb.utils
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 
@@ -37,7 +39,8 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             budget = (budget ?: 0L).formatCurrency(),
             revenue = (revenue ?: 0L).formatCurrency(),
             originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
-            status = status ?: ""
+            status = status ?: "",
+            externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel()
     )
 }
 
@@ -50,4 +53,13 @@ private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDo
                 order = castResponseModel.order
         )
     } ?: emptyList()
+}
+
+private fun ExternalIdResponse.mapExternalIdResponseToExternalIdDomainModel(): ExternalIdDomainModel {
+    return ExternalIdDomainModel(
+            instragramId = instagramId,
+            facebookId = facebookId,
+            imdbId = imdbId,
+            twitterId = twitterId
+    )
 }

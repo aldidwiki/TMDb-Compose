@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
@@ -280,7 +281,13 @@ fun ContentDetailPreview() {
                     budget = "$1,000,000.00",
                     revenue = "$2,000,000.00",
                     originalLanguage = "English",
-                    status = "Released"
+                    status = "Released",
+                    externalId = ExternalIdDomainModel(
+                            instragramId = "",
+                            facebookId = "",
+                            imdbId = "",
+                            twitterId = ""
+                    )
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {}
