@@ -28,10 +28,10 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             tagline = tagline ?: "",
             overview = overview ?: "",
             voteAverage = voteAverage ?: 0.0,
-            movieGenres = genres.convertGenreToSingleText(),
+            genres = genres.convertGenreToSingleText(),
             backdropPath = backdropPath,
             casts = credits?.mapCreditResponseToCastDomainModelList() ?: emptyList(),
-            movieCertification = (releaseDates?.results?.firstOrNull { item ->
+            certification = (releaseDates?.results?.firstOrNull { item ->
                 item.iso31661 == "US"
             }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" }
     )

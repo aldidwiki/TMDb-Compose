@@ -54,7 +54,7 @@ fun List<GenresItem>?.convertGenreToSingleText(): String {
 suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
     val loader = ImageLoader(this)
     val request = ImageRequest.Builder(this)
-            .data("https://image.tmdb.org/t/p/w500/$imagePath")
+            .data("https://image.tmdb.org/t/p/w185/$imagePath")
             .allowHardware(false)
             .build()
 
