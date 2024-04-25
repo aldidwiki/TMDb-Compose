@@ -45,6 +45,7 @@ import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
@@ -226,9 +227,15 @@ private fun ContentDetail(
                         modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.size(20.dp))
-                ContentDetailExternal(modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 20.dp)
+                ContentDetailExternal(
+                        instagramUrl = "${Constant.INSTAGRAM_BASE_URL}${movieDetailDomainModel.externalId.instragramId}",
+                        facebookUrl = "${Constant.FACEBOOK_BASE_URL}${movieDetailDomainModel.externalId.facebookId}",
+                        twitterUrl = "${Constant.TWITTER_BASE_URL}${movieDetailDomainModel.externalId.twitterId}",
+                        imdbUrl = "${Constant.IMDB_BASE_URL}${movieDetailDomainModel.externalId.imdbId}",
+                        googleUrl = "${Constant.GOOGLE_SEARCH_BASE_URL}${movieDetailDomainModel.title}",
+                        modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 20.dp)
                 )
             }
 
