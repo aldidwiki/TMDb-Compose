@@ -1,6 +1,5 @@
 package com.aldiprahasta.tmdb.ui.person
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,7 +46,7 @@ fun PersonScreen(
     personViewModel.setPersonId(personId)
 
     val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
-    Box(modifier = modifier.fillMaxSize()) {
+    Scaffold(modifier = modifier) { innerPadding ->
         personData.doIfLoading {
             LoadingScreen()
         }
@@ -56,7 +56,9 @@ fun PersonScreen(
         }
 
         personData.doIfSuccess { personDetail ->
-            PersonDetailContent(personDomainModel = personDetail)
+            PersonDetailContent(
+                    personDomainModel = personDetail,
+                    modifier = Modifier.padding(innerPadding))
         }
     }
 }

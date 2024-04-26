@@ -59,6 +59,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ContentDetailScreen(
         contentId: Int,
         onBackPressed: () -> Unit,
+        onCastClicked: (personId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
@@ -130,6 +131,9 @@ fun ContentDetailScreen(
                 colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
                 onSuccessFetch = {
                     posterPath = it.posterPath
+                },
+                onCastClicked = { personId ->
+                    onCastClicked(personId)
                 }
         )
     }
@@ -197,6 +201,7 @@ private fun ContentDetail(
         movieDetail: UiState<MovieDetailDomainModel>,
         colorPalette: Triple<Color, Color, Color>,
         onSuccessFetch: (movieDetail: MovieDetailDomainModel) -> Unit,
+        onCastClicked: (personId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -220,6 +225,9 @@ private fun ContentDetail(
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentBilledCast(
                         casts = movieDetailDomainModel.casts,
+                        onCastClicked = { personId ->
+                            onCastClicked(personId)
+                        }
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentDetailInfo(
@@ -267,25 +275,29 @@ fun ContentDetailPreview() {
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
                                     profilePath = null,
-                                    order = 0
+                                    order = 0,
+                                    id = 12345
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
                                     profilePath = null,
-                                    order = 0
+                                    order = 0,
+                                    id = 12345
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
                                     profilePath = null,
-                                    order = 0
+                                    order = 0,
+                                    id = 12345
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
                                     profilePath = null,
-                                    order = 0
+                                    order = 0,
+                                    id = 12345
                             )
                     ),
                     budget = "$1,000,000.00",
@@ -301,6 +313,7 @@ fun ContentDetailPreview() {
                     videos = emptyList()
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
-            onSuccessFetch = {}
+            onSuccessFetch = {},
+            onCastClicked = {}
     )
 }

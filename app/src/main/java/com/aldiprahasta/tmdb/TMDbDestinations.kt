@@ -19,3 +19,12 @@ object MovieDetail : TMDbDestinations {
         type = NavType.IntType
     })
 }
+
+object PersonDetail : TMDbDestinations {
+    override val route: String = "person_detail"
+    const val personIdArg = "person_id"
+    val routeWithArgs = "$route/{$personIdArg}"
+    val arguments = listOf(navArgument(personIdArg) {
+        type = NavType.IntType
+    })
+}

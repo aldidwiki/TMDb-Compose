@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
+import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.theme.TMDbTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,9 +51,24 @@ fun TMDbContent() {
                         arguments = MovieDetail.arguments
                 ) { navBackStateEntry ->
                     val movieId = navBackStateEntry.arguments?.getInt(MovieDetail.movieIdArg) ?: 0
-                    ContentDetailScreen(contentId = movieId, onBackPressed = {
-                        navController.navigateUp()
-                    })
+                    ContentDetailScreen(
+                            contentId = movieId,
+                            onBackPressed = {
+                                navController.navigateUp()
+                            },
+                            onCastClicked = { personId ->
+                                navController.navigateToPersonDetail(personId)
+                            }
+                    )
+                }
+
+                composable(
+                        route = PersonDetail.routeWithArgs,
+                        arguments = PersonDetail.arguments
+                ) { navBackStackEntry ->
+                    val personId = navBackStackEntry.arguments?.getInt(PersonDetail.personIdArg)
+                            ?: 0
+                    PersonScreen(personId = personId)
                 }
             }
         }
@@ -68,5 +84,9 @@ private fun NavHostController.navigateSingleTopTo(route: String) = navigate(rout
 }
 
 private fun NavHostController.navigateToMovieDetail(movieId: Int) {
-    navigateSingleTopTo("${MovieDetail.route}/$movieId")
+    navigate("${MovieDetail.route}/$movieId")
+}
+
+private fun NavHostController.navigateToPersonDetail(personId: Int) {
+    navigate("${PersonDetail.route}/$personId")
 }

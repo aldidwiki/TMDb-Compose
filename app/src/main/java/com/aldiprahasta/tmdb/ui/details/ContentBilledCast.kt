@@ -20,6 +20,7 @@ import com.aldiprahasta.tmdb.ui.components.BilledCastItem
 @Composable
 fun ContentBilledCast(
         casts: List<CastDomainModel>,
+        onCastClicked: (personId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -38,6 +39,9 @@ fun ContentBilledCast(
                         name = item.name,
                         characterName = item.characterName,
                         profilePath = item.profilePath,
+                        onItemClicked = {
+                            onCastClicked(item.id)
+                        }
                 )
             }
         }
@@ -52,31 +56,37 @@ fun ContentBilledCastPreview() {
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
                     profilePath = null,
-                    order = 0
+                    order = 0,
+                    id = 12345
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
                     profilePath = null,
-                    order = 0
+                    order = 0,
+                    id = 12345
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
                     profilePath = null,
-                    order = 0
+                    order = 0,
+                    id = 12345
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
                     profilePath = null,
-                    order = 0
+                    order = 0,
+                    id = 12345
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
                     profilePath = null,
-                    order = 0
-            )
-    ))
+                    order = 0,
+                    id = 12345
+            )),
+            onCastClicked = {}
+    )
 }

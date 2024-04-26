@@ -53,8 +53,8 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
     return PersonDomainModel(
             profilePath = profilePath,
             name = name ?: "",
-            birthDay = birthday ?: "",
-            deathDay = deathday ?: "",
+            birthDay = birthday?.convertDate() ?: "",
+            deathDay = deathday?.convertDate() ?: "",
             gender = gender?.formatGender() ?: "-",
             biography = biography ?: "-",
             knownFor = knownForDepartment ?: "-",
@@ -69,7 +69,8 @@ private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDo
                 name = castResponseModel.name ?: "",
                 characterName = castResponseModel.character ?: "",
                 profilePath = castResponseModel.profilePath,
-                order = castResponseModel.order
+                order = castResponseModel.order,
+                id = castResponseModel.id
         )
     } ?: emptyList()
 }
