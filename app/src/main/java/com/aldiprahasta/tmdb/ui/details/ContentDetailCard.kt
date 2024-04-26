@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,9 +40,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
 import com.aldiprahasta.tmdb.ui.components.ImageType
+import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
 
 @Composable
@@ -77,7 +82,8 @@ fun ContentDetailCard(
             ContentDetailUserScoreWithTrailer(
                     voteAverage = movieDetailDomainModel.voteAverage,
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    colorPalette = colorPalette
+                    colorPalette = colorPalette,
+                    videos = movieDetailDomainModel.videos
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentOverview(
@@ -118,6 +124,7 @@ private fun ContentOverview(
 private fun ContentDetailUserScoreWithTrailer(
         voteAverage: Double,
         colorPalette: Triple<Color, Color, Color>,
+        videos: List<VideoDomainModel>,
         modifier: Modifier = Modifier
 ) {
     Row(
@@ -125,6 +132,7 @@ private fun ContentDetailUserScoreWithTrailer(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier.fillMaxWidth()
     ) {
+        val uriHandler = LocalUriHandler.current
         val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -135,9 +143,27 @@ private fun ContentDetailUserScoreWithTrailer(
                     },
                     sheetState = sheetState
             ) {
-                Text(text = "Test")
-                Text(text = "Test")
-                Text(text = "Test")
+                val trailers = videos.asSequence().filter { model ->
+                    model.type.equals("trailer", ignoreCase = true) &&
+                            model.site.equals("youtube", ignoreCase = true) &&
+                            model.isOfficial
+                }.sortedBy { it.name }.toList()
+
+                Text(
+                        text = "Trailers",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                LazyColumn(modifier = Modifier.padding(10.dp)) {
+                    items(trailers) { model ->
+                        TextButton(
+                                onClick = {
+                                    uriHandler.openUri(Constant.YOUTUBE_BASE_URL + model.key)
+                                }) {
+                            Text(text = model.name)
+                        }
+                    }
+                }
             }
         }
 
