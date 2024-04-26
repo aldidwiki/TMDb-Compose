@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.data.source.remote.response.movie
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ReleaseDatesResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetailResponse(
@@ -64,7 +65,10 @@ data class MovieDetailResponse(
         val credits: CreditResponse?,
 
         @field:SerializedName("external_ids")
-        val externalIds: ExternalIdResponse
+        val externalIds: ExternalIdResponse,
+
+        @field:SerializedName("videos")
+        val video: VideoResponse?
 )
 
 data class GenresItem(

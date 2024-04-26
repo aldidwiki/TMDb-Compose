@@ -2,12 +2,14 @@ package com.aldiprahasta.tmdb.utils
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
+import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 
 fun MovieResponse.mapMovieResponseToMovieDomainModelList(): List<MovieDomainModel> {
     return this.movieResponseModelList.map { movieResponseModel ->
@@ -40,7 +42,8 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             revenue = (revenue ?: 0L).formatCurrency(),
             originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
             status = status ?: "",
-            externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel()
+            externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
+            videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList()
     )
 }
 
@@ -62,4 +65,17 @@ private fun ExternalIdResponse.mapExternalIdResponseToExternalIdDomainModel(): E
             imdbId = imdbId,
             twitterId = twitterId
     )
+}
+
+private fun VideoResponse.mapVideoResponseToVideoDomainModelList(): List<VideoDomainModel> {
+    return results?.map { model ->
+        VideoDomainModel(
+                id = model.id,
+                name = model.name ?: "",
+                site = model.site ?: "",
+                type = model.type ?: "",
+                key = model.key ?: "",
+                isOfficial = model.official ?: false
+        )
+    } ?: emptyList()
 }

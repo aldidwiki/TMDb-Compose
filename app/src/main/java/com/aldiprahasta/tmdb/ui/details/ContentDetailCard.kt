@@ -13,12 +13,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -106,6 +113,7 @@ private fun ContentOverview(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ContentDetailUserScoreWithTrailer(
         voteAverage: Double,
@@ -117,6 +125,22 @@ private fun ContentDetailUserScoreWithTrailer(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier.fillMaxWidth()
     ) {
+        val sheetState = rememberModalBottomSheetState()
+        var showBottomSheet by remember { mutableStateOf(false) }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+            ) {
+                Text(text = "Test")
+                Text(text = "Test")
+                Text(text = "Test")
+            }
+        }
+
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
                     modifier = Modifier.size(40.dp),
@@ -145,7 +169,9 @@ private fun ContentDetailUserScoreWithTrailer(
                 style = MaterialTheme.typography.labelMedium,
                 color = colorPalette.second
         )
-        TextButton(onClick = { }) {
+        TextButton(onClick = {
+            showBottomSheet = true
+        }) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                         imageVector = Icons.Default.PlayArrow,
@@ -269,7 +295,8 @@ fun ContentDetailCardPreview() {
                             facebookId = "",
                             imdbId = "",
                             twitterId = ""
-                    )
+                    ),
+                    videos = emptyList()
             ),
             colorPalette = Triple(Color.White, Color.Black, Color.Black)
     )

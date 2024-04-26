@@ -297,7 +297,8 @@ fun ContentDetailPreview() {
                             facebookId = "",
                             imdbId = "",
                             twitterId = ""
-                    )
+                    ),
+                    videos = emptyList()
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {}
