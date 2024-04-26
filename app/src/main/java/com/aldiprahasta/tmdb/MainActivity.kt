@@ -68,7 +68,11 @@ fun TMDbContent() {
                 ) { navBackStackEntry ->
                     val personId = navBackStackEntry.arguments?.getInt(PersonDetail.personIdArg)
                             ?: 0
-                    PersonScreen(personId = personId)
+                    PersonScreen(
+                            personId = personId,
+                            onBackPressed = {
+                                navController.navigateUp()
+                            })
                 }
             }
         }
