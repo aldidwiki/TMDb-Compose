@@ -5,10 +5,12 @@ import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
+import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 
 fun MovieResponse.mapMovieResponseToMovieDomainModelList(): List<MovieDomainModel> {
@@ -44,6 +46,18 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieD
             status = status ?: "",
             externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
             videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList()
+    )
+}
+
+fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
+    return PersonDomainModel(
+            profilePath = profilePath,
+            name = name ?: "",
+            birthDay = birthday ?: "",
+            deathDay = deathday ?: "",
+            gender = gender?.formatGender() ?: "-",
+            biography = biography ?: "-",
+            knownFor = knownForDepartment ?: "-"
     )
 }
 

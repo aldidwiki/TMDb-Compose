@@ -8,8 +8,10 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.GenresItem
+import java.sql.Date
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -73,6 +75,26 @@ fun Context.shareIt(text: String) {
 
     val shareIntent = Intent.createChooser(sendIntent, null)
     startActivity(shareIntent)
+}
+
+fun getAge(birthday: String, deathDay: String?): String {
+    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).calendar
+    date.time = Date.valueOf(birthday)
+
+    val currentDate = Calendar.getInstance()
+    deathDay?.let { currentDate.time = Date.valueOf(it) }
+    var age = currentDate.get(Calendar.YEAR) - date.get(Calendar.YEAR)
+
+    if (currentDate.get(Calendar.DAY_OF_YEAR) < date.get(Calendar.DAY_OF_YEAR))
+        age -= 1
+
+    return age.toString()
+}
+
+fun Int?.formatGender(): String = when (this) {
+    1 -> "Female"
+    2 -> "Male"
+    else -> "Not Sure"
 }
 
 suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
