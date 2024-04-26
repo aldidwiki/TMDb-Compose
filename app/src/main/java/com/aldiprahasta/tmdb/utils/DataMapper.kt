@@ -57,7 +57,9 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             deathDay = deathday ?: "",
             gender = gender?.formatGender() ?: "-",
             biography = biography ?: "-",
-            knownFor = knownForDepartment ?: "-"
+            knownFor = knownForDepartment ?: "-",
+            age = getAge(birthday ?: "", deathday),
+            placeOfBirth = placeOfBirth ?: "-"
     )
 }
 
