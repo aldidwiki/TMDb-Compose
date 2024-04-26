@@ -141,7 +141,8 @@ private fun ContentDetailUserScoreWithTrailer(
                     onDismissRequest = {
                         showBottomSheet = false
                     },
-                    sheetState = sheetState
+                    sheetState = sheetState,
+                    modifier = Modifier.height(250.dp)
             ) {
                 val trailers = videos.asSequence().filter { model ->
                     model.type.equals("trailer", ignoreCase = true) &&
