@@ -38,7 +38,7 @@ fun ContentBilledCast(
                 BilledCastItem(
                         name = item.name,
                         characterName = item.characterName,
-                        profilePath = item.profilePath,
+                        profilePath = item.imagePath,
                         onItemClicked = {
                             onCastClicked(item.id)
                         }
@@ -55,37 +55,42 @@ fun ContentBilledCastPreview() {
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
-                    profilePath = null,
+                    imagePath = null,
                     order = 0,
-                    id = 12345
+                    id = 12345,
+                    mediaType = null
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
-                    profilePath = null,
+                    imagePath = null,
                     order = 0,
-                    id = 12345
+                    id = 12345,
+                    mediaType = null
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
-                    profilePath = null,
+                    imagePath = null,
                     order = 0,
-                    id = 12345
+                    id = 12345,
+                    mediaType = null
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
-                    profilePath = null,
+                    imagePath = null,
                     order = 0,
-                    id = 12345
+                    id = 12345,
+                    mediaType = null
             ),
             CastDomainModel(
                     name = "Timothée Chalamet",
                     characterName = "Paul Atreides",
-                    profilePath = null,
+                    imagePath = null,
                     order = 0,
-                    id = 12345
+                    id = 12345,
+                    mediaType = null
             )),
             onCastClicked = {}
     )

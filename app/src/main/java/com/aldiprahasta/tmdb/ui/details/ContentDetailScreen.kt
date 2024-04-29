@@ -274,30 +274,34 @@ fun ContentDetailPreview() {
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
-                                    profilePath = null,
+                                    imagePath = null,
                                     order = 0,
-                                    id = 12345
+                                    id = 12345,
+                                    mediaType = null
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
-                                    profilePath = null,
+                                    imagePath = null,
                                     order = 0,
-                                    id = 12345
+                                    id = 12345,
+                                    mediaType = null
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
-                                    profilePath = null,
+                                    imagePath = null,
                                     order = 0,
-                                    id = 12345
+                                    id = 12345,
+                                    mediaType = null
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
                                     characterName = "Paul Atreides",
-                                    profilePath = null,
+                                    imagePath = null,
                                     order = 0,
-                                    id = 12345
+                                    id = 12345,
+                                    mediaType = null
                             )
                     ),
                     budget = "$1,000,000.00",

@@ -40,5 +40,14 @@ data class CastResponseModel(
         val id: Int,
 
         @field:SerializedName("order")
-        val order: Int
+        val order: Int,
+
+        @field:SerializedName("media_type")
+        val mediaType: String?,
+
+        @field:SerializedName("title")
+        val title: String?,
+
+        @field:SerializedName("poster_path")
+        val posterPath: String?
 )

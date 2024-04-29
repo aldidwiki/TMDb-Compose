@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.person
 
+import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.google.gson.annotations.SerializedName
 
@@ -39,5 +40,8 @@ data class PersonResponse(
         val id: Int,
 
         @field:SerializedName("external_ids")
-        val externalIds: ExternalIdResponse
+        val externalIds: ExternalIdResponse,
+
+        @field:SerializedName("combined_credits")
+        val combinedCredits: CreditResponse?
 )

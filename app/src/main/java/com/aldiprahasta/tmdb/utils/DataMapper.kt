@@ -69,9 +69,10 @@ private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDo
         CastDomainModel(
                 name = castResponseModel.name ?: "",
                 characterName = castResponseModel.character ?: "",
-                profilePath = castResponseModel.profilePath,
+                imagePath = castResponseModel.profilePath,
                 order = castResponseModel.order,
-                id = castResponseModel.id
+                id = castResponseModel.id,
+                mediaType = null
         )
     } ?: emptyList()
 }
