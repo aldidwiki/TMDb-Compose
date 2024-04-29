@@ -59,7 +59,8 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             biography = biography ?: "-",
             knownFor = knownForDepartment ?: "-",
             age = getAge(birthday ?: "", deathday),
-            placeOfBirth = placeOfBirth ?: "-"
+            placeOfBirth = placeOfBirth ?: "-",
+            externalIds = externalIds.mapExternalIdResponseToExternalIdDomainModel()
     )
 }
 

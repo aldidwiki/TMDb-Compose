@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.person
 
+import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.google.gson.annotations.SerializedName
 
 data class PersonResponse(
@@ -36,4 +37,7 @@ data class PersonResponse(
 
         @field:SerializedName("id")
         val id: Int,
+
+        @field:SerializedName("external_ids")
+        val externalIds: ExternalIdResponse
 )

@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.person
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,11 +36,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.details.ContentDetailExternal
 import com.aldiprahasta.tmdb.utils.convertDate
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
@@ -118,6 +121,14 @@ private fun PersonDetailContent(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.SemiBold
         )
+        Spacer(modifier = Modifier.size(4.dp))
+        ContentDetailExternal(
+                instagramId = personDomainModel.externalIds.instragramId,
+                facebookId = personDomainModel.externalIds.facebookId,
+                twitterId = personDomainModel.externalIds.twitterId,
+                imdbPair = Pair(false, personDomainModel.externalIds.imdbId),
+                googleId = personDomainModel.name
+        )
         Spacer(modifier = Modifier.size(20.dp))
         PersonPersonalInfo(
                 birthDay = personDomainModel.birthDay,
@@ -151,57 +162,61 @@ private fun PersonPersonalInfo(
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = "Personal Info", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.size(10.dp))
-        Row {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                        text = "Birthday",
-                        style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                        text = birthDayText,
-                        style = MaterialTheme.typography.bodySmall
-                )
-
-                if (deathDay.isNotEmpty()) {
-                    Spacer(modifier = Modifier.size(16.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                            text = "Day of Death",
+                            text = "Birthday",
                             style = MaterialTheme.typography.labelMedium
                     )
                     Text(
-                            text = "$deathDay ($age years old)",
+                            text = birthDayText,
                             style = MaterialTheme.typography.bodySmall
                     )
                 }
-
-                Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                        text = "Place of Birth",
-                        style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                        text = placeOfBirth,
-                        style = MaterialTheme.typography.bodySmall
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                            text = "Known For",
+                            style = MaterialTheme.typography.labelMedium
+                    )
+                    Text(
+                            text = knownFor,
+                            style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                        text = "Known For",
-                        style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                        text = knownFor,
-                        style = MaterialTheme.typography.bodySmall
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                        text = "Gender",
-                        style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                        text = gender,
-                        style = MaterialTheme.typography.bodySmall
-                )
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                            text = "Place of Birth",
+                            style = MaterialTheme.typography.labelMedium
+                    )
+                    Text(
+                            text = placeOfBirth,
+                            style = MaterialTheme.typography.bodySmall
+                    )
+                    if (deathDay.isNotEmpty()) {
+                        Spacer(modifier = Modifier.size(16.dp))
+                        Text(
+                                text = "Day of Death",
+                                style = MaterialTheme.typography.labelMedium
+                        )
+                        Text(
+                                text = "$deathDay ($age years old)",
+                                style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                            text = "Gender",
+                            style = MaterialTheme.typography.labelMedium
+                    )
+                    Text(
+                            text = gender,
+                            style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }
@@ -235,7 +250,13 @@ fun PersonDetailContentPreview() {
             biography = "-",
             knownFor = "Acting",
             age = "28 years old",
-            placeOfBirth = "Manhattan, New York City, New York, USA"
+            placeOfBirth = "Manhattan, New York City, New York, USA",
+            externalIds = ExternalIdDomainModel(
+                    instragramId = "",
+                    facebookId = "",
+                    imdbId = "",
+                    twitterId = ""
+            )
     ))
 }
 
