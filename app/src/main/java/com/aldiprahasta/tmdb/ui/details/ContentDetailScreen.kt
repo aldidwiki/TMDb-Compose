@@ -227,7 +227,7 @@ private fun ContentDetail(
                 ContentBilledCast(
                         sectionTitle = "Top Billed Cast",
                         casts = movieDetailDomainModel.casts,
-                        onCastClicked = { personId ->
+                        onCastClicked = { personId, _ ->
                             onCastClicked(personId)
                         }
                 )

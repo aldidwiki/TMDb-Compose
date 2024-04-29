@@ -72,7 +72,13 @@ fun TMDbContent() {
                             personId = personId,
                             onBackPressed = {
                                 navController.navigateUp()
-                            })
+                            },
+                            onCreditClicked = { contentId, mediaType ->
+                                if (mediaType == "movie") {
+                                    navController.navigateToMovieDetail(contentId)
+                                }
+                            }
+                    )
                 }
             }
         }

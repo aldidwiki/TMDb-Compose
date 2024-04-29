@@ -36,8 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
+import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
@@ -54,6 +56,7 @@ import org.koin.androidx.compose.koinViewModel
 fun PersonScreen(
         personId: Int,
         onBackPressed: () -> Unit,
+        onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
@@ -89,7 +92,11 @@ fun PersonScreen(
         personData.doIfSuccess { personDetail ->
             PersonDetailContent(
                     personDomainModel = personDetail,
-                    modifier = Modifier.padding(innerPadding))
+                    modifier = Modifier.padding(innerPadding),
+                    onCreditClicked = { creditId, mediaType ->
+                        onCreditClicked(creditId, mediaType)
+                    }
+            )
         }
     }
 }
@@ -97,49 +104,61 @@ fun PersonScreen(
 @Composable
 private fun PersonDetailContent(
         personDomainModel: PersonDomainModel,
+        onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    Column(
-            modifier = modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    Column(modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(vertical = 16.dp)
     ) {
-        ImageLoader(
-                imagePath = personDomainModel.profilePath,
-                imageType = ImageType.PROFILE,
-                modifier = Modifier
-                        .width(180.dp)
-                        .height(250.dp)
-                        .clip(RoundedCornerShape(6.dp))
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(
-                text = personDomainModel.name,
-                style = MaterialTheme.typography.titleLarge,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.size(4.dp))
-        ContentDetailExternal(
-                instagramId = personDomainModel.externalIds.instragramId,
-                facebookId = personDomainModel.externalIds.facebookId,
-                twitterId = personDomainModel.externalIds.twitterId,
-                imdbPair = Pair(false, personDomainModel.externalIds.imdbId),
-                googleId = personDomainModel.name
-        )
+        Column(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ImageLoader(
+                    imagePath = personDomainModel.profilePath,
+                    imageType = ImageType.PROFILE,
+                    modifier = Modifier
+                            .width(180.dp)
+                            .height(250.dp)
+                            .clip(RoundedCornerShape(6.dp))
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                    text = personDomainModel.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.size(4.dp))
+            ContentDetailExternal(
+                    instagramId = personDomainModel.externalIds.instragramId,
+                    facebookId = personDomainModel.externalIds.facebookId,
+                    twitterId = personDomainModel.externalIds.twitterId,
+                    imdbPair = Pair(false, personDomainModel.externalIds.imdbId),
+                    googleId = personDomainModel.name
+            )
+            Spacer(modifier = Modifier.size(20.dp))
+            PersonPersonalInfo(
+                    birthDay = personDomainModel.birthDay,
+                    deathDay = personDomainModel.deathDay,
+                    age = personDomainModel.age,
+                    placeOfBirth = personDomainModel.placeOfBirth,
+                    knownFor = personDomainModel.knownFor,
+                    gender = personDomainModel.gender
+            )
+            Spacer(modifier = Modifier.size(20.dp))
+            PersonBiography(biography = personDomainModel.biography)
+        }
         Spacer(modifier = Modifier.size(20.dp))
-        PersonPersonalInfo(
-                birthDay = personDomainModel.birthDay,
-                deathDay = personDomainModel.deathDay,
-                age = personDomainModel.age,
-                placeOfBirth = personDomainModel.placeOfBirth,
-                knownFor = personDomainModel.knownFor,
-                gender = personDomainModel.gender
+        ContentBilledCast(
+                sectionTitle = "Known For",
+                casts = personDomainModel.credits.take(10),
+                onCastClicked = { creditId, mediaType ->
+                    onCreditClicked(creditId, mediaType)
+                }
         )
-        Spacer(modifier = Modifier.size(20.dp))
-        PersonBiography(biography = personDomainModel.biography)
     }
 }
 
@@ -241,23 +260,36 @@ private fun PersonBiography(
 @Preview(showBackground = true)
 @Composable
 fun PersonDetailContentPreview() {
-    PersonDetailContent(personDomainModel = PersonDomainModel(
-            profilePath = null,
-            name = "Timothée Chalamet",
-            birthDay = "1995-12-27".convertDate(),
-            deathDay = "",
-            gender = "Male",
-            biography = "-",
-            knownFor = "Acting",
-            age = "28 years old",
-            placeOfBirth = "Manhattan, New York City, New York, USA",
-            externalIds = ExternalIdDomainModel(
-                    instragramId = "",
-                    facebookId = "",
-                    imdbId = "",
-                    twitterId = ""
-            )
-    ))
+    PersonDetailContent(
+            personDomainModel = PersonDomainModel(
+                    profilePath = null,
+                    name = "Timothée Chalamet",
+                    birthDay = "1995-12-27".convertDate(),
+                    deathDay = "",
+                    gender = "Male",
+                    biography = "-",
+                    knownFor = "Acting",
+                    age = "28 years old",
+                    placeOfBirth = "Manhattan, New York City, New York, USA",
+                    externalIds = ExternalIdDomainModel(
+                            instragramId = "",
+                            facebookId = "",
+                            imdbId = "",
+                            twitterId = ""
+                    ),
+                    credits = listOf(
+                            CastDomainModel(
+                                    name = "Timothée Chalamet",
+                                    characterName = "Paul Atreides",
+                                    imagePath = null,
+                                    order = 0,
+                                    id = 12345,
+                                    mediaType = null
+                            )
+                    )
+            ),
+            onCreditClicked = { _, _ -> }
+    )
 }
 
 @Preview(showBackground = true)

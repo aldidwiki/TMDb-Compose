@@ -20,7 +20,7 @@ import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 fun ContentBilledCast(
         sectionTitle: String,
         casts: List<CastDomainModel>,
-        onCastClicked: (personId: Int) -> Unit,
+        onCastClicked: (contentId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -40,7 +40,7 @@ fun ContentBilledCast(
                         characterName = item.characterName,
                         profilePath = item.imagePath,
                         onItemClicked = {
-                            onCastClicked(item.id)
+                            onCastClicked(item.id, item.mediaType)
                         }
                 )
             }
@@ -94,6 +94,6 @@ fun ContentBilledCastPreview() {
                             id = 12345,
                             mediaType = null
                     )),
-            onCastClicked = {}
+            onCastClicked = { _, _ -> }
     )
 }

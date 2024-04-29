@@ -60,19 +60,20 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             knownFor = knownForDepartment ?: "-",
             age = getAge(birthday ?: "", deathday),
             placeOfBirth = placeOfBirth ?: "-",
-            externalIds = externalIds.mapExternalIdResponseToExternalIdDomainModel()
+            externalIds = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
+            credits = combinedCredits?.mapCreditResponseToCastDomainModelList() ?: emptyList()
     )
 }
 
 private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainModel> {
     return casts?.map { castResponseModel ->
         CastDomainModel(
-                name = castResponseModel.name ?: "",
+                name = castResponseModel.name ?: castResponseModel.title ?: "",
                 characterName = castResponseModel.character ?: "",
-                imagePath = castResponseModel.profilePath,
+                imagePath = castResponseModel.profilePath ?: castResponseModel.posterPath ?: "",
                 order = castResponseModel.order,
                 id = castResponseModel.id,
-                mediaType = null
+                mediaType = castResponseModel.mediaType
         )
     } ?: emptyList()
 }

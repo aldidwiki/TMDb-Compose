@@ -14,6 +14,6 @@ interface RemoteService {
     @GET("movie/{movie_id}?append_to_response=release_dates,credits,external_ids,videos")
     suspend fun getMovieDetail(@Path("movie_id") movieId: Int): Response<MovieDetailResponse>
 
-    @GET("person/{person_id}?append_to_response=external_ids")
+    @GET("person/{person_id}?append_to_response=external_ids,combined_credits")
     suspend fun getPersonDetail(@Path("person_id") personId: Int): Response<PersonResponse>
 }
