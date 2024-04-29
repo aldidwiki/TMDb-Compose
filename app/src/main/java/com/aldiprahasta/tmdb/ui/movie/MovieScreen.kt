@@ -76,8 +76,9 @@ fun MovieContent(
                 itemsIndexed(movieList) { index, movie ->
                     ContentItem(
                             title = movie.title,
-                            subTitle = movie.releaseDate,
+                            releaseDate = movie.releaseDate,
                             posterPath = movie.posterPath,
+                            characterName = null,
                             onItemClicked = { onItemClicked(movie.movieId) }
                     )
 

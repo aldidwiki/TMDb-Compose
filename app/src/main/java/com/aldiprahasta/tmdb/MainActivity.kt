@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
+import com.aldiprahasta.tmdb.ui.credit.MediaType
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
@@ -61,7 +62,7 @@ fun TMDbContent() {
                                 navController.navigateToPersonDetail(personId)
                             },
                             onViewMoreClicked = {
-                                navController.navigateToCreditDetail(movieId)
+                                navController.navigateToCreditDetail(movieId, MediaType.MOVIE_TYPE.name)
                             }
                     )
                 }
@@ -83,7 +84,7 @@ fun TMDbContent() {
                                 }
                             },
                             onViewMoreClicked = {
-                                navController.navigateToCreditDetail(personId)
+                                navController.navigateToCreditDetail(personId, MediaType.PERSON_TYPE.name)
                             }
                     )
                 }
@@ -94,8 +95,10 @@ fun TMDbContent() {
                 ) { navBackStackEntry ->
                     val contentId = navBackStackEntry.arguments?.getInt(CreditDetail.contentIdArg)
                             ?: 0
+                    val contentType = navBackStackEntry.arguments?.getString(CreditDetail.contentTypeArg)
+                            ?: MediaType.MOVIE_TYPE.name
                     CreditScreen(
-                            contentId = contentId,
+                            contentId = Pair(contentId, contentType),
                             onBackPressed = {
                                 navController.navigateUp()
                             }
@@ -122,6 +125,6 @@ private fun NavHostController.navigateToPersonDetail(personId: Int) {
     navigate("${PersonDetail.route}/$personId")
 }
 
-private fun NavHostController.navigateToCreditDetail(contentId: Int) {
-    navigate("${CreditDetail.route}/$contentId")
+private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType: String) {
+    navigate("${CreditDetail.route}/$contentId/$contentType")
 }

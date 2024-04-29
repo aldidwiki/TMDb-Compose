@@ -19,7 +19,7 @@ fun String.convertDate(): String {
     val parser = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
 
-    val date = parser.parse(this)
+    val date = parser.parse(this.ifEmpty { return this })
     return date?.let {
         formatter.format(it)
     } ?: this

@@ -4,6 +4,7 @@ import android.app.Application
 import com.aldiprahasta.tmdb.di.remoteModule
 import com.aldiprahasta.tmdb.di.repositoryModule
 import com.aldiprahasta.tmdb.di.useCaseModule
+import com.aldiprahasta.tmdb.di.useCaseWrapperModule
 import com.aldiprahasta.tmdb.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -14,7 +15,7 @@ class TMDbApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@TMDbApp)
-            modules(remoteModule, repositoryModule, useCaseModule, viewModelModule)
+            modules(remoteModule, repositoryModule, useCaseModule, viewModelModule, useCaseWrapperModule)
         }
 
         if (BuildConfig.DEBUG) {

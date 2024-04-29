@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ContentItem(
         title: String,
-        subTitle: String,
+        releaseDate: String?,
+        characterName: String?,
         posterPath: String?,
         onItemClicked: () -> Unit,
         modifier: Modifier = Modifier
@@ -49,11 +50,20 @@ fun ContentItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
             )
-            Text(
-                    text = subTitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1
-            )
+            releaseDate?.let {
+                Text(
+                        text = releaseDate,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1
+                )
+            }
+            characterName?.let {
+                Text(
+                        text = characterName,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1
+                )
+            }
         }
     }
 }
@@ -63,8 +73,9 @@ fun ContentItem(
 fun ContentItemPreview() {
     ContentItem(
             title = "Dune: Part Two",
-            subTitle = "24 December 2024",
+            releaseDate = "24 December 2024",
             posterPath = null,
+            characterName = "Albert",
             onItemClicked = {}
     )
 }

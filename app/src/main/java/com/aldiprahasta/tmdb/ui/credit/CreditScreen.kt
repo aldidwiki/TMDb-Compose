@@ -36,13 +36,13 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreditScreen(
-        contentId: Int,
+        contentId: Pair<Int, String>,
         onBackPressed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
     creditViewModel.setContentId(contentId)
-    val creditData by creditViewModel.movieCredits.collectAsStateWithLifecycle()
+    val creditData by creditViewModel.credits.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -73,7 +73,7 @@ fun CreditScreen(
             LoadingScreen()
         }
 
-        creditData.doIfError { throwable, errorMessage ->
+        creditData.doIfError { throwable, _ ->
             ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
         }
 
@@ -95,8 +95,9 @@ fun CreditContent(
         itemsIndexed(casts) { index, item ->
             ContentItem(
                     title = item.name,
-                    subTitle = item.releaseDate ?: item.characterName,
+                    releaseDate = item.releaseDate,
                     posterPath = item.imagePath,
+                    characterName = item.characterName,
                     onItemClicked = {
 
                     }
@@ -120,7 +121,7 @@ fun CreditContentPreview() {
                     imagePath = null,
                     order = 2653,
                     mediaType = null,
-                    releaseDate = null
+                    releaseDate = ""
             ),
             CastDomainModel(
                     id = 3728,
@@ -129,7 +130,7 @@ fun CreditContentPreview() {
                     imagePath = null,
                     order = 2653,
                     mediaType = null,
-                    releaseDate = null
+                    releaseDate = ""
             ),
             CastDomainModel(
                     id = 3728,
@@ -138,7 +139,7 @@ fun CreditContentPreview() {
                     imagePath = null,
                     order = 2653,
                     mediaType = null,
-                    releaseDate = null
+                    releaseDate = ""
             ),
             CastDomainModel(
                     id = 3728,
@@ -147,7 +148,7 @@ fun CreditContentPreview() {
                     imagePath = null,
                     order = 2653,
                     mediaType = null,
-                    releaseDate = null
+                    releaseDate = ""
             ),
             CastDomainModel(
                     id = 3728,
@@ -156,7 +157,7 @@ fun CreditContentPreview() {
                     imagePath = null,
                     order = 2653,
                     mediaType = null,
-                    releaseDate = null
+                    releaseDate = ""
             )
     ))
 }

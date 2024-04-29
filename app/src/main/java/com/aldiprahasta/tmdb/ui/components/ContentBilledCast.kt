@@ -78,7 +78,7 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = null
+                            releaseDate = ""
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -87,7 +87,7 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = null
+                            releaseDate = ""
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -96,7 +96,7 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = null
+                            releaseDate = ""
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -105,7 +105,7 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = null
+                            releaseDate = ""
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -114,7 +114,7 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = null
+                            releaseDate = ""
                     )),
             onCastClicked = { _, _ -> },
             onViewMoreClicked = {}

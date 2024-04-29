@@ -284,7 +284,7 @@ fun ContentDetailPreview() {
                                     order = 0,
                                     id = 12345,
                                     mediaType = null,
-                                    releaseDate = null
+                                    releaseDate = ""
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
@@ -293,7 +293,7 @@ fun ContentDetailPreview() {
                                     order = 0,
                                     id = 12345,
                                     mediaType = null,
-                                    releaseDate = null
+                                    releaseDate = ""
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
@@ -302,7 +302,7 @@ fun ContentDetailPreview() {
                                     order = 0,
                                     id = 12345,
                                     mediaType = null,
-                                    releaseDate = null
+                                    releaseDate = ""
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
@@ -311,7 +311,7 @@ fun ContentDetailPreview() {
                                     order = 0,
                                     id = 12345,
                                     mediaType = null,
-                                    releaseDate = null
+                                    releaseDate = ""
                             )
                     ),
                     budget = "$1,000,000.00",

@@ -74,7 +74,7 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainMode
                 order = castResponseModel.order,
                 id = castResponseModel.id,
                 mediaType = castResponseModel.mediaType,
-                releaseDate = castResponseModel.releaseDate
+                releaseDate = castResponseModel.releaseDate?.convertDate()
         )
     } ?: emptyList()
 }

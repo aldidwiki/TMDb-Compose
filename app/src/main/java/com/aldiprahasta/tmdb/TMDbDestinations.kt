@@ -32,8 +32,14 @@ object PersonDetail : TMDbDestinations {
 object CreditDetail : TMDbDestinations {
     override val route: String = "credit_detail"
     const val contentIdArg = "content_id"
-    val routeWithArgs = "$route/{$contentIdArg}"
-    val arguments = listOf(navArgument(contentIdArg) {
-        type = NavType.IntType
-    })
+    const val contentTypeArg = "content_type"
+    val routeWithArgs = "$route/{$contentIdArg}/{$contentTypeArg}"
+    val arguments = listOf(
+            navArgument(contentIdArg) {
+                type = NavType.IntType
+            },
+            navArgument(contentTypeArg) {
+                type = NavType.StringType
+            }
+    )
 }

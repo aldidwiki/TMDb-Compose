@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.data.source.remote
 
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
+import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,18 @@ class PersonRemoteDataSource(private val remoteService: RemoteService) {
         if (!response.isSuccessful) throw HttpException(response)
         else response.body()?.let { personResponse ->
             emit(UiState.Success(personResponse))
+        }
+    }.catch { t ->
+        Timber.e(t)
+        emit(UiState.Error(t))
+    }.flowOn(Dispatchers.IO)
+
+    fun getPersonCredits(personId: Int): Flow<UiState<CreditResponse>> = flow {
+        emit(UiState.Loading)
+        val response = remoteService.getPersonCredits(personId)
+        if (!response.isSuccessful) throw HttpException(response)
+        else response.body()?.let { creditResponse ->
+            emit(UiState.Success(creditResponse))
         }
     }.catch { t ->
         Timber.e(t)
