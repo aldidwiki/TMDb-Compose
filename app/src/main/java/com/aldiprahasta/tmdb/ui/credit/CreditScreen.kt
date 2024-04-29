@@ -38,6 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CreditScreen(
         contentId: Pair<Int, String>,
         onBackPressed: () -> Unit,
+        onItemClicked: (contentId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
@@ -78,7 +79,11 @@ fun CreditScreen(
         }
 
         creditData.doIfSuccess { casts ->
-            CreditContent(casts = casts, modifier = Modifier.padding(innerPadding))
+            CreditContent(
+                    casts = casts,
+                    modifier = Modifier.padding(innerPadding),
+                    onItemClicked = onItemClicked
+            )
         }
     }
 }
@@ -86,6 +91,7 @@ fun CreditScreen(
 @Composable
 fun CreditContent(
         casts: List<CastDomainModel>,
+        onItemClicked: (contentId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -99,7 +105,7 @@ fun CreditContent(
                     posterPath = item.imagePath,
                     characterName = item.characterName,
                     onItemClicked = {
-
+                        onItemClicked(item.id)
                     }
             )
 
@@ -113,51 +119,54 @@ fun CreditContent(
 @Preview(showBackground = true)
 @Composable
 fun CreditContentPreview() {
-    CreditContent(casts = listOf(
-            CastDomainModel(
-                    id = 3728,
-                    name = "Aldo Nolan",
-                    characterName = "Eugenia Nolan",
-                    imagePath = null,
-                    order = 2653,
-                    mediaType = null,
-                    releaseDate = ""
+    CreditContent(
+            casts = listOf(
+                    CastDomainModel(
+                            id = 3728,
+                            name = "Aldo Nolan",
+                            characterName = "Eugenia Nolan",
+                            imagePath = null,
+                            order = 2653,
+                            mediaType = null,
+                            releaseDate = ""
+                    ),
+                    CastDomainModel(
+                            id = 3728,
+                            name = "Aldo Nolan",
+                            characterName = "Eugenia Nolan",
+                            imagePath = null,
+                            order = 2653,
+                            mediaType = null,
+                            releaseDate = ""
+                    ),
+                    CastDomainModel(
+                            id = 3728,
+                            name = "Aldo Nolan",
+                            characterName = "Eugenia Nolan",
+                            imagePath = null,
+                            order = 2653,
+                            mediaType = null,
+                            releaseDate = ""
+                    ),
+                    CastDomainModel(
+                            id = 3728,
+                            name = "Aldo Nolan",
+                            characterName = "Eugenia Nolan",
+                            imagePath = null,
+                            order = 2653,
+                            mediaType = null,
+                            releaseDate = ""
+                    ),
+                    CastDomainModel(
+                            id = 3728,
+                            name = "Aldo Nolan",
+                            characterName = "Eugenia Nolan",
+                            imagePath = null,
+                            order = 2653,
+                            mediaType = null,
+                            releaseDate = ""
+                    )
             ),
-            CastDomainModel(
-                    id = 3728,
-                    name = "Aldo Nolan",
-                    characterName = "Eugenia Nolan",
-                    imagePath = null,
-                    order = 2653,
-                    mediaType = null,
-                    releaseDate = ""
-            ),
-            CastDomainModel(
-                    id = 3728,
-                    name = "Aldo Nolan",
-                    characterName = "Eugenia Nolan",
-                    imagePath = null,
-                    order = 2653,
-                    mediaType = null,
-                    releaseDate = ""
-            ),
-            CastDomainModel(
-                    id = 3728,
-                    name = "Aldo Nolan",
-                    characterName = "Eugenia Nolan",
-                    imagePath = null,
-                    order = 2653,
-                    mediaType = null,
-                    releaseDate = ""
-            ),
-            CastDomainModel(
-                    id = 3728,
-                    name = "Aldo Nolan",
-                    characterName = "Eugenia Nolan",
-                    imagePath = null,
-                    order = 2653,
-                    mediaType = null,
-                    releaseDate = ""
-            )
-    ))
+            onItemClicked = {}
+    )
 }

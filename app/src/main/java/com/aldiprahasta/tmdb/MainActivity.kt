@@ -101,6 +101,12 @@ fun TMDbContent() {
                             contentId = Pair(contentId, contentType),
                             onBackPressed = {
                                 navController.navigateUp()
+                            },
+                            onItemClicked = { id ->
+                                when (contentType) {
+                                    MediaType.MOVIE_TYPE.name -> navController.navigateToPersonDetail(id) // movie credit consist people
+                                    MediaType.PERSON_TYPE.name -> navController.navigateToMovieDetail(id) // reverse, person credit consist movie/tv
+                                }
                             }
                     )
                 }
