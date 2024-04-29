@@ -43,6 +43,7 @@ import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
+import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.utils.Constant
@@ -224,6 +225,7 @@ private fun ContentDetail(
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentBilledCast(
+                        sectionTitle = "Top Billed Cast",
                         casts = movieDetailDomainModel.casts,
                         onCastClicked = { personId ->
                             onCastClicked(personId)
