@@ -49,5 +49,8 @@ data class CastResponseModel(
         val title: String?,
 
         @field:SerializedName("poster_path")
-        val posterPath: String?
+        val posterPath: String?,
+
+        @field:SerializedName("release_date")
+        val releaseDate: String?
 )

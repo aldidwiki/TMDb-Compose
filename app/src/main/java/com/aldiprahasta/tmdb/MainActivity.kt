@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
@@ -58,6 +59,9 @@ fun TMDbContent() {
                             },
                             onCastClicked = { personId ->
                                 navController.navigateToPersonDetail(personId)
+                            },
+                            onViewMoreClicked = {
+                                navController.navigateToCreditDetail(movieId)
                             }
                     )
                 }
@@ -77,6 +81,23 @@ fun TMDbContent() {
                                 if (mediaType == "movie") {
                                     navController.navigateToMovieDetail(contentId)
                                 }
+                            },
+                            onViewMoreClicked = {
+                                navController.navigateToCreditDetail(personId)
+                            }
+                    )
+                }
+
+                composable(
+                        route = CreditDetail.routeWithArgs,
+                        arguments = CreditDetail.arguments
+                ) { navBackStackEntry ->
+                    val contentId = navBackStackEntry.arguments?.getInt(CreditDetail.contentIdArg)
+                            ?: 0
+                    CreditScreen(
+                            contentId = contentId,
+                            onBackPressed = {
+                                navController.navigateUp()
                             }
                     )
                 }
@@ -99,4 +120,8 @@ private fun NavHostController.navigateToMovieDetail(movieId: Int) {
 
 private fun NavHostController.navigateToPersonDetail(personId: Int) {
     navigate("${PersonDetail.route}/$personId")
+}
+
+private fun NavHostController.navigateToCreditDetail(contentId: Int) {
+    navigate("${CreditDetail.route}/$contentId")
 }

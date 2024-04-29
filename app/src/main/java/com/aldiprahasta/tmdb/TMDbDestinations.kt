@@ -28,3 +28,12 @@ object PersonDetail : TMDbDestinations {
         type = NavType.IntType
     })
 }
+
+object CreditDetail : TMDbDestinations {
+    override val route: String = "credit_detail"
+    const val contentIdArg = "content_id"
+    val routeWithArgs = "$route/{$contentIdArg}"
+    val arguments = listOf(navArgument(contentIdArg) {
+        type = NavType.IntType
+    })
+}

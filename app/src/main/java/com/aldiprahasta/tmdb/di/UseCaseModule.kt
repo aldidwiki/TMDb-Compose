@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.di
 
+import com.aldiprahasta.tmdb.domain.usecase.GetMovieCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
@@ -10,4 +11,5 @@ val useCaseModule = module {
     factoryOf(::GetPopularMovieList)
     factoryOf(::GetMovieDetail)
     factoryOf(::GetPersonDetail)
+    factoryOf(::GetMovieCredits)
 }

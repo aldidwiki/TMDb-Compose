@@ -66,6 +66,7 @@ fun PersonScreen(
         personId: Int,
         onBackPressed: () -> Unit,
         onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
+        onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
@@ -104,7 +105,8 @@ fun PersonScreen(
                     modifier = Modifier.padding(innerPadding),
                     onCreditClicked = { creditId, mediaType ->
                         onCreditClicked(creditId, mediaType)
-                    }
+                    },
+                    onViewMoreClicked = onViewMoreClicked
             )
         }
     }
@@ -114,6 +116,7 @@ fun PersonScreen(
 private fun PersonDetailContent(
         personDomainModel: PersonDomainModel,
         onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
+        onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier
@@ -166,7 +169,8 @@ private fun PersonDetailContent(
                 casts = personDomainModel.credits.take(10),
                 onCastClicked = { creditId, mediaType ->
                     onCreditClicked(creditId, mediaType)
-                }
+                },
+                onViewMoreClicked = onViewMoreClicked
         )
     }
 }
@@ -317,11 +321,13 @@ fun PersonDetailContentPreview() {
                                     imagePath = null,
                                     order = 0,
                                     id = 12345,
-                                    mediaType = null
+                                    mediaType = null,
+                                    releaseDate = null
                             )
                     )
             ),
-            onCreditClicked = { _, _ -> }
+            onCreditClicked = { _, _ -> },
+            onViewMoreClicked = {}
     )
 }
 

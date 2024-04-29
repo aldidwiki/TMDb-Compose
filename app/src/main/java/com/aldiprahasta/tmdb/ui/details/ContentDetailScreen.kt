@@ -61,6 +61,7 @@ fun ContentDetailScreen(
         contentId: Int,
         onBackPressed: () -> Unit,
         onCastClicked: (personId: Int) -> Unit,
+        onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
@@ -135,7 +136,8 @@ fun ContentDetailScreen(
                 },
                 onCastClicked = { personId ->
                     onCastClicked(personId)
-                }
+                },
+                onViewMoreClicked = onViewMoreClicked
         )
     }
 }
@@ -203,6 +205,7 @@ private fun ContentDetail(
         colorPalette: Triple<Color, Color, Color>,
         onSuccessFetch: (movieDetail: MovieDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
+        onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -229,7 +232,8 @@ private fun ContentDetail(
                         casts = movieDetailDomainModel.casts,
                         onCastClicked = { personId, _ ->
                             onCastClicked(personId)
-                        }
+                        },
+                        onViewMoreClicked = onViewMoreClicked
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentDetailInfo(
@@ -279,7 +283,8 @@ fun ContentDetailPreview() {
                                     imagePath = null,
                                     order = 0,
                                     id = 12345,
-                                    mediaType = null
+                                    mediaType = null,
+                                    releaseDate = null
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
@@ -287,7 +292,8 @@ fun ContentDetailPreview() {
                                     imagePath = null,
                                     order = 0,
                                     id = 12345,
-                                    mediaType = null
+                                    mediaType = null,
+                                    releaseDate = null
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
@@ -295,7 +301,8 @@ fun ContentDetailPreview() {
                                     imagePath = null,
                                     order = 0,
                                     id = 12345,
-                                    mediaType = null
+                                    mediaType = null,
+                                    releaseDate = null
                             ),
                             CastDomainModel(
                                     name = "Timothée Chalamet",
@@ -303,7 +310,8 @@ fun ContentDetailPreview() {
                                     imagePath = null,
                                     order = 0,
                                     id = 12345,
-                                    mediaType = null
+                                    mediaType = null,
+                                    releaseDate = null
                             )
                     ),
                     budget = "$1,000,000.00",
@@ -320,6 +328,7 @@ fun ContentDetailPreview() {
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {},
-            onCastClicked = {}
+            onCastClicked = {},
+            onViewMoreClicked = {}
     )
 }

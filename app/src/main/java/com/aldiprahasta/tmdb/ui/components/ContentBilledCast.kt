@@ -26,6 +26,7 @@ fun ContentBilledCast(
         sectionTitle: String,
         casts: List<CastDomainModel>,
         onCastClicked: (contentId: Int, mediaType: String?) -> Unit,
+        onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -51,9 +52,7 @@ fun ContentBilledCast(
                 )
 
                 if (index == casts.take(10).lastIndex) {
-                    TextButton(onClick = {
-
-                    }) {
+                    TextButton(onClick = onViewMoreClicked) {
                         Text(text = "View more")
                         Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
@@ -78,7 +77,8 @@ fun ContentBilledCastPreview() {
                             imagePath = null,
                             order = 0,
                             id = 12345,
-                            mediaType = null
+                            mediaType = null,
+                            releaseDate = null
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -86,7 +86,8 @@ fun ContentBilledCastPreview() {
                             imagePath = null,
                             order = 0,
                             id = 12345,
-                            mediaType = null
+                            mediaType = null,
+                            releaseDate = null
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -94,7 +95,8 @@ fun ContentBilledCastPreview() {
                             imagePath = null,
                             order = 0,
                             id = 12345,
-                            mediaType = null
+                            mediaType = null,
+                            releaseDate = null
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -102,7 +104,8 @@ fun ContentBilledCastPreview() {
                             imagePath = null,
                             order = 0,
                             id = 12345,
-                            mediaType = null
+                            mediaType = null,
+                            releaseDate = null
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -110,8 +113,10 @@ fun ContentBilledCastPreview() {
                             imagePath = null,
                             order = 0,
                             id = 12345,
-                            mediaType = null
+                            mediaType = null,
+                            releaseDate = null
                     )),
-            onCastClicked = { _, _ -> }
+            onCastClicked = { _, _ -> },
+            onViewMoreClicked = {}
     )
 }

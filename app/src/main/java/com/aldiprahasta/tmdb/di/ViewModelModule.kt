@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.di
 
+import com.aldiprahasta.tmdb.ui.credit.CreditViewModel
 import com.aldiprahasta.tmdb.ui.details.ContentDetailViewModel
 import com.aldiprahasta.tmdb.ui.movie.MovieViewModel
 import com.aldiprahasta.tmdb.ui.person.PersonViewModel
@@ -10,4 +11,5 @@ val viewModelModule = module {
     viewModelOf(::MovieViewModel)
     viewModelOf(::ContentDetailViewModel)
     viewModelOf(::PersonViewModel)
+    viewModelOf(::CreditViewModel)
 }

@@ -6,5 +6,6 @@ data class CastDomainModel(
         val characterName: String,
         val imagePath: String?,
         val order: Int,
-        val mediaType: String?
+        val mediaType: String?,
+        val releaseDate: String?
 )

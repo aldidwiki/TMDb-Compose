@@ -65,7 +65,7 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
     )
 }
 
-private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainModel> {
+fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainModel> {
     return casts?.map { castResponseModel ->
         CastDomainModel(
                 name = castResponseModel.name ?: castResponseModel.title ?: "",
@@ -73,7 +73,8 @@ private fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDo
                 imagePath = castResponseModel.profilePath ?: castResponseModel.posterPath ?: "",
                 order = castResponseModel.order,
                 id = castResponseModel.id,
-                mediaType = castResponseModel.mediaType
+                mediaType = castResponseModel.mediaType,
+                releaseDate = castResponseModel.releaseDate
         )
     } ?: emptyList()
 }

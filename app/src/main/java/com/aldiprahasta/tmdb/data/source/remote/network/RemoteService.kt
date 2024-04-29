@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.data.source.remote.network
 
+import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
@@ -16,4 +17,7 @@ interface RemoteService {
 
     @GET("person/{person_id}?append_to_response=external_ids,combined_credits")
     suspend fun getPersonDetail(@Path("person_id") personId: Int): Response<PersonResponse>
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<CreditResponse>
 }
