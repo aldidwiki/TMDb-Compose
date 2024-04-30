@@ -6,11 +6,13 @@ import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
+import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 
 fun MovieResponse.mapMovieResponseToMovieDomainModelList(): List<MovieDomainModel> {
@@ -77,6 +79,17 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainMode
                 releaseDate = castResponseModel.releaseDate?.convertDate()
         )
     } ?: emptyList()
+}
+
+fun TvResponse.mapTvResponseToTvDomainModelList(): List<TvDomainModel> {
+    return tvList.map { tvResponseModel ->
+        TvDomainModel(
+                posterPath = tvResponseModel.posterPath,
+                tvId = tvResponseModel.id,
+                title = tvResponseModel.name ?: "",
+                releaseDate = tvResponseModel.firstAirDate?.convertDate() ?: ""
+        )
+    }
 }
 
 private fun ExternalIdResponse.mapExternalIdResponseToExternalIdDomainModel(): ExternalIdDomainModel {

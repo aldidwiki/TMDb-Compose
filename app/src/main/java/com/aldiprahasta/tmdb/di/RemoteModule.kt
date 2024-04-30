@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.di
 
 import com.aldiprahasta.tmdb.data.source.remote.MovieRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.PersonRemoteDataSource
+import com.aldiprahasta.tmdb.data.source.remote.TvRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,6 +17,7 @@ val remoteModule = module {
 
     singleOf(::MovieRemoteDataSource)
     singleOf(::PersonRemoteDataSource)
+    singleOf(::TvRemoteDataSource)
 }
 
 private fun provideRetrofit(): Retrofit {

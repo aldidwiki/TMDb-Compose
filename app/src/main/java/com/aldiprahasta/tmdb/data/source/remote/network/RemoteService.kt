@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -23,4 +24,7 @@ interface RemoteService {
 
     @GET("person/{person_id}/combined_credits")
     suspend fun getPersonCredits(@Path("person_id") personId: Int): Response<CreditResponse>
+
+    @GET("tv/popular")
+    suspend fun getPopularTv(): Response<TvResponse>
 }

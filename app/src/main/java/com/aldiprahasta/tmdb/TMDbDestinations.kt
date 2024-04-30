@@ -7,6 +7,10 @@ interface TMDbDestinations {
     val route: String
 }
 
+object Home : TMDbDestinations {
+    override val route: String = "home"
+}
+
 object Movie : TMDbDestinations {
     override val route: String = "movie"
 }

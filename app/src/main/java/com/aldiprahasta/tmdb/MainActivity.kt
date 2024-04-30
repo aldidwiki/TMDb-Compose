@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.credit.MediaType
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
-import com.aldiprahasta.tmdb.ui.movie.MovieScreen
+import com.aldiprahasta.tmdb.ui.home.HomeScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.theme.TMDbTheme
 
@@ -40,10 +40,10 @@ fun TMDbContent() {
         ) {
             NavHost(
                     navController = navController,
-                    startDestination = Movie.route
+                    startDestination = Home.route
             ) {
-                composable(route = Movie.route) {
-                    MovieScreen(onMovieClicked = { movieId ->
+                composable(route = Home.route) {
+                    HomeScreen(onMovieClicked = { movieId ->
                         navController.navigateToMovieDetail(movieId)
                     })
                 }
