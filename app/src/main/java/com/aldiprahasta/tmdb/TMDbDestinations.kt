@@ -1,18 +1,29 @@
 package com.aldiprahasta.tmdb
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 interface TMDbDestinations {
     val route: String
-}
-
-object Home : TMDbDestinations {
-    override val route: String = "home"
+    val icon: ImageVector get() = Icons.Filled.Home
+    val label: String get() = "Home"
 }
 
 object Movie : TMDbDestinations {
     override val route: String = "movie"
+    override val icon = Icons.Default.Face
+    override val label = "Movie"
+}
+
+object Tv : TMDbDestinations {
+    override val route: String = "tv"
+    override val icon = Icons.Default.Star
+    override val label = "Tv Show"
 }
 
 object MovieDetail : TMDbDestinations {
