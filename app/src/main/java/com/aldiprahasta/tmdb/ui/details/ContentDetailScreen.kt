@@ -90,57 +90,56 @@ fun ContentDetailScreen(
             ?: palette?.dominantSwatch?.bodyTextColor
             ?: MaterialTheme.colorScheme.onSurface.toArgb()
 
-//    SetStatusBarColor(rgbColorPalette = rgbColor)
-//    Scaffold(
-//            modifier = modifier
-//                    .fillMaxSize()
-//                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-//            topBar = {
-//                TopAppBar(
-//                        colors = TopAppBarDefaults.topAppBarColors(
-//                                containerColor = Color(rgbColor),
-//                                titleContentColor = Color(titleTextColor),
-//                        ),
-//                        scrollBehavior = scrollBehavior,
-//                        title = {},
-//                        navigationIcon = {
-//                            IconButton(onClick = {
-//                                onBackPressed()
-//                            }) {
-//                                Icon(
-//                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                                        contentDescription = "Back Button",
-//                                        tint = Color(titleTextColor)
-//                                )
-//                            }
-//                        },
-//                        actions = {
-//                            IconButton(onClick = {
-//                                context.shareIt("${Constant.SHARE_BASE_URL}/movie/$contentId")
-//                            }) {
-//                                Icon(
-//                                        imageVector = Icons.Default.Share,
-//                                        contentDescription = "Share Button",
-//                                        tint = Color(titleTextColor)
-//                                )
-//                            }
-//                        }
-//                )
-//            }) { innerPadding ->
-//
-//    }
-    ContentDetail(
-            movieDetail = movieDetail,
-            modifier = modifier,
-            colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
-            onSuccessFetch = {
-                posterPath = it.posterPath
-            },
-            onCastClicked = { personId ->
-                onCastClicked(personId)
-            },
-            onViewMoreClicked = onViewMoreClicked
-    )
+    SetStatusBarColor(rgbColorPalette = rgbColor)
+    Scaffold(
+            modifier = modifier
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(rgbColor),
+                                titleContentColor = Color(titleTextColor),
+                        ),
+                        scrollBehavior = scrollBehavior,
+                        title = {},
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                onBackPressed()
+                            }) {
+                                Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Back Button",
+                                        tint = Color(titleTextColor)
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                context.shareIt("${Constant.SHARE_BASE_URL}/movie/$contentId")
+                            }) {
+                                Icon(
+                                        imageVector = Icons.Default.Share,
+                                        contentDescription = "Share Button",
+                                        tint = Color(titleTextColor)
+                                )
+                            }
+                        }
+                )
+            }) { innerPadding ->
+        ContentDetail(
+                movieDetail = movieDetail,
+                modifier = modifier.padding(innerPadding),
+                colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
+                onSuccessFetch = {
+                    posterPath = it.posterPath
+                },
+                onCastClicked = { personId ->
+                    onCastClicked(personId)
+                },
+                onViewMoreClicked = onViewMoreClicked
+        )
+    }
 }
 
 @Composable

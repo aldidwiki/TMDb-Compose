@@ -21,7 +21,7 @@ object Movie : TMDbDestinations {
 }
 
 object Tv : TMDbDestinations {
-    override val route: String = "tv"
+    override val route: String = "tv_show"
     override val icon = Icons.Default.Tv
     override val label = "Tv Show"
 }
