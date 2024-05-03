@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.material.icons)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

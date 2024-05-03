@@ -17,6 +17,7 @@ koin-compose = "3.5.6"
 androidx-navigation = "2.7.7"
 androidx-palette = "1.0.0"
 androidx-constraintlayout = "1.0.1"
+material-icons = "1.6.7"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -44,6 +45,7 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
 androidx-palette = { group = "androidx.palette", name = "palette", version.ref = "androidx-palette" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidx-constraintlayout" }
+androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "material-icons" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

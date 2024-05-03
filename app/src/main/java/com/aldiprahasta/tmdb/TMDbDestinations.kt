@@ -1,9 +1,9 @@
 package com.aldiprahasta.tmdb
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Tv
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -16,13 +16,13 @@ interface TMDbDestinations {
 
 object Movie : TMDbDestinations {
     override val route: String = "movie"
-    override val icon = Icons.Default.Face
+    override val icon = Icons.Default.Movie
     override val label = "Movie"
 }
 
 object Tv : TMDbDestinations {
     override val route: String = "tv"
-    override val icon = Icons.Default.Star
+    override val icon = Icons.Default.Tv
     override val label = "Tv Show"
 }
 
