@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
-import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
@@ -265,7 +265,8 @@ private fun ContentDetail(
 @Composable
 fun ContentDetailPreview() {
     ContentDetail(
-            movieDetail = UiState.Success(data = ContentDetailDomainModel(title = "Dune: Part Two",
+            movieDetail = UiState.Success(data = ContentDetailDomainModel(
+                    title = "Dune: Part Two",
                     posterPath = null,
                     releaseDate = "27 February 2024",
                     runtime = "2h 27m",
@@ -324,7 +325,9 @@ fun ContentDetailPreview() {
                             imdbId = "",
                             twitterId = ""
                     ),
-                    videos = emptyList()
+                    videos = emptyList(),
+                    type = "",
+                    networks = emptyList()
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {},

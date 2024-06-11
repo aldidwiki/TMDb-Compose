@@ -21,7 +21,7 @@ data class TvDetailResponse(
         val languages: List<String>?,
 
         @field:SerializedName("networks")
-        val networks: List<NetworksItem?>?,
+        val networks: List<NetworksItem>?,
 
         @field:SerializedName("type")
         val type: String?,

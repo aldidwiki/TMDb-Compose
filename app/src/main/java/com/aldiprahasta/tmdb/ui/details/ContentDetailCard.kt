@@ -38,8 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
@@ -323,7 +323,9 @@ fun ContentDetailCardPreview() {
                             imdbId = "",
                             twitterId = ""
                     ),
-                    videos = emptyList()
+                    videos = emptyList(),
+                    type = "",
+                    networks = emptyList(),
             ),
             colorPalette = Triple(Color.White, Color.Black, Color.Black)
     )

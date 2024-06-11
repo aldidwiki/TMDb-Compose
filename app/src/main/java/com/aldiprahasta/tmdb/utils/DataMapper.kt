@@ -6,11 +6,14 @@ import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItem
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
-import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
+import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
@@ -47,7 +50,9 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
             status = status ?: "",
             externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
-            videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList()
+            videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
+            networks = emptyList(),
+            type = ""
     )
 }
 
@@ -88,6 +93,40 @@ fun TvResponse.mapTvResponseToTvDomainModelList(): List<TvDomainModel> {
                 tvId = tvResponseModel.id,
                 title = tvResponseModel.name ?: "",
                 releaseDate = tvResponseModel.firstAirDate?.convertDate() ?: ""
+        )
+    }
+}
+
+fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDetailDomainModel =
+        ContentDetailDomainModel(
+                title = name ?: "",
+                posterPath = posterPath,
+                releaseDate = firstAirDate?.convertDate() ?: "",
+                runtime = "",
+                tagline = tagline ?: "",
+                overview = overview ?: "",
+                id = id,
+                voteAverage = voteAverage ?: 0.0,
+                genres = genres.convertGenreToSingleText(),
+                certification = "",
+                backdropPath = backdropPath,
+                budget = "",
+                revenue = "",
+                originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
+                status = status ?: "",
+                externalId = ExternalIdDomainModel(instragramId = null, facebookId = null, imdbId = null, twitterId = null),
+                casts = emptyList(),
+                videos = emptyList(),
+                networks = networks?.mapNetworkItemsToNetworkDomainModel() ?: emptyList(),
+                type = type ?: ""
+        )
+
+private fun List<NetworksItem>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
+    return map { networksItem ->
+        NetworkDomainModel(
+                networkId = networksItem.id,
+                networkLogoPath = networksItem.logoPath,
+                networkName = networksItem.name ?: ""
         )
     }
 }

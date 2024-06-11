@@ -6,6 +6,7 @@ import com.aldiprahasta.tmdb.domain.usecase.GetPersonCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
+import com.aldiprahasta.tmdb.domain.usecase.GetTvDetail
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -17,6 +18,7 @@ val useCaseModule = module {
     factoryOf(::GetMovieCredits)
     factoryOf(::GetPersonCredits)
     factoryOf(::GetPopularTv)
+    factoryOf(::GetTvDetail)
 }
 
 val useCaseWrapperModule = module {

@@ -18,5 +18,7 @@ data class ContentDetailDomainModel(
         val status: String,
         val externalId: ExternalIdDomainModel,
         val casts: List<CastDomainModel>,
-        val videos: List<VideoDomainModel>
+        val videos: List<VideoDomainModel>,
+        val type: String,
+        val networks: List<NetworkDomainModel>
 )
