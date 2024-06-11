@@ -7,7 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.aldiprahasta.tmdb.data.source.remote.response.movie.GenresItem
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import java.sql.Date
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -43,7 +43,7 @@ fun Double?.formatVoteAverage(): Int {
     return format.roundToInt()
 }
 
-fun List<GenresItem>?.convertGenreToSingleText(): String {
+fun List<GenreResponse>?.convertGenreToSingleText(): String {
     val outputGenre = StringBuilder()
     this?.sortedBy { it.name }?.forEachIndexed { index, genresItem ->
         outputGenre.append(genresItem.name)

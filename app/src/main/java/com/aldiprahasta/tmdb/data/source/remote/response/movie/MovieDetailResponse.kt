@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.data.source.remote.response.movie
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ReleaseDatesResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.google.gson.annotations.SerializedName
@@ -38,7 +39,7 @@ data class MovieDetailResponse(
         val releaseDate: String?,
 
         @field:SerializedName("genres")
-        val genres: List<GenresItem>?,
+        val genres: List<GenreResponse>?,
 
         @field:SerializedName("popularity")
         val popularity: Double?,
@@ -69,14 +70,6 @@ data class MovieDetailResponse(
 
         @field:SerializedName("videos")
         val video: VideoResponse?
-)
-
-data class GenresItem(
-        @field:SerializedName("name")
-        val name: String?,
-
-        @field:SerializedName("id")
-        val id: Int
 )
 
 data class SpokenLanguagesItem(
