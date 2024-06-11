@@ -42,7 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
-import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
@@ -201,9 +201,9 @@ private fun SetStatusBarColor(rgbColorPalette: Int) {
 
 @Composable
 private fun ContentDetail(
-        movieDetail: UiState<MovieDetailDomainModel>,
+        movieDetail: UiState<ContentDetailDomainModel>,
         colorPalette: Triple<Color, Color, Color>,
-        onSuccessFetch: (movieDetail: MovieDetailDomainModel) -> Unit,
+        onSuccessFetch: (movieDetail: ContentDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
@@ -223,7 +223,7 @@ private fun ContentDetail(
                     .verticalScroll(rememberScrollState()))
             {
                 ContentDetailCard(
-                        movieDetailDomainModel = movieDetailDomainModel,
+                        contentDetailDomainModel = movieDetailDomainModel,
                         colorPalette = colorPalette
                 )
                 Spacer(modifier = Modifier.size(20.dp))
@@ -265,7 +265,7 @@ private fun ContentDetail(
 @Composable
 fun ContentDetailPreview() {
     ContentDetail(
-            movieDetail = UiState.Success(data = MovieDetailDomainModel(title = "Dune: Part Two",
+            movieDetail = UiState.Success(data = ContentDetailDomainModel(title = "Dune: Part Two",
                     posterPath = null,
                     releaseDate = "27 February 2024",
                     runtime = "2h 27m",

@@ -2,7 +2,7 @@ package com.aldiprahasta.tmdb.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieDetail
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,7 +19,7 @@ class ContentDetailViewModel(getMovieDetail: GetMovieDetail) : ViewModel() {
         id.value = contentId
     }
 
-    val movieDetail: StateFlow<UiState<MovieDetailDomainModel>> = id.flatMapLatest { contentId ->
+    val movieDetail: StateFlow<UiState<ContentDetailDomainModel>> = id.flatMapLatest { contentId ->
         getMovieDetail(contentId)
     }.stateIn(
             viewModelScope,

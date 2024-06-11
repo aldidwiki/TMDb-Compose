@@ -1,6 +1,6 @@
 package com.aldiprahasta.tmdb.domain.model
 
-data class MovieDetailDomainModel(
+data class ContentDetailDomainModel(
         val title: String,
         val posterPath: String?,
         val releaseDate: String,

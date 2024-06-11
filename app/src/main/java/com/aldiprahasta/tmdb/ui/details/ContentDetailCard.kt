@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
-import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
@@ -49,7 +49,7 @@ import com.aldiprahasta.tmdb.utils.formatVoteAverage
 
 @Composable
 fun ContentDetailCard(
-        movieDetailDomainModel: MovieDetailDomainModel,
+        contentDetailDomainModel: ContentDetailDomainModel,
         colorPalette: Triple<Color, Color, Color>,
         modifier: Modifier = Modifier
 ) {
@@ -59,20 +59,20 @@ fun ContentDetailCard(
             modifier = modifier.fillMaxWidth()
     ) {
         Column {
-            movieDetailDomainModel.backdropPath?.let { path ->
+            contentDetailDomainModel.backdropPath?.let { path ->
                 ImageLoaderBackdrop(
                         imagePath = path,
                         imageType = ImageType.BACKDROP
                 )
             }
             ContentDetailPosterWithInfo(
-                    posterPath = movieDetailDomainModel.posterPath,
-                    title = movieDetailDomainModel.title,
-                    releaseDate = movieDetailDomainModel.releaseDate,
-                    runtime = movieDetailDomainModel.runtime,
-                    tagline = movieDetailDomainModel.tagline,
-                    genres = movieDetailDomainModel.genres,
-                    certification = movieDetailDomainModel.certification,
+                    posterPath = contentDetailDomainModel.posterPath,
+                    title = contentDetailDomainModel.title,
+                    releaseDate = contentDetailDomainModel.releaseDate,
+                    runtime = contentDetailDomainModel.runtime,
+                    tagline = contentDetailDomainModel.tagline,
+                    genres = contentDetailDomainModel.genres,
+                    certification = contentDetailDomainModel.certification,
                     colorPalette = colorPalette,
                     modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -80,14 +80,14 @@ fun ContentDetailCard(
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentDetailUserScoreWithTrailer(
-                    voteAverage = movieDetailDomainModel.voteAverage,
+                    voteAverage = contentDetailDomainModel.voteAverage,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     colorPalette = colorPalette,
-                    videos = movieDetailDomainModel.videos
+                    videos = contentDetailDomainModel.videos
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentOverview(
-                    overview = movieDetailDomainModel.overview,
+                    overview = contentDetailDomainModel.overview,
                     colorPalette = colorPalette,
                     modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -300,7 +300,7 @@ private fun ContentDetailPosterWithInfo(
 @Composable
 fun ContentDetailCardPreview() {
     ContentDetailCard(
-            movieDetailDomainModel = MovieDetailDomainModel(
+            contentDetailDomainModel = ContentDetailDomainModel(
                     title = "Dune: Part Two",
                     posterPath = null,
                     releaseDate = "27 February 2024",

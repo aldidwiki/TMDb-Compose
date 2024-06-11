@@ -9,7 +9,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
-import com.aldiprahasta.tmdb.domain.model.MovieDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
@@ -26,8 +26,8 @@ fun MovieResponse.mapMovieResponseToMovieDomainModelList(): List<MovieDomainMode
     }
 }
 
-fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): MovieDetailDomainModel {
-    return MovieDetailDomainModel(
+fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): ContentDetailDomainModel {
+    return ContentDetailDomainModel(
             id = id,
             title = title ?: "",
             posterPath = posterPath,
