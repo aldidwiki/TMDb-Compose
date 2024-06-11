@@ -58,14 +58,14 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentDetailScreen(
-        contentId: Int,
+        contentId: Pair<Int, String>,
         onBackPressed: () -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
-    viewModel.setId(contentId)
+    viewModel.setId(contentId.first)
     val movieDetail by viewModel.movieDetail.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())

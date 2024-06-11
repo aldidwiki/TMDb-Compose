@@ -30,13 +30,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aldiprahasta.tmdb.ContentDetail
 import com.aldiprahasta.tmdb.CreditDetail
 import com.aldiprahasta.tmdb.Movie
-import com.aldiprahasta.tmdb.MovieDetail
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.Tv
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
-import com.aldiprahasta.tmdb.ui.credit.MediaType
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
@@ -128,7 +128,7 @@ fun TMDbNavHostController(
     ) {
         composable(route = Movie.route) {
             MovieScreen(onMovieClicked = { movieId ->
-                navController.navigateToMovieDetail(movieId)
+                navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
             })
         }
 
@@ -139,12 +139,15 @@ fun TMDbNavHostController(
         }
 
         composable(
-                route = MovieDetail.routeWithArgs,
-                arguments = MovieDetail.arguments
+                route = ContentDetail.routeWithArgs,
+                arguments = ContentDetail.arguments
         ) { navBackStateEntry ->
-            val movieId = navBackStateEntry.arguments?.getInt(MovieDetail.movieIdArg) ?: 0
+            val contentId = navBackStateEntry.arguments?.getInt(ContentDetail.contentIdArg) ?: 0
+            val contentType = navBackStateEntry.arguments?.getString(ContentDetail.contentTypeArg)
+                    ?: ""
+
             ContentDetailScreen(
-                    contentId = movieId,
+                    contentId = Pair(contentId, contentType),
                     onBackPressed = {
                         navController.navigateUp()
                     },
@@ -152,7 +155,7 @@ fun TMDbNavHostController(
                         navController.navigateToPersonDetail(personId)
                     },
                     onViewMoreClicked = {
-                        navController.navigateToCreditDetail(movieId, MediaType.MOVIE_TYPE.name)
+                        navController.navigateToCreditDetail(contentId, contentType)
                     }
             )
         }
@@ -170,7 +173,7 @@ fun TMDbNavHostController(
                     },
                     onCreditClicked = { contentId, mediaType ->
                         if (mediaType == "movie") {
-                            navController.navigateToMovieDetail(contentId)
+                            navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
                         }
                     },
                     onViewMoreClicked = {
@@ -195,7 +198,7 @@ fun TMDbNavHostController(
                     onItemClicked = { id ->
                         when (contentType) {
                             MediaType.MOVIE_TYPE.name -> navController.navigateToPersonDetail(id) // movie credit consist people
-                            MediaType.PERSON_TYPE.name -> navController.navigateToMovieDetail(id) // reverse, person credit consist movie/tv
+                            MediaType.PERSON_TYPE.name -> navController.navigateToContentDetail(id, MediaType.MOVIE_TYPE.name) // reverse, person credit consist movie/tv
                         }
                     }
             )
@@ -222,8 +225,8 @@ private fun NavHostController.navigateSingleTopTo(route: String) = navigate(rout
     restoreState = true
 }
 
-private fun NavHostController.navigateToMovieDetail(movieId: Int) {
-    navigate("${MovieDetail.route}/$movieId")
+private fun NavHostController.navigateToContentDetail(contentId: Int, contentType: String) {
+    navigate("${ContentDetail.route}/$contentId/$contentType")
 }
 
 private fun NavHostController.navigateToPersonDetail(personId: Int) {

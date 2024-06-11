@@ -26,13 +26,19 @@ object Tv : TMDbDestinations {
     override val label = "Tv Show"
 }
 
-object MovieDetail : TMDbDestinations {
-    override val route: String = "movie_detail"
-    const val movieIdArg = "movie_id"
-    val routeWithArgs = "$route/{$movieIdArg}"
-    val arguments = listOf(navArgument(movieIdArg) {
-        type = NavType.IntType
-    })
+object ContentDetail : TMDbDestinations {
+    override val route: String = "content_detail"
+    const val contentIdArg = "content_id"
+    const val contentTypeArg = "content_type"
+    val routeWithArgs = "$route/{$contentIdArg}/{$contentTypeArg}"
+    val arguments = listOf(
+            navArgument(contentIdArg) {
+                type = NavType.IntType
+            },
+            navArgument(contentTypeArg) {
+                type = NavType.StringType
+            }
+    )
 }
 
 object PersonDetail : TMDbDestinations {

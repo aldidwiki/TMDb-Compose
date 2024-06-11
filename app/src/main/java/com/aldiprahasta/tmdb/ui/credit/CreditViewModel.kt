@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +30,4 @@ class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
             SharingStarted.WhileSubscribed(5000),
             UiState.Loading
     )
-}
-
-enum class MediaType {
-    PERSON_TYPE,
-    MOVIE_TYPE,
-    TV_TYPE
 }
