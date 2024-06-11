@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.details
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -134,7 +136,13 @@ private fun ContentDetailUserScoreWithTrailer(
     ) {
         val uriHandler = LocalUriHandler.current
         val sheetState = rememberModalBottomSheetState()
+        val context = LocalContext.current
         var showBottomSheet by remember { mutableStateOf(false) }
+
+        val trailers = videos.asSequence().filter { model ->
+            model.type.equals("trailer", ignoreCase = true) &&
+                    model.site.equals("youtube", ignoreCase = true)
+        }.sortedBy { it.name }.toList()
 
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -144,12 +152,6 @@ private fun ContentDetailUserScoreWithTrailer(
                     sheetState = sheetState,
                     modifier = Modifier.height(250.dp)
             ) {
-                val trailers = videos.asSequence().filter { model ->
-                    model.type.equals("trailer", ignoreCase = true) &&
-                            model.site.equals("youtube", ignoreCase = true) &&
-                            model.isOfficial
-                }.sortedBy { it.name }.toList()
-
                 Text(
                         text = "Trailers",
                         style = MaterialTheme.typography.titleLarge,
@@ -197,7 +199,19 @@ private fun ContentDetailUserScoreWithTrailer(
                 color = colorPalette.second
         )
         TextButton(onClick = {
-            showBottomSheet = true
+            when {
+                trailers.isEmpty() -> {
+                    Toast.makeText(context, "Sorry, trailer not available", Toast.LENGTH_SHORT).show()
+                }
+
+                trailers.size == 1 -> {
+                    uriHandler.openUri(Constant.YOUTUBE_BASE_URL + trailers.first().key)
+                }
+
+                else -> {
+                    showBottomSheet = true
+                }
+            }
         }) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -256,17 +270,19 @@ private fun ContentDetailPosterWithInfo(
                     color = colorPalette.third
             )
             Row {
-                Text(
-                        text = runtime,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = colorPalette.third
-                )
-                Text(
-                        text = "\u2022",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        color = colorPalette.third
-                )
+                if (runtime.isNotEmpty()) {
+                    Text(
+                            text = runtime,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = colorPalette.third
+                    )
+                    Text(
+                            text = "\u2022",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            color = colorPalette.third
+                    )
+                }
                 Text(
                         text = certification,
                         style = MaterialTheme.typography.bodySmall,

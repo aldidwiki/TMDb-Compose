@@ -29,6 +29,6 @@ interface RemoteService {
     @GET("tv/popular")
     suspend fun getPopularTv(): Response<TvResponse>
 
-    @GET("tv/{tv_id}")
+    @GET("tv/{tv_id}?append_to_response=videos")
     suspend fun getTvDetail(@Path("tv_id") tvId: Int): Response<TvDetailResponse>
 }

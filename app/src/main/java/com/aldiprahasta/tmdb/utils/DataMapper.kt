@@ -116,7 +116,7 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 status = status ?: "",
                 externalId = ExternalIdDomainModel(instragramId = null, facebookId = null, imdbId = null, twitterId = null),
                 casts = emptyList(),
-                videos = emptyList(),
+                videos = videos?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
                 networks = networks?.mapNetworkItemsToNetworkDomainModel(),
                 type = type
         )

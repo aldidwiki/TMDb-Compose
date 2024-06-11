@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.tv
 
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.google.gson.annotations.SerializedName
 
 data class TvDetailResponse(
@@ -66,7 +67,10 @@ data class TvDetailResponse(
         val homepage: String?,
 
         @field:SerializedName("status")
-        val status: String?
+        val status: String?,
+
+        @field:SerializedName("videos")
+        val videos: VideoResponse?
 )
 
 data class NetworksItem(
