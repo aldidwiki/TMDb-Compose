@@ -114,7 +114,7 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 revenue = null,
                 originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
                 status = status ?: "",
-                externalId = ExternalIdDomainModel(instragramId = null, facebookId = null, imdbId = null, twitterId = null),
+                externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
                 casts = emptyList(),
                 videos = videos?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
                 networks = networks?.mapNetworkItemsToNetworkDomainModel(),
