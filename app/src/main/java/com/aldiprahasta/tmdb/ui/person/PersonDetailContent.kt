@@ -185,10 +185,10 @@ private fun PersonPersonalInfo(
         gender: String,
         modifier: Modifier = Modifier
 ) {
-    val birthDayText = if (deathDay.isEmpty()) {
+    val birthDayText = if (deathDay.isEmpty() && birthDay.isNotEmpty()) {
         "$birthDay ($age years old)"
     } else {
-        birthDay
+        birthDay.ifEmpty { "-" }
     }
 
     Column(modifier = modifier.fillMaxWidth()) {

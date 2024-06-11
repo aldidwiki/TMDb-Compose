@@ -60,7 +60,7 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             gender = gender?.formatGender() ?: "-",
             biography = biography ?: "-",
             knownFor = knownForDepartment ?: "-",
-            age = getAge(birthday ?: "", deathday),
+            age = birthday?.let { getAge(it, deathday) } ?: "-",
             placeOfBirth = placeOfBirth ?: "-",
             externalIds = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
             credits = combinedCredits?.mapCreditResponseToCastDomainModelList() ?: emptyList()
