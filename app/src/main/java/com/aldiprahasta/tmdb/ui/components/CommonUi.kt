@@ -81,5 +81,6 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 enum class ImageType(val value: String) {
     POSTER("w500"),
     BACKDROP("w780"),
-    PROFILE("h632")
+    PROFILE("h632"),
+    LOGO("w185")
 }

@@ -12,13 +12,13 @@ data class ContentDetailDomainModel(
         val genres: String,
         val certification: String,
         val backdropPath: String?,
-        val budget: String,
-        val revenue: String,
+        val budget: String?,
+        val revenue: String?,
         val originalLanguage: String,
         val status: String,
         val externalId: ExternalIdDomainModel,
         val casts: List<CastDomainModel>,
         val videos: List<VideoDomainModel>,
-        val type: String,
-        val networks: List<NetworkDomainModel>
+        val type: String?,
+        val networks: List<NetworkDomainModel>?
 )

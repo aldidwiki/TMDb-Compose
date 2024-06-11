@@ -67,7 +67,7 @@ fun ContentDetailScreen(
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
     viewModel.setId(contentParam)
-    val movieDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
+    val contentDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -135,7 +135,7 @@ fun ContentDetailScreen(
                 )
             }) { innerPadding ->
         ContentDetail(
-                movieDetail = movieDetail,
+                contentDetail = contentDetail,
                 modifier = modifier.padding(innerPadding),
                 colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
                 onSuccessFetch = {
@@ -208,35 +208,35 @@ private fun SetStatusBarColor(rgbColorPalette: Int) {
 
 @Composable
 private fun ContentDetail(
-        movieDetail: UiState<ContentDetailDomainModel>,
+        contentDetail: UiState<ContentDetailDomainModel>,
         colorPalette: Triple<Color, Color, Color>,
-        onSuccessFetch: (movieDetail: ContentDetailDomainModel) -> Unit,
+        onSuccessFetch: (contentDetail: ContentDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        movieDetail.doIfLoading {
+        contentDetail.doIfLoading {
             LoadingScreen()
         }
 
-        movieDetail.doIfError { throwable, _ ->
+        contentDetail.doIfError { throwable, _ ->
             ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
         }
 
-        movieDetail.doIfSuccess { movieDetailDomainModel ->
+        contentDetail.doIfSuccess { contentDetailDomainModel ->
             Column(modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()))
             {
                 ContentDetailCard(
-                        contentDetailDomainModel = movieDetailDomainModel,
+                        contentDetailDomainModel = contentDetailDomainModel,
                         colorPalette = colorPalette
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentBilledCast(
                         sectionTitle = "Top Billed Cast",
-                        casts = movieDetailDomainModel.casts,
+                        casts = contentDetailDomainModel.casts,
                         onCastClicked = { personId, _ ->
                             onCastClicked(personId)
                         },
@@ -244,26 +244,28 @@ private fun ContentDetail(
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentDetailInfo(
-                        status = movieDetailDomainModel.status,
-                        originalLanguage = movieDetailDomainModel.originalLanguage,
-                        budget = movieDetailDomainModel.budget,
-                        revenue = movieDetailDomainModel.revenue,
+                        status = contentDetailDomainModel.status,
+                        originalLanguage = contentDetailDomainModel.originalLanguage,
+                        budget = contentDetailDomainModel.budget,
+                        revenue = contentDetailDomainModel.revenue,
+                        networks = contentDetailDomainModel.networks,
+                        tvType = contentDetailDomainModel.type,
                         modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentDetailExternal(
-                        instagramId = movieDetailDomainModel.externalId.instragramId,
-                        facebookId = movieDetailDomainModel.externalId.facebookId,
-                        twitterId = movieDetailDomainModel.externalId.twitterId,
-                        imdbPair = Pair(true, movieDetailDomainModel.externalId.imdbId),
-                        googleId = movieDetailDomainModel.title,
+                        instagramId = contentDetailDomainModel.externalId.instragramId,
+                        facebookId = contentDetailDomainModel.externalId.facebookId,
+                        twitterId = contentDetailDomainModel.externalId.twitterId,
+                        imdbPair = Pair(true, contentDetailDomainModel.externalId.imdbId),
+                        googleId = contentDetailDomainModel.title,
                         modifier = Modifier
                                 .padding(horizontal = 16.dp)
                                 .padding(bottom = 20.dp)
                 )
             }
 
-            onSuccessFetch(movieDetailDomainModel)
+            onSuccessFetch(contentDetailDomainModel)
         }
     }
 }
@@ -272,7 +274,7 @@ private fun ContentDetail(
 @Composable
 fun ContentDetailPreview() {
     ContentDetail(
-            movieDetail = UiState.Success(data = ContentDetailDomainModel(
+            contentDetail = UiState.Success(data = ContentDetailDomainModel(
                     title = "Dune: Part Two",
                     posterPath = null,
                     releaseDate = "27 February 2024",
@@ -333,8 +335,8 @@ fun ContentDetailPreview() {
                             twitterId = ""
                     ),
                     videos = emptyList(),
-                    type = "",
-                    networks = emptyList()
+                    type = null,
+                    networks = null
             )),
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {},

@@ -36,11 +36,11 @@ import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.Tv
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
-import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
+import com.aldiprahasta.tmdb.utils.MediaType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,7 +134,7 @@ fun TMDbNavHostController(
 
         composable(route = Tv.route) {
             TvScreen(onItemClicked = { tvId ->
-                // TODO
+                navController.navigateToContentDetail(tvId, MediaType.TV_TYPE.name)
             })
         }
 

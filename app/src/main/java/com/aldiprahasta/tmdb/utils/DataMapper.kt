@@ -51,8 +51,8 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             status = status ?: "",
             externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
             videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
-            networks = emptyList(),
-            type = ""
+            networks = null,
+            type = null
     )
 }
 
@@ -110,15 +110,15 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 genres = genres.convertGenreToSingleText(),
                 certification = "",
                 backdropPath = backdropPath,
-                budget = "",
-                revenue = "",
+                budget = null,
+                revenue = null,
                 originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
                 status = status ?: "",
                 externalId = ExternalIdDomainModel(instragramId = null, facebookId = null, imdbId = null, twitterId = null),
                 casts = emptyList(),
                 videos = emptyList(),
-                networks = networks?.mapNetworkItemsToNetworkDomainModel() ?: emptyList(),
-                type = type ?: ""
+                networks = networks?.mapNetworkItemsToNetworkDomainModel(),
+                type = type
         )
 
 private fun List<NetworksItem>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
