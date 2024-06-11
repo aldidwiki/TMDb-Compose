@@ -147,7 +147,7 @@ fun TMDbNavHostController(
                     ?: ""
 
             ContentDetailScreen(
-                    contentId = Pair(contentId, contentType),
+                    contentParam = Pair(contentId, contentType),
                     onBackPressed = {
                         navController.navigateUp()
                     },

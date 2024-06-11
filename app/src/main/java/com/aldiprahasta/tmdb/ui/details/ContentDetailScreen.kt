@@ -47,6 +47,7 @@ import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.utils.Constant
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
@@ -58,15 +59,15 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentDetailScreen(
-        contentId: Pair<Int, String>,
+        contentParam: Pair<Int, String>,
         onBackPressed: () -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
-    viewModel.setId(contentId.first)
-    val movieDetail by viewModel.movieDetail.collectAsStateWithLifecycle()
+    viewModel.setId(contentParam)
+    val movieDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -116,7 +117,13 @@ fun ContentDetailScreen(
                         },
                         actions = {
                             IconButton(onClick = {
-                                context.shareIt("${Constant.SHARE_BASE_URL}/movie/$contentId")
+                                val shareUrl = if (contentParam.second == MediaType.MOVIE_TYPE.name) {
+                                    "${Constant.SHARE_BASE_URL}/movie/${contentParam.first}"
+                                } else {
+                                    "${Constant.SHARE_BASE_URL}/tv/${contentParam.first}"
+                                }
+
+                                context.shareIt(shareUrl)
                             }) {
                                 Icon(
                                         imageVector = Icons.Default.Share,
