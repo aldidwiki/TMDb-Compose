@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.person
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -91,23 +92,28 @@ fun PersonScreen(
                 )
             }
     ) { innerPadding ->
-        personData.doIfLoading {
-            LoadingScreen()
-        }
+        AnimatedContent(
+                targetState = personData,
+                label = "Animated Content",
+                modifier = Modifier.padding(innerPadding)
+        ) { targetState ->
+            targetState.doIfLoading {
+                LoadingScreen()
+            }
 
-        personData.doIfError { throwable, _ ->
-            ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
-        }
+            targetState.doIfError { throwable, _ ->
+                ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+            }
 
-        personData.doIfSuccess { personDetail ->
-            PersonDetailContent(
-                    personDomainModel = personDetail,
-                    modifier = Modifier.padding(innerPadding),
-                    onCreditClicked = { creditId, mediaType ->
-                        onCreditClicked(creditId, mediaType)
-                    },
-                    onViewMoreClicked = onViewMoreClicked
-            )
+            targetState.doIfSuccess { personDetail ->
+                PersonDetailContent(
+                        personDomainModel = personDetail,
+                        onCreditClicked = { creditId, mediaType ->
+                            onCreditClicked(creditId, mediaType)
+                        },
+                        onViewMoreClicked = onViewMoreClicked
+                )
+            }
         }
     }
 }

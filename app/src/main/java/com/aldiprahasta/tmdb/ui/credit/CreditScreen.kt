@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.credit
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -70,20 +71,25 @@ fun CreditScreen(
                         scrollBehavior = scrollBehavior
                 )
             }) { innerPadding ->
-        creditData.doIfLoading {
-            LoadingScreen()
-        }
+        AnimatedContent(
+                targetState = creditData,
+                label = "Animated Content",
+                modifier = Modifier.padding(innerPadding)
+        ) { targetState ->
+            targetState.doIfLoading {
+                LoadingScreen()
+            }
 
-        creditData.doIfError { throwable, _ ->
-            ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
-        }
+            targetState.doIfError { throwable, _ ->
+                ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+            }
 
-        creditData.doIfSuccess { casts ->
-            CreditContent(
-                    casts = casts,
-                    modifier = Modifier.padding(innerPadding),
-                    onItemClicked = onItemClicked
-            )
+            targetState.doIfSuccess { casts ->
+                CreditContent(
+                        casts = casts,
+                        onItemClicked = onItemClicked
+                )
+            }
         }
     }
 }

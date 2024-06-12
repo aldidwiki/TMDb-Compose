@@ -1,6 +1,6 @@
 package com.aldiprahasta.tmdb.ui.movie
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -42,8 +42,12 @@ fun MovieContent(
         onItemClicked: (movieId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        popularMovieList.doIfSuccess { movieList ->
+    AnimatedContent(
+            targetState = popularMovieList,
+            label = "Animated Content",
+            modifier = modifier.fillMaxSize()
+    ) { targetState ->
+        targetState.doIfSuccess { movieList ->
             LazyColumn(contentPadding = PaddingValues(10.dp)) {
                 itemsIndexed(movieList) { index, movie ->
                     ContentItem(
@@ -61,11 +65,11 @@ fun MovieContent(
             }
         }
 
-        popularMovieList.doIfError { _, _ ->
+        targetState.doIfError { _, _ ->
             ErrorScreen(errorMessage = "No Movies Found")
         }
 
-        popularMovieList.doIfLoading {
+        targetState.doIfLoading {
             LoadingScreen()
         }
     }

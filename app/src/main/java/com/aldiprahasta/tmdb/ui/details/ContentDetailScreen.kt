@@ -3,8 +3,8 @@ package com.aldiprahasta.tmdb.ui.details
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -215,16 +215,20 @@ private fun ContentDetail(
         onViewMoreClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        contentDetail.doIfLoading {
+    AnimatedContent(
+            targetState = contentDetail,
+            label = "Animated Content",
+            modifier = modifier.fillMaxSize()
+    ) { targetState ->
+        targetState.doIfLoading {
             LoadingScreen()
         }
 
-        contentDetail.doIfError { throwable, _ ->
+        targetState.doIfError { throwable, _ ->
             ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
         }
 
-        contentDetail.doIfSuccess { contentDetailDomainModel ->
+        targetState.doIfSuccess { contentDetailDomainModel ->
             Column(modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()))

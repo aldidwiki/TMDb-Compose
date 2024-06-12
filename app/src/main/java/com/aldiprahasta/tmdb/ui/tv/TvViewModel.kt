@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
 import com.aldiprahasta.tmdb.utils.UiState
+import com.aldiprahasta.tmdb.utils.delayAfterLoading
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class TvViewModel(getPopularTv: GetPopularTv) : ViewModel() {
     val popularTv: StateFlow<UiState<List<TvDomainModel>>> = getPopularTv()
+            .delayAfterLoading(300L)
             .stateIn(
                     viewModelScope,
                     SharingStarted.WhileSubscribed(5000),

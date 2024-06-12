@@ -1,6 +1,6 @@
 package com.aldiprahasta.tmdb.ui.tv
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,16 +30,20 @@ fun TvScreen(
     val tvViewModel: TvViewModel = koinViewModel()
     val tvData by tvViewModel.popularTv.collectAsStateWithLifecycle()
 
-    Box(modifier = modifier.fillMaxWidth()) {
-        tvData.doIfLoading {
+    AnimatedContent(
+            targetState = tvData,
+            label = "Animated Content",
+            modifier = modifier.fillMaxWidth()
+    ) { targetState ->
+        targetState.doIfLoading {
             LoadingScreen()
         }
 
-        tvData.doIfError { throwable, _ ->
+        targetState.doIfError { throwable, _ ->
             ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
         }
 
-        tvData.doIfSuccess { popularTvList ->
+        targetState.doIfSuccess { popularTvList ->
             TvContent(
                     popularTvList = popularTvList,
                     onItemClicked = onItemClicked

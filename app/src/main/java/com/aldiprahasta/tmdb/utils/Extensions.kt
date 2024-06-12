@@ -8,6 +8,9 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 import java.sql.Date
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -106,4 +109,8 @@ suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
 
     val result = (loader.execute(request) as SuccessResult).drawable
     return (result as BitmapDrawable).bitmap
+}
+
+fun <T> Flow<UiState<T>>.delayAfterLoading(timeMillis: Long): Flow<UiState<T>> = onEach { state ->
+    if (state != UiState.Loading) delay(timeMillis)
 }
