@@ -75,7 +75,7 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
 }
 
 fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType): List<CastDomainModel> {
-    return casts?.map { castResponseModel ->
+    return casts?.sortedByDescending { it.releaseDate }?.map { castResponseModel ->
         when (mediaType) {
             MediaType.MOVIE_TYPE -> CastDomainModel(
                     name = castResponseModel.name ?: "",
