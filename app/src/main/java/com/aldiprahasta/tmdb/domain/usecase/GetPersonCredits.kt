@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.domain.usecase
 
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.repository.PersonRepository
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.mapCreditResponseToCastDomainModelList
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ class GetPersonCredits(private val personRepository: PersonRepository) {
                     )
 
                     is UiState.Success -> UiState.Success(
-                            state.data.mapCreditResponseToCastDomainModelList()
+                            state.data.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
                     )
                 }
             }

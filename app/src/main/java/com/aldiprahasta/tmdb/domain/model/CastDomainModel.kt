@@ -7,5 +7,6 @@ data class CastDomainModel(
         val imagePath: String?,
         val order: Int,
         val mediaType: String?,
-        val releaseDate: String?
+        val releaseDate: String?,
+        val totalEpisodeCount: Int?
 )

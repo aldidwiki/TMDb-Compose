@@ -41,7 +41,8 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             voteAverage = voteAverage ?: 0.0,
             genres = genres.convertGenreToSingleText(),
             backdropPath = backdropPath,
-            casts = credits?.mapCreditResponseToCastDomainModelList() ?: emptyList(),
+            casts = credits?.mapCreditResponseToCastDomainModelList(MediaType.MOVIE_TYPE)
+                    ?: emptyList(),
             certification = (releaseDates?.results?.firstOrNull { item ->
                 item.iso31661 == "US"
             }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" },
@@ -68,21 +69,48 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             age = birthday?.let { getAge(it, deathday) } ?: "-",
             placeOfBirth = placeOfBirth ?: "-",
             externalIds = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
-            credits = combinedCredits?.mapCreditResponseToCastDomainModelList() ?: emptyList()
+            credits = combinedCredits?.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
+                    ?: emptyList()
     )
 }
 
-fun CreditResponse.mapCreditResponseToCastDomainModelList(): List<CastDomainModel> {
+fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType): List<CastDomainModel> {
     return casts?.map { castResponseModel ->
-        CastDomainModel(
-                name = castResponseModel.name ?: castResponseModel.title ?: "",
-                characterName = castResponseModel.character ?: "",
-                imagePath = castResponseModel.profilePath ?: castResponseModel.posterPath ?: "",
-                order = castResponseModel.order,
-                id = castResponseModel.id,
-                mediaType = castResponseModel.mediaType,
-                releaseDate = castResponseModel.releaseDate?.convertDate()
-        )
+        when (mediaType) {
+            MediaType.MOVIE_TYPE -> CastDomainModel(
+                    name = castResponseModel.name ?: "",
+                    characterName = castResponseModel.character ?: "",
+                    imagePath = castResponseModel.profilePath ?: "",
+                    order = castResponseModel.order,
+                    id = castResponseModel.id,
+                    mediaType = null,
+                    releaseDate = null,
+                    totalEpisodeCount = null
+            )
+
+            MediaType.PERSON_TYPE -> CastDomainModel(
+                    name = castResponseModel.title ?: "",
+                    characterName = castResponseModel.character ?: "",
+                    imagePath = castResponseModel.posterPath ?: "",
+                    order = castResponseModel.order,
+                    id = castResponseModel.id,
+                    mediaType = castResponseModel.mediaType,
+                    releaseDate = castResponseModel.releaseDate?.convertDate(),
+                    totalEpisodeCount = null
+            )
+
+            MediaType.TV_TYPE -> CastDomainModel(
+                    name = castResponseModel.name ?: "",
+                    characterName = castResponseModel.roles?.firstOrNull()?.character ?: "",
+                    imagePath = castResponseModel.profilePath ?: "",
+                    order = castResponseModel.order,
+                    id = castResponseModel.id,
+                    mediaType = null,
+                    releaseDate = null,
+                    totalEpisodeCount = castResponseModel.totalEpisodeCount
+            )
+        }
+
     } ?: emptyList()
 }
 
@@ -117,7 +145,8 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
                 status = status ?: "",
                 externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
-                casts = emptyList(),
+                casts = credits?.mapCreditResponseToCastDomainModelList(MediaType.TV_TYPE)
+                        ?: emptyList(),
                 videos = videos?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
                 networks = networks?.mapNetworkItemsToNetworkDomainModel(),
                 type = type

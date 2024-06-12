@@ -51,7 +51,7 @@ fun ContentBilledCast(
                         }
                 )
 
-                if (index == casts.take(10).lastIndex) {
+                if (index == casts.take(10).lastIndex && casts.size > 10) {
                     TextButton(onClick = onViewMoreClicked) {
                         Text(text = "View more")
                         Icon(
@@ -78,7 +78,8 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = ""
+                            releaseDate = "",
+                            totalEpisodeCount = 10
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -87,7 +88,8 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = ""
+                            releaseDate = "",
+                            totalEpisodeCount = 10
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -96,7 +98,8 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = ""
+                            releaseDate = "",
+                            totalEpisodeCount = 10
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -105,7 +108,8 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = ""
+                            releaseDate = "",
+                            totalEpisodeCount = 10
                     ),
                     CastDomainModel(
                             name = "Timothée Chalamet",
@@ -114,7 +118,8 @@ fun ContentBilledCastPreview() {
                             order = 0,
                             id = 12345,
                             mediaType = null,
-                            releaseDate = ""
+                            releaseDate = "",
+                            totalEpisodeCount = 10
                     )),
             onCastClicked = { _, _ -> },
             onViewMoreClicked = {}

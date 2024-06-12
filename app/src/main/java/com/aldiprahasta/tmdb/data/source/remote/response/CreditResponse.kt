@@ -52,5 +52,22 @@ data class CastResponseModel(
         val posterPath: String?,
 
         @field:SerializedName("release_date")
-        val releaseDate: String?
+        val releaseDate: String?,
+
+        @field:SerializedName("roles")
+        val roles: List<RolesResponseModel>?,
+
+        @field:SerializedName("total_episode_count")
+        val totalEpisodeCount: Int?
+)
+
+data class RolesResponseModel(
+        @field:SerializedName("credit_id")
+        val creditId: String,
+
+        @field:SerializedName("character")
+        val character: String?,
+
+        @field:SerializedName("episode_count")
+        val episodeCount: Int?
 )

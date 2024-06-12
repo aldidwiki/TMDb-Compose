@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.tv
 
+import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
@@ -77,7 +78,10 @@ data class TvDetailResponse(
         val externalIds: ExternalIdResponse,
 
         @field:SerializedName("content_ratings")
-        val contentRatings: ContentRatingResponse
+        val contentRatings: ContentRatingResponse,
+
+        @field:SerializedName("aggregate_credits")
+        val credits: CreditResponse?,
 )
 
 data class NetworksItem(
