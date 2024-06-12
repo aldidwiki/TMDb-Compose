@@ -197,7 +197,7 @@ fun TMDbNavHostController(
                     },
                     onItemClicked = { id ->
                         when (contentType) {
-                            MediaType.MOVIE_TYPE.name -> navController.navigateToPersonDetail(id) // movie credit consist people
+                            MediaType.MOVIE_TYPE.name, MediaType.TV_TYPE.name -> navController.navigateToPersonDetail(id) // movie credit consist people
                             MediaType.PERSON_TYPE.name -> navController.navigateToContentDetail(id, MediaType.MOVIE_TYPE.name) // reverse, person credit consist movie/tv
                         }
                     }

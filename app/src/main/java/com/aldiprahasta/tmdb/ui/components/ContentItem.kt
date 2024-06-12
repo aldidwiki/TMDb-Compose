@@ -25,6 +25,7 @@ fun ContentItem(
         releaseDate: String?,
         characterName: String?,
         posterPath: String?,
+        totalEpisodeCount: Int?,
         onItemClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
@@ -64,6 +65,13 @@ fun ContentItem(
                         maxLines = 1
                 )
             }
+            totalEpisodeCount?.let {
+                Text(
+                        text = "($it episodes)",
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1
+                )
+            }
         }
     }
 }
@@ -76,6 +84,7 @@ fun ContentItemPreview() {
             releaseDate = "24 December 2024",
             posterPath = null,
             characterName = "Albert",
-            onItemClicked = {}
+            onItemClicked = {},
+            totalEpisodeCount = 15
     )
 }

@@ -70,7 +70,8 @@ fun TvContent(
                     posterPath = item.posterPath,
                     onItemClicked = {
                         onItemClicked(item.tvId)
-                    }
+                    },
+                    totalEpisodeCount = null
             )
 
             if (index < popularTvList.lastIndex) {

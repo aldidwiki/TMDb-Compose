@@ -112,7 +112,8 @@ fun CreditContent(
                     characterName = item.characterName,
                     onItemClicked = {
                         onItemClicked(item.id)
-                    }
+                    },
+                    totalEpisodeCount = item.totalEpisodeCount
             )
 
             if (index < casts.lastIndex) {

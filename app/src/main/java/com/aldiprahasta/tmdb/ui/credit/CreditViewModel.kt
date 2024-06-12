@@ -24,7 +24,8 @@ class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
     val credits: StateFlow<UiState<List<CastDomainModel>>> = contentId.flatMapLatest { contentPair ->
         when (contentPair.second) {
             MediaType.MOVIE_TYPE.name -> creditWrapper.getMovieCredits(contentPair.first)
-            else -> creditWrapper.getPersonCredits(contentPair.first)
+            MediaType.TV_TYPE.name -> creditWrapper.getTvCredits(contentPair.first)
+            else -> creditWrapper.getPersonCredits(contentPair.first)// person type
         }
     }.delayAfterLoading(300L).stateIn(
             viewModelScope,

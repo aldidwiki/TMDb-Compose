@@ -55,7 +55,8 @@ fun MovieContent(
                             releaseDate = movie.releaseDate,
                             posterPath = movie.posterPath,
                             characterName = null,
-                            onItemClicked = { onItemClicked(movie.movieId) }
+                            onItemClicked = { onItemClicked(movie.movieId) },
+                            totalEpisodeCount = null
                     )
 
                     if (index < movieList.lastIndex) {

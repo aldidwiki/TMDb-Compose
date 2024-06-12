@@ -51,7 +51,7 @@ fun ContentBilledCast(
                         }
                 )
 
-                if (index == casts.take(10).lastIndex && casts.size > 10) {
+                if (index == casts.take(10).lastIndex) {
                     TextButton(onClick = onViewMoreClicked) {
                         Text(text = "View more")
                         Icon(

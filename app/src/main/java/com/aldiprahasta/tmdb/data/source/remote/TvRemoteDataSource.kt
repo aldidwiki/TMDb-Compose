@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.data.source.remote
 
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
+import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.utils.UiState
@@ -35,5 +36,17 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
     }.catch { t ->
         Timber.e(t)
         emit(UiState.Error(t))
+    }.flowOn(Dispatchers.IO)
+
+    fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> = flow {
+        emit(UiState.Loading)
+        val response = remoteService.getTvCredits(tvId)
+        if (!response.isSuccessful) throw HttpException(response)
+        else response.body()?.let { creditResponse ->
+            emit(UiState.Success(creditResponse))
+        }
+    }.catch { t ->
+        Timber.e(t)
+        UiState.Error(t)
     }.flowOn(Dispatchers.IO)
 }

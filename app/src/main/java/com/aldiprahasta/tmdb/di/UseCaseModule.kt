@@ -6,6 +6,7 @@ import com.aldiprahasta.tmdb.domain.usecase.GetPersonCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
+import com.aldiprahasta.tmdb.domain.usecase.GetTvCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetTvDetail
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
@@ -20,6 +21,7 @@ val useCaseModule = module {
     factoryOf(::GetPersonCredits)
     factoryOf(::GetPopularTv)
     factoryOf(::GetTvDetail)
+    factoryOf(::GetTvCredits)
 }
 
 val useCaseWrapperModule = module {
