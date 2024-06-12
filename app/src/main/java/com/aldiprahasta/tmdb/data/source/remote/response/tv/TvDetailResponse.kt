@@ -74,7 +74,10 @@ data class TvDetailResponse(
         val videos: VideoResponse?,
 
         @field:SerializedName("external_ids")
-        val externalIds: ExternalIdResponse
+        val externalIds: ExternalIdResponse,
+
+        @field:SerializedName("content_ratings")
+        val contentRatings: ContentRatingResponse
 )
 
 data class NetworksItem(
@@ -90,4 +93,17 @@ data class NetworksItem(
 
         @field:SerializedName("origin_country")
         val originCountry: String?
+)
+
+data class ContentRatingResponse(
+        @field:SerializedName("results")
+        val results: List<ContentRatingResponseModel>?
+)
+
+data class ContentRatingResponseModel(
+        @field:SerializedName("iso_3166_1")
+        val code: String?,
+
+        @field:SerializedName("rating")
+        val rating: String?
 )

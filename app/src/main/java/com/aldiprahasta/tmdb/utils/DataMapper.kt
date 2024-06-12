@@ -108,7 +108,9 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 id = id,
                 voteAverage = voteAverage ?: 0.0,
                 genres = genres.convertGenreToSingleText(),
-                certification = "",
+                certification = contentRatings.results?.firstOrNull {
+                    it.code == "US"
+                }?.rating ?: "NR",
                 backdropPath = backdropPath,
                 budget = null,
                 revenue = null,
