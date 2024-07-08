@@ -20,5 +20,6 @@ data class ContentDetailDomainModel(
         val casts: List<CastDomainModel>,
         val videos: List<VideoDomainModel>,
         val type: String?,
-        val networks: List<NetworkDomainModel>?
+        val networks: List<NetworkDomainModel>?,
+        val seasons: List<TvSeasonDomainModel>? = null
 )

@@ -24,7 +24,7 @@ data class TvDetailResponse(
         val languages: List<String>?,
 
         @field:SerializedName("networks")
-        val networks: List<NetworksItem>?,
+        val networks: List<NetworksItemResponse>?,
 
         @field:SerializedName("type")
         val type: String?,
@@ -82,9 +82,12 @@ data class TvDetailResponse(
 
         @field:SerializedName("aggregate_credits")
         val credits: CreditResponse?,
+
+        @field:SerializedName("seasons")
+        val seasons: List<TvSeasonItemResponse>?,
 )
 
-data class NetworksItem(
+data class NetworksItemResponse(
 
         @field:SerializedName("logo_path")
         val logoPath: String?,
@@ -110,4 +113,31 @@ data class ContentRatingResponseModel(
 
         @field:SerializedName("rating")
         val rating: String?
+)
+
+data class TvSeasonItemResponse(
+
+        @field:SerializedName("air_date")
+        val airDate: String?,
+
+        @field:SerializedName("overview")
+        val overview: String?,
+
+        @field:SerializedName("episode_count")
+        val episodeCount: Int?,
+
+        @field:SerializedName("vote_average")
+        val voteAverage: Double?,
+
+        @field:SerializedName("name")
+        val name: String?,
+
+        @field:SerializedName("season_number")
+        val seasonNumber: Int?,
+
+        @field:SerializedName("id")
+        val id: Int,
+
+        @field:SerializedName("poster_path")
+        val posterPath: String?
 )

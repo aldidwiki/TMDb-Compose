@@ -42,7 +42,7 @@ fun ContentDetailInfo(
                         onClick = {
                             // TODO
                         }) {
-                    Text(text = "SEE ALL EPISODES")
+                    Text(text = "SEE ALL SEASONS")
                 }
             }
         }

@@ -6,9 +6,10 @@ import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItem
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonItemResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
@@ -16,6 +17,7 @@ import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
+import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 
 fun MovieResponse.mapMovieResponseToMovieDomainModelList(): List<MovieDomainModel> {
@@ -149,10 +151,11 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                         ?: emptyList(),
                 videos = videos?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
                 networks = networks?.mapNetworkItemsToNetworkDomainModel(),
-                type = type
+                type = type,
+                seasons = seasons?.mapTvSeasonItemResponseToDomainModelList()
         )
 
-private fun List<NetworksItem>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
+private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
     return map { networksItem ->
         NetworkDomainModel(
                 networkId = networksItem.id,
@@ -182,4 +185,16 @@ private fun VideoResponse.mapVideoResponseToVideoDomainModelList(): List<VideoDo
                 isOfficial = model.official ?: false
         )
     } ?: emptyList()
+}
+
+private fun List<TvSeasonItemResponse>.mapTvSeasonItemResponseToDomainModelList(): List<TvSeasonDomainModel> {
+    return this.map { item ->
+        TvSeasonDomainModel(
+                seasonId = item.id,
+                seasonName = item.name ?: "",
+                seasonPosterPath = item.posterPath,
+                seasonAirDate = item.airDate?.convertDate() ?: "",
+                seasonVoteAverage = item.voteAverage ?: 0.0
+        )
+    }
 }
