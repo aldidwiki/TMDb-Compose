@@ -220,7 +220,13 @@ fun TMDbNavHostController(
             val tvSeasonList = navBackStackEntry.arguments?.getParcelableArrayList<TvSeasonDomainModel>(TvSeason.TV_SEASON_ARG)
                     ?: emptyList()
 
-            TvSeasonScreen(tvTitle = tvTitle, tvSeasonList = tvSeasonList)
+            TvSeasonScreen(
+                    tvTitle = tvTitle,
+                    tvSeasonList = tvSeasonList,
+                    onBackPressed = {
+                        navController.navigateUp()
+                    }
+            )
         }
     }
 }
