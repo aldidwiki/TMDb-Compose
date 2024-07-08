@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,15 +26,26 @@ fun ContentDetailInfo(
         originalLanguage: String,
         budget: String?,
         revenue: String?,
-        networks: List<NetworkDomainModel>?,
+        networks: List<NetworkDomainModel>?, // null means its from movie
         tvType: String?,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-                text = "Details",
-                style = MaterialTheme.typography.titleLarge
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                    text = "Details",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f)
+            )
+            networks?.let {
+                TextButton(
+                        onClick = {
+                            // TODO
+                        }) {
+                    Text(text = "SEE ALL EPISODES")
+                }
+            }
+        }
         Spacer(modifier = Modifier.size(16.dp))
         Row {
             Column(
