@@ -194,7 +194,9 @@ private fun List<TvSeasonItemResponse>.mapTvSeasonItemResponseToDomainModelList(
                 seasonName = item.name ?: "",
                 seasonPosterPath = item.posterPath,
                 seasonAirDate = item.airDate?.convertDate() ?: "",
-                seasonVoteAverage = item.voteAverage ?: 0.0
+                seasonVoteAverage = item.voteAverage ?: 0.0,
+                totalEpisodes = item.episodeCount ?: 0,
+                seasonNumber = item.seasonNumber ?: 0
         )
     }
 }

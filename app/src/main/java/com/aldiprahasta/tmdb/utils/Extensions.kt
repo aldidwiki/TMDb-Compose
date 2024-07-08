@@ -42,7 +42,7 @@ fun Int?.runtimeFormat(): String {
 }
 
 fun Double?.formatVoteAverage(): Int {
-    val format = String.format("%.1f", this).toDouble() * 10
+    val format = String.format(Locale.getDefault(), "%.1f", this).toDouble() * 10
     return format.roundToInt()
 }
 

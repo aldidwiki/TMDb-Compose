@@ -5,5 +5,7 @@ data class TvSeasonDomainModel(
         val seasonName: String,
         val seasonPosterPath: String?,
         val seasonAirDate: String,
-        val seasonVoteAverage: Double
+        val seasonVoteAverage: Double,
+        val totalEpisodes: Int,
+        val seasonNumber: Int
 )
