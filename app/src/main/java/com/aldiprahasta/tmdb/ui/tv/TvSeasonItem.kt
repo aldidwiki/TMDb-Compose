@@ -31,6 +31,8 @@ fun TvSeasonItem(
         tvSeasonDomainModel: TvSeasonDomainModel,
         modifier: Modifier = Modifier
 ) {
+    var seasonOverview = "Season ${tvSeasonDomainModel.seasonNumber} of $tvTitle premiered on ${tvSeasonDomainModel.seasonAirDate}."
+
     Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier.fillMaxWidth()
@@ -63,14 +65,19 @@ fun TvSeasonItem(
                     VoteAverageUi(voteAverage = tvSeasonDomainModel.seasonVoteAverage)
                 }
 
-                Text(
-                        text = tvSeasonDomainModel.seasonAirDate.takeLast(4),
-                        style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                        text = "\u2022",
-                        fontSize = 14.sp
-                )
+                if (tvSeasonDomainModel.seasonAirDate.isNotEmpty()) {
+                    Text(
+                            text = tvSeasonDomainModel.seasonAirDate.takeLast(4),
+                            style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                            text = "\u2022",
+                            fontSize = 14.sp
+                    )
+                } else {
+                    seasonOverview = "We don't have an overview translated in English. Help us expand our database by adding one."
+                }
+
                 Text(
                         text = "${tvSeasonDomainModel.totalEpisodes} Episodes",
                         style = MaterialTheme.typography.bodyMedium
@@ -79,7 +86,7 @@ fun TvSeasonItem(
 
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                    text = "Season ${tvSeasonDomainModel.seasonNumber} of $tvTitle premiered on ${tvSeasonDomainModel.seasonAirDate}.",
+                    text = seasonOverview,
                     style = MaterialTheme.typography.bodySmall
             )
         }

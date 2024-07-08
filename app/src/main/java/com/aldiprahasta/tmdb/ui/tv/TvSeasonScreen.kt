@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.ui.tv
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -58,21 +59,19 @@ fun TvSeasonScreen(
             },
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        LazyColumn(
-                modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 20.dp)
-                        .padding(vertical = 10.dp)
-        ) {
-            itemsIndexed(tvSeasonList) { index, tvSeason ->
-                TvSeasonItem(
-                        tvTitle = tvTitle,
-                        tvSeasonDomainModel = tvSeason
-                )
+        Box(modifier = Modifier.padding(innerPadding)) {
+            LazyColumn(
+                    contentPadding = PaddingValues(vertical = 10.dp, horizontal = 16.dp)
+            ) {
+                itemsIndexed(tvSeasonList) { index, tvSeason ->
+                    TvSeasonItem(
+                            tvTitle = tvTitle,
+                            tvSeasonDomainModel = tvSeason
+                    )
 
-                if (index < tvSeasonList.lastIndex) {
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                    if (index < tvSeasonList.lastIndex) {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                    }
                 }
             }
         }
