@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.home
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -35,12 +36,16 @@ import com.aldiprahasta.tmdb.CreditDetail
 import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.Tv
+import com.aldiprahasta.tmdb.TvSeason
+import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
+import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.MediaType
+import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,6 +161,9 @@ fun TMDbNavHostController(
                     },
                     onViewMoreClicked = {
                         navController.navigateToCreditDetail(contentId, contentType)
+                    },
+                    onAllSeasonClicked = { tvTitle, tvSeasonList ->
+                        navController.navigateToTvSeasonScreen(tvTitle, tvSeasonList)
                     }
             )
         }
@@ -203,6 +211,17 @@ fun TMDbNavHostController(
                     }
             )
         }
+
+        composable(
+                route = TvSeason.routeWithArgs,
+                arguments = TvSeason.arguments
+        ) { navBackStackEntry ->
+            val tvTitle = navBackStackEntry.arguments?.getString(TvSeason.TV_TITLE_ARG) ?: ""
+            val tvSeasonList = navBackStackEntry.arguments?.getParcelableArrayList<TvSeasonDomainModel>(TvSeason.TV_SEASON_ARG)
+                    ?: emptyList()
+
+            TvSeasonScreen(tvTitle = tvTitle, tvSeasonList = tvSeasonList)
+        }
     }
 }
 
@@ -235,4 +254,9 @@ private fun NavHostController.navigateToPersonDetail(personId: Int) {
 
 private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType: String) {
     navigate("${CreditDetail.route}/$contentId/$contentType")
+}
+
+private fun NavHostController.navigateToTvSeasonScreen(tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) {
+    val tvSeasonListJson = Uri.encode(Gson().toJson(tvSeasonList))
+    navigate("${TvSeason.route}/$tvTitle/$tvSeasonListJson")
 }

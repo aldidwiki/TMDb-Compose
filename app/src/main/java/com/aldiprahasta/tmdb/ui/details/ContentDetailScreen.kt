@@ -43,6 +43,7 @@ import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
+import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
@@ -63,6 +64,7 @@ fun ContentDetailScreen(
         onBackPressed: () -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
+        onAllSeasonClicked: (tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
@@ -144,7 +146,8 @@ fun ContentDetailScreen(
                 onCastClicked = { personId ->
                     onCastClicked(personId)
                 },
-                onViewMoreClicked = onViewMoreClicked
+                onViewMoreClicked = onViewMoreClicked,
+                onAllSeasonClicked = onAllSeasonClicked
         )
     }
 }
@@ -213,6 +216,7 @@ private fun ContentDetail(
         onSuccessFetch: (contentDetail: ContentDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
+        onAllSeasonClicked: (tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
     AnimatedContent(
@@ -254,7 +258,13 @@ private fun ContentDetail(
                         revenue = contentDetailDomainModel.revenue,
                         networks = contentDetailDomainModel.networks,
                         tvType = contentDetailDomainModel.type,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        onAllSeasonClicked = {
+                            onAllSeasonClicked(
+                                    contentDetailDomainModel.title,
+                                    contentDetailDomainModel.seasons ?: emptyList()
+                            )
+                        }
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentDetailExternal(
@@ -349,6 +359,7 @@ fun ContentDetailPreview() {
             colorPalette = Triple(Color.White, Color.Black, Color.Black),
             onSuccessFetch = {},
             onCastClicked = {},
-            onViewMoreClicked = {}
+            onViewMoreClicked = {},
+            onAllSeasonClicked = { _, _ -> }
     )
 }

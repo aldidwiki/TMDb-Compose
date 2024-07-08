@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Tv
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.aldiprahasta.tmdb.utils.TvSeasonType
 
 interface TMDbDestinations {
     val route: String
@@ -37,6 +38,21 @@ object ContentDetail : TMDbDestinations {
             },
             navArgument(contentTypeArg) {
                 type = NavType.StringType
+            }
+    )
+}
+
+object TvSeason : TMDbDestinations {
+    override val route: String = "tv_season"
+    const val TV_TITLE_ARG = "tv_title_arg"
+    const val TV_SEASON_ARG = "tv_season_list"
+    val routeWithArgs = "$route/{$TV_TITLE_ARG}/{$TV_SEASON_ARG}"
+    val arguments = listOf(
+            navArgument(TV_TITLE_ARG) {
+                type = NavType.StringType
+            },
+            navArgument(TV_SEASON_ARG) {
+                type = TvSeasonType()
             }
     )
 }

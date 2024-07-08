@@ -28,6 +28,7 @@ fun ContentDetailInfo(
         revenue: String?,
         networks: List<NetworkDomainModel>?, // null means its from movie
         tvType: String?,
+        onAllSeasonClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -38,10 +39,7 @@ fun ContentDetailInfo(
                     modifier = Modifier.weight(1f)
             )
             networks?.let {
-                TextButton(
-                        onClick = {
-                            // TODO
-                        }) {
+                TextButton(onClick = onAllSeasonClicked) {
                     Text(text = "SEE ALL SEASONS")
                 }
             }
@@ -173,6 +171,7 @@ fun ContentDetailInfoPreview() {
             budget = "$1,000,000.00",
             revenue = "2,000,000.00",
             networks = null,
-            tvType = null
+            tvType = null,
+            onAllSeasonClicked = { }
     )
 }

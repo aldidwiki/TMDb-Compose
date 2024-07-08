@@ -30,7 +30,7 @@ fun VoteAverageUi(
     Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(
-                    space = 4.dp,
+                    space = 2.dp,
                     alignment = Alignment.CenterHorizontally
             ),
             modifier = modifier
@@ -39,19 +39,18 @@ fun VoteAverageUi(
                             shape = RoundedCornerShape(4.dp)
                     )
                     .padding(horizontal = 4.dp)
-                    .padding(vertical = 2.dp)
-                    .width(50.dp),
+                    .width(40.dp),
     ) {
         Image(
                 imageVector = Icons.Default.Star,
                 colorFilter = ColorFilter.tint(Color.White),
                 contentDescription = null,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(14.dp)
         )
         Text(
                 text = "${voteAverage.formatVoteAverage()}%",
                 color = Color.White,
-                fontSize = 12.sp
+                fontSize = 10.sp
         )
     }
 }

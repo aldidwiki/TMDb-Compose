@@ -59,7 +59,10 @@ fun TvSeasonItem(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                VoteAverageUi(voteAverage = tvSeasonDomainModel.seasonVoteAverage)
+                if (tvSeasonDomainModel.seasonVoteAverage != 0.0) {
+                    VoteAverageUi(voteAverage = tvSeasonDomainModel.seasonVoteAverage)
+                }
+
                 Text(
                         text = tvSeasonDomainModel.seasonAirDate.takeLast(4),
                         style = MaterialTheme.typography.bodyMedium
