@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build.VERSION.SDK_INT
+import android.os.Bundle
+import android.os.Parcelable
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
@@ -113,4 +116,9 @@ suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
 
 fun <T> Flow<UiState<T>>.delayAfterLoading(timeMillis: Long): Flow<UiState<T>> = onEach { state ->
     if (state != UiState.Loading) delay(timeMillis)
+}
+
+inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? = when {
+    SDK_INT >= 33 -> getParcelableArrayList(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableArrayList(key)
 }

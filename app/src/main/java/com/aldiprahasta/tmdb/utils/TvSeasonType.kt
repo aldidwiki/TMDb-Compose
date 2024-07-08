@@ -8,7 +8,7 @@ import com.google.gson.reflect.TypeToken
 
 class TvSeasonType : NavType<ArrayList<TvSeasonDomainModel>>(isNullableAllowed = false) {
     override fun get(bundle: Bundle, key: String): ArrayList<TvSeasonDomainModel>? {
-        return bundle.getParcelableArrayList(key)
+        return bundle.parcelableArrayList(key)
     }
 
     override fun parseValue(value: String): ArrayList<TvSeasonDomainModel> {
