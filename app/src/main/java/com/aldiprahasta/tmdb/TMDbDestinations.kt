@@ -29,14 +29,14 @@ object Tv : TMDbDestinations {
 
 object ContentDetail : TMDbDestinations {
     override val route: String = "content_detail"
-    const val contentIdArg = "content_id"
-    const val contentTypeArg = "content_type"
-    val routeWithArgs = "$route/{$contentIdArg}/{$contentTypeArg}"
+    const val CONTENT_ID_ARG = "content_id"
+    const val CONTENT_TYPE_ARG = "content_type"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_TYPE_ARG}"
     val arguments = listOf(
-            navArgument(contentIdArg) {
+            navArgument(CONTENT_ID_ARG) {
                 type = NavType.IntType
             },
-            navArgument(contentTypeArg) {
+            navArgument(CONTENT_TYPE_ARG) {
                 type = NavType.StringType
             }
     )
@@ -59,23 +59,23 @@ object TvSeason : TMDbDestinations {
 
 object PersonDetail : TMDbDestinations {
     override val route: String = "person_detail"
-    const val personIdArg = "person_id"
-    val routeWithArgs = "$route/{$personIdArg}"
-    val arguments = listOf(navArgument(personIdArg) {
+    const val PERSON_ID_ARG = "person_id"
+    val routeWithArgs = "$route/{$PERSON_ID_ARG}"
+    val arguments = listOf(navArgument(PERSON_ID_ARG) {
         type = NavType.IntType
     })
 }
 
 object CreditDetail : TMDbDestinations {
     override val route: String = "credit_detail"
-    const val contentIdArg = "content_id"
-    const val contentTypeArg = "content_type"
-    val routeWithArgs = "$route/{$contentIdArg}/{$contentTypeArg}"
+    const val CONTENT_ID_ARG = "content_id"
+    const val CONTENT_TYPE_ARG = "content_type"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_TYPE_ARG}"
     val arguments = listOf(
-            navArgument(contentIdArg) {
+            navArgument(CONTENT_ID_ARG) {
                 type = NavType.IntType
             },
-            navArgument(contentTypeArg) {
+            navArgument(CONTENT_TYPE_ARG) {
                 type = NavType.StringType
             }
     )

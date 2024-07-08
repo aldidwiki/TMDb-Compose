@@ -147,8 +147,8 @@ fun TMDbNavHostController(
                 route = ContentDetail.routeWithArgs,
                 arguments = ContentDetail.arguments
         ) { navBackStateEntry ->
-            val contentId = navBackStateEntry.arguments?.getInt(ContentDetail.contentIdArg) ?: 0
-            val contentType = navBackStateEntry.arguments?.getString(ContentDetail.contentTypeArg)
+            val contentId = navBackStateEntry.arguments?.getInt(ContentDetail.CONTENT_ID_ARG) ?: 0
+            val contentType = navBackStateEntry.arguments?.getString(ContentDetail.CONTENT_TYPE_ARG)
                     ?: ""
 
             ContentDetailScreen(
@@ -172,7 +172,7 @@ fun TMDbNavHostController(
                 route = PersonDetail.routeWithArgs,
                 arguments = PersonDetail.arguments
         ) { navBackStackEntry ->
-            val personId = navBackStackEntry.arguments?.getInt(PersonDetail.personIdArg)
+            val personId = navBackStackEntry.arguments?.getInt(PersonDetail.PERSON_ID_ARG)
                     ?: 0
             PersonScreen(
                     personId = personId,
@@ -194,9 +194,9 @@ fun TMDbNavHostController(
                 route = CreditDetail.routeWithArgs,
                 arguments = CreditDetail.arguments
         ) { navBackStackEntry ->
-            val contentId = navBackStackEntry.arguments?.getInt(CreditDetail.contentIdArg)
+            val contentId = navBackStackEntry.arguments?.getInt(CreditDetail.CONTENT_ID_ARG)
                     ?: 0
-            val contentType = navBackStackEntry.arguments?.getString(CreditDetail.contentTypeArg)
+            val contentType = navBackStackEntry.arguments?.getString(CreditDetail.CONTENT_TYPE_ARG)
                     ?: MediaType.MOVIE_TYPE.name
             CreditScreen(
                     contentId = Pair(contentId, contentType),
