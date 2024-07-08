@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
+import com.aldiprahasta.tmdb.ui.components.VoteAverageUi
 
 @Composable
 fun TvSeasonItem(
@@ -50,7 +51,7 @@ fun TvSeasonItem(
             Text(
                     text = tvSeasonDomainModel.seasonName,
                     style = MaterialTheme.typography.titleMedium,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
             )
 
@@ -58,24 +59,25 @@ fun TvSeasonItem(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
+                VoteAverageUi(voteAverage = tvSeasonDomainModel.seasonVoteAverage)
                 Text(
-                        text = tvSeasonDomainModel.seasonAirDate.take(4),
-                        style = MaterialTheme.typography.titleSmall
+                        text = tvSeasonDomainModel.seasonAirDate.takeLast(4),
+                        style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                         text = "\u2022",
-                        fontSize = 18.sp
+                        fontSize = 14.sp
                 )
                 Text(
                         text = "${tvSeasonDomainModel.totalEpisodes} Episodes",
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.bodyMedium
                 )
             }
 
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                     text = "Season ${tvSeasonDomainModel.seasonNumber} of $tvTitle premiered on ${tvSeasonDomainModel.seasonAirDate}.",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodySmall
             )
         }
     }
@@ -90,7 +92,7 @@ fun TvSeasonItemPreview(modifier: Modifier = Modifier) {
                     seasonId = 2237,
                     seasonName = "Season 1",
                     seasonPosterPath = null,
-                    seasonAirDate = "2022-04-12",
+                    seasonAirDate = "August 10, 2022",
                     seasonVoteAverage = 2.3,
                     totalEpisodes = 53,
                     seasonNumber = 1
