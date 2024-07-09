@@ -28,7 +28,7 @@ fun ImageLoader(
 ) {
     AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/${imageType.value}/$imagePath")
+                    .data("https://image.tmdb.org/t/p/${imageType.size}/$imagePath")
                     .placeholder(ColorDrawable(Color.GRAY))
                     .error(R.drawable.ic_broken_image)
                     .crossfade(true)
@@ -46,7 +46,7 @@ fun ImageLoaderBackdrop(
         modifier: Modifier = Modifier
 ) {
     AsyncImage(
-            model = "https://image.tmdb.org/t/p/${imageType.value}/$imagePath",
+            model = "https://image.tmdb.org/t/p/${imageType.size}/$imagePath",
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = modifier
@@ -78,9 +78,10 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     }
 }
 
-enum class ImageType(val value: String) {
+enum class ImageType(val size: String) {
     POSTER("w500"),
     BACKDROP("w780"),
     PROFILE("h632"),
-    LOGO("w185")
+    LOGO("w185"),
+    STILL("w300")
 }
