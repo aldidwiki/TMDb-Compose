@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aldiprahasta.tmdb.ui.theme.TMDBColor
+import com.aldiprahasta.tmdb.ui.theme.TMDBPrimaryColor
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
 
 @Composable
@@ -35,7 +35,7 @@ fun VoteAverageUi(
             ),
             modifier = modifier
                     .background(
-                            color = TMDBColor,
+                            color = TMDBPrimaryColor,
                             shape = RoundedCornerShape(4.dp)
                     )
                     .padding(horizontal = 4.dp)
@@ -57,6 +57,6 @@ fun VoteAverageUi(
 
 @Preview(showBackground = true)
 @Composable
-fun VoteAverageUiPreview(modifier: Modifier = Modifier) {
+private fun VoteAverageUiPreview(modifier: Modifier = Modifier) {
     VoteAverageUi(voteAverage = 8.0)
 }

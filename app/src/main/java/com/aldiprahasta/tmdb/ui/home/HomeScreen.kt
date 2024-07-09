@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -43,6 +44,7 @@ import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
+import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonDetailScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
@@ -109,6 +111,7 @@ fun TMDbBottomNavigation(
     NavigationBar(modifier = modifier) {
         navigationItem().forEach { tmDbDestinations ->
             NavigationBarItem(
+                    colors = NavigationBarItemDefaults.colors(indicatorColor = TMDBSecondaryColor),
                     selected = tmDbDestinations.route == navController.currentDestination()?.route,
                     onClick = {
                         navController.navigate(tmDbDestinations.route)

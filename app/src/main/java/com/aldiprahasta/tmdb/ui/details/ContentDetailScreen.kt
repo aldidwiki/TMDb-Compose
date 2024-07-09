@@ -1,8 +1,6 @@
 package com.aldiprahasta.tmdb.ui.details
 
-import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
+import android.app.Activity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -36,8 +34,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
@@ -156,55 +156,15 @@ fun ContentDetailScreen(
 private fun SetStatusBarColor(rgbColorPalette: Int) {
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
     val isDarkMode = isSystemInDarkTheme()
-    val context = LocalContext.current as ComponentActivity
-
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    window.statusBarColor = rgbColorPalette
+    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+    
     DisposableEffect(isDarkMode) {
-        context.enableEdgeToEdge(
-                statusBarStyle = if (!isDarkMode) {
-                    SystemBarStyle.light(
-                            rgbColorPalette,
-                            primaryColor
-                    )
-                } else {
-                    SystemBarStyle.dark(
-                            primaryColor
-                    )
-                },
-                navigationBarStyle = if (!isDarkMode) {
-                    SystemBarStyle.light(
-                            rgbColorPalette,
-                            primaryColor
-                    )
-                } else {
-                    SystemBarStyle.dark(
-                            primaryColor
-                    )
-                }
-        )
-
         onDispose {
-            context.enableEdgeToEdge(
-                    statusBarStyle = if (!isDarkMode) {
-                        SystemBarStyle.light(
-                                primaryColor,
-                                primaryColor
-                        )
-                    } else {
-                        SystemBarStyle.dark(
-                                primaryColor
-                        )
-                    },
-                    navigationBarStyle = if (!isDarkMode) {
-                        SystemBarStyle.light(
-                                rgbColorPalette,
-                                primaryColor
-                        )
-                    } else {
-                        SystemBarStyle.dark(
-                                primaryColor
-                        )
-                    }
-            )
+            window.statusBarColor = primaryColor
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
 }
