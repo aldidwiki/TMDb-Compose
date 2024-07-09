@@ -50,6 +50,7 @@ fun TvSeasonDetailScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     var tvSeasonName by remember { mutableStateOf("") }
+    var tvSeasonYear by remember { mutableStateOf("") }
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -60,7 +61,12 @@ fun TvSeasonDetailScreen(
                                 titleContentColor = Color.White
                         ),
                         title = {
-                            Text(text = tvSeasonName.ifEmpty { "Episodes List" })
+                            val titleText = if (tvSeasonYear.isEmpty() || tvSeasonName.isEmpty()) {
+                                "Episodes List"
+                            } else {
+                                "$tvSeasonName ($tvSeasonYear)"
+                            }
+                            Text(text = titleText)
                         },
                         scrollBehavior = scrollBehavior,
                         navigationIcon = {
@@ -90,6 +96,7 @@ fun TvSeasonDetailScreen(
 
             targetState.doIfSuccess { data: TvSeasonDetailDomainModel ->
                 tvSeasonName = data.tvSeasonDomainModel.seasonName
+                tvSeasonYear = data.tvSeasonDomainModel.seasonAirDate.takeLast(4)
                 TvSeasonDetailContent(tvEpisodeList = data.tvEpisodeList)
             }
         }
