@@ -4,7 +4,9 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -36,6 +39,7 @@ import com.aldiprahasta.tmdb.ContentDetail
 import com.aldiprahasta.tmdb.CreditDetail
 import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
+import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.Tv
 import com.aldiprahasta.tmdb.TvSeason
 import com.aldiprahasta.tmdb.TvSeasonDetail
@@ -73,7 +77,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                                     titleContentColor = Color.White,
                             ),
                             title = {
-                                Text(text = "TMDb")
+                                Image(
+                                        painter = painterResource(id = R.drawable.tmdb_logo_long),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(120.dp)
+                                )
                             },
                             scrollBehavior = scrollBehavior
                     )
