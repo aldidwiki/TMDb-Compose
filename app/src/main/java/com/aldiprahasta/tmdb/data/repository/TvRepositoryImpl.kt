@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.data.source.remote.TvRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.repository.TvRepository
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.flow.Flow
@@ -19,5 +20,9 @@ class TvRepositoryImpl(private val tvRemoteDataSource: TvRemoteDataSource) : TvR
 
     override fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> {
         return tvRemoteDataSource.getTvCredits(tvId)
+    }
+
+    override fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> {
+        return tvRemoteDataSource.getTvSeasonDetail(tvId, tvSeasonNumber)
     }
 }

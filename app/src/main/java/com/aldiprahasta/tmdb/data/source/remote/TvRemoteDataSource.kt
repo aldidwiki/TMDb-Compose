@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +45,18 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
         if (!response.isSuccessful) throw HttpException(response)
         else response.body()?.let { creditResponse ->
             emit(UiState.Success(creditResponse))
+        }
+    }.catch { t ->
+        Timber.e(t)
+        UiState.Error(t)
+    }.flowOn(Dispatchers.IO)
+
+    fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> = flow {
+        emit(UiState.Loading)
+        val response = remoteService.getTvSeasonDetail(tvId, tvSeasonNumber)
+        if (!response.isSuccessful) throw HttpException(response)
+        else response.body()?.let { tvSeasonResponse ->
+            emit(UiState.Success(tvSeasonResponse))
         }
     }.catch { t ->
         Timber.e(t)
