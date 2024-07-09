@@ -8,7 +8,7 @@ import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TvViewModel(tvWrapper: TvWrapper) : ViewModel() {
-    private val tvSeasonDetailParam = MutableSharedFlow<Pair<Int, Int>>(1)
+    private val tvSeasonDetailParam = MutableStateFlow(Pair(0, 0))
     fun setTvSeasonDetailParam(tvId: Int, tvSeasonNumber: Int) {
-        tvSeasonDetailParam.tryEmit(Pair(tvId, tvSeasonNumber))
+        tvSeasonDetailParam.value = Pair(tvId, tvSeasonNumber)
     }
 
     val popularTv: StateFlow<UiState<List<TvDomainModel>>> = tvWrapper.getPopularTv()
