@@ -45,6 +45,7 @@ import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.MediaType
+import com.aldiprahasta.tmdb.utils.parcelableArrayList
 import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,7 +164,7 @@ fun TMDbNavHostController(
                         navController.navigateToCreditDetail(contentId, contentType)
                     },
                     onAllSeasonClicked = { tvTitle, tvSeasonList ->
-                        navController.navigateToTvSeasonScreen(tvTitle, tvSeasonList)
+                        navController.navigateToTvSeasonScreen(contentId, tvTitle, tvSeasonList)
                     }
             )
         }
@@ -217,8 +218,9 @@ fun TMDbNavHostController(
                 arguments = TvSeason.arguments
         ) { navBackStackEntry ->
             val tvTitle = navBackStackEntry.arguments?.getString(TvSeason.TV_TITLE_ARG) ?: ""
-            val tvSeasonList = navBackStackEntry.arguments?.getParcelableArrayList<TvSeasonDomainModel>(TvSeason.TV_SEASON_ARG)
+            val tvSeasonList = navBackStackEntry.arguments?.parcelableArrayList<TvSeasonDomainModel>(TvSeason.TV_SEASON_ARG)
                     ?: emptyList()
+            val tvId = navBackStackEntry.arguments?.getInt(TvSeason.TV_ID_ARG, 0) ?: 0
 
             TvSeasonScreen(
                     tvTitle = tvTitle,
@@ -262,7 +264,7 @@ private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType
     navigate("${CreditDetail.route}/$contentId/$contentType")
 }
 
-private fun NavHostController.navigateToTvSeasonScreen(tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) {
+private fun NavHostController.navigateToTvSeasonScreen(tvId: Int, tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) {
     val tvSeasonListJson = Uri.encode(Gson().toJson(tvSeasonList))
-    navigate("${TvSeason.route}/$tvTitle/$tvSeasonListJson")
+    navigate("${TvSeason.route}/$tvId/$tvTitle/$tvSeasonListJson")
 }
