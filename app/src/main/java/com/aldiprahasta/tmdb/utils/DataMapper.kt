@@ -8,8 +8,10 @@ import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvEpisodeItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonItemResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
@@ -17,6 +19,8 @@ import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
+import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
+import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 
@@ -155,6 +159,21 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 seasons = seasons?.mapTvSeasonItemResponseToDomainModelList()
         )
 
+fun TvSeasonResponse.mapTvSeasonResponseToDomainModel(): TvSeasonDetailDomainModel {
+    return TvSeasonDetailDomainModel(
+            tvSeasonDomainModel = TvSeasonDomainModel(
+                    seasonId = id,
+                    seasonName = name ?: "",
+                    seasonPosterPath = posterPath,
+                    seasonAirDate = airDate?.convertDate() ?: "",
+                    seasonVoteAverage = voteAverage ?: 0.0,
+                    totalEpisodes = 0,
+                    seasonNumber = seasonNumber ?: 0
+            ),
+            tvEpisodeList = episodes.mapTvEpisodeItemResponseToDomainModelList()
+    )
+}
+
 private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
     return map { networksItem ->
         NetworkDomainModel(
@@ -197,6 +216,21 @@ private fun List<TvSeasonItemResponse>.mapTvSeasonItemResponseToDomainModelList(
                 seasonVoteAverage = item.voteAverage ?: 0.0,
                 totalEpisodes = item.episodeCount ?: 0,
                 seasonNumber = item.seasonNumber ?: 0
+        )
+    }
+}
+
+private fun List<TvEpisodeItemResponse>.mapTvEpisodeItemResponseToDomainModelList(): List<TvEpisodeDomainModel> {
+    return this.map { item ->
+        TvEpisodeDomainModel(
+                id = item.id,
+                name = item.name ?: "",
+                stillPath = item.stillPath,
+                runtime = item.runtime ?: 0,
+                overview = item.overview ?: "",
+                voteAverage = item.voteAverage ?: 0.0,
+                episodeNumber = item.episodeNumber ?: 0,
+                airDate = item.airDate?.convertDate() ?: ""
         )
     }
 }
