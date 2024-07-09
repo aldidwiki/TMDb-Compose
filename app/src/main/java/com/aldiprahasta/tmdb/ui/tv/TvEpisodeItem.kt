@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +29,14 @@ fun TvEpisodeItem(
         tvEpisodeDomainModel: TvEpisodeDomainModel,
         modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier.fillMaxWidth()) {
+    Card(
+            modifier = modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(6.dp)
+    ) {
         ImageLoader(
                 imagePath = tvEpisodeDomainModel.stillPath,
                 imageType = ImageType.STILL,
-                modifier = Modifier.height(180.dp)
+                modifier = Modifier.height(200.dp)
         )
 
         Column(modifier = Modifier

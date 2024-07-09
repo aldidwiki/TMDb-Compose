@@ -83,5 +83,5 @@ enum class ImageType(val size: String) {
     BACKDROP("w780"),
     PROFILE("h632"),
     LOGO("w185"),
-    STILL("original")
+    STILL("w780")
 }

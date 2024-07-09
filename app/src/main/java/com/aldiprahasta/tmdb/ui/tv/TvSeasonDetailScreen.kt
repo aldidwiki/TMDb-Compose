@@ -118,7 +118,7 @@ fun TvSeasonDetailContent(
         items(tvEpisodeList) { tvEpisode ->
             TvEpisodeItem(
                     tvEpisodeDomainModel = tvEpisode,
-                    modifier = Modifier.padding(bottom = 14.dp)
+                    modifier = Modifier.padding(bottom = 16.dp)
             )
         }
     }

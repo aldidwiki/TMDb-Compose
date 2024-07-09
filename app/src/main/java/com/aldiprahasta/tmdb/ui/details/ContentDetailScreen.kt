@@ -120,9 +120,9 @@ fun ContentDetailScreen(
                         actions = {
                             IconButton(onClick = {
                                 val shareUrl = if (contentParam.second == MediaType.MOVIE_TYPE.name) {
-                                    "${Constant.SHARE_BASE_URL}/movie/${contentParam.first}"
+                                    "${Constant.SHARE_BASE_URL}movie/${contentParam.first}"
                                 } else {
-                                    "${Constant.SHARE_BASE_URL}/tv/${contentParam.first}"
+                                    "${Constant.SHARE_BASE_URL}tv/${contentParam.first}"
                                 }
 
                                 context.shareIt(shareUrl)
