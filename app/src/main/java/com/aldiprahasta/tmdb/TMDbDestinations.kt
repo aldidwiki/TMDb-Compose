@@ -61,6 +61,21 @@ object TvSeason : TMDbDestinations {
     )
 }
 
+object TvSeasonDetail : TMDbDestinations {
+    override val route: String = "tv_season_detail"
+    const val TV_ID_ARG = "tv_id_arg"
+    const val TV_SEASON_NUMBER_ARG = "tv_season_number_arg"
+    val routeWithArgs = "$route/{$TV_ID_ARG}/{$TV_SEASON_NUMBER_ARG}"
+    val arguments = listOf(
+            navArgument(TV_ID_ARG) {
+                type = NavType.IntType
+            },
+            navArgument(TV_SEASON_NUMBER_ARG) {
+                type = NavType.IntType
+            }
+    )
+}
+
 object PersonDetail : TMDbDestinations {
     override val route: String = "person_detail"
     const val PERSON_ID_ARG = "person_id"

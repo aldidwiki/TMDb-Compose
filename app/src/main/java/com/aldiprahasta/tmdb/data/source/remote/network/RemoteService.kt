@@ -36,7 +36,7 @@ interface RemoteService {
     @GET("tv/{tv_id}/aggregate_credits")
     suspend fun getTvCredits(@Path("tv_id") tvId: Int): Response<CreditResponse>
 
-    @GET("tv{tv_id}/season/{season_number}")
+    @GET("tv/{tv_id}/season/{season_number}")
     suspend fun getTvSeasonDetail(
             @Path("tv_id") tvId: Int,
             @Path("season_number") seasonNumber: Int

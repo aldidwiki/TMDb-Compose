@@ -31,12 +31,13 @@ fun TvEpisodeItem(
         ImageLoader(
                 imagePath = tvEpisodeDomainModel.stillPath,
                 imageType = ImageType.STILL,
-                modifier = Modifier.height(170.dp)
+                modifier = Modifier.height(180.dp)
         )
 
         Column(modifier = Modifier
                 .padding(10.dp)
                 .padding(bottom = 10.dp)
+                .padding(horizontal = 4.dp)
         ) {
             Text(
                     text = "${tvEpisodeDomainModel.episodeNumber} ${tvEpisodeDomainModel.name}",

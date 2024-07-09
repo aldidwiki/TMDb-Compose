@@ -30,6 +30,7 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 fun TvSeasonScreen(
         tvTitle: String,
         tvSeasonList: List<TvSeasonDomainModel>,
+        onItemClicked: (tvSeasonNumber: Int) -> Unit,
         onBackPressed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
@@ -66,7 +67,10 @@ fun TvSeasonScreen(
                 itemsIndexed(tvSeasonList) { index, tvSeason ->
                     TvSeasonItem(
                             tvTitle = tvTitle,
-                            tvSeasonDomainModel = tvSeason
+                            tvSeasonDomainModel = tvSeason,
+                            onItemClicked = {
+                                onItemClicked(tvSeason.seasonNumber)
+                            }
                     )
 
                     if (index < tvSeasonList.lastIndex) {
@@ -121,6 +125,7 @@ fun TvSeasonScreenPreview(modifier: Modifier = Modifier) {
                             seasonNumber = 1
                     ),
             ),
-            onBackPressed = {}
+            onBackPressed = {},
+            onItemClicked = {}
     )
 }

@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.tv
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,13 +30,18 @@ import com.aldiprahasta.tmdb.ui.components.VoteAverageUi
 fun TvSeasonItem(
         tvTitle: String,
         tvSeasonDomainModel: TvSeasonDomainModel,
+        onItemClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     var seasonOverview = "Season ${tvSeasonDomainModel.seasonNumber} of $tvTitle premiered on ${tvSeasonDomainModel.seasonAirDate}."
 
     Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onItemClicked()
+                    }
     ) {
         ImageLoader(
                 imagePath = tvSeasonDomainModel.seasonPosterPath,
@@ -106,5 +112,7 @@ fun TvSeasonItemPreview(modifier: Modifier = Modifier) {
                     seasonVoteAverage = 2.3,
                     totalEpisodes = 53,
                     seasonNumber = 1
-            ))
+            ),
+            onItemClicked = {}
+    )
 }

@@ -37,12 +37,14 @@ import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.Tv
 import com.aldiprahasta.tmdb.TvSeason
+import com.aldiprahasta.tmdb.TvSeasonDetail
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
+import com.aldiprahasta.tmdb.ui.tv.TvSeasonDetailScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.parcelableArrayList
@@ -227,6 +229,26 @@ fun TMDbNavHostController(
                     tvSeasonList = tvSeasonList,
                     onBackPressed = {
                         navController.navigateUp()
+                    },
+                    onItemClicked = { tvSeasonNumber ->
+                        navController.navigateToTvSeasonDetailScreen(tvId, tvSeasonNumber)
+                    }
+            )
+        }
+
+        composable(
+                route = TvSeasonDetail.routeWithArgs,
+                arguments = TvSeasonDetail.arguments
+        ) { navBackStackEntry ->
+            val tvId = navBackStackEntry.arguments?.getInt(TvSeasonDetail.TV_ID_ARG, 0) ?: 0
+            val tvSeasonNumber = navBackStackEntry.arguments?.getInt(TvSeasonDetail.TV_SEASON_NUMBER_ARG, 0)
+                    ?: 0
+
+            TvSeasonDetailScreen(
+                    tvId = tvId,
+                    tvSeasonNumber = tvSeasonNumber,
+                    onBackPressed = {
+                        navController.navigateUp()
                     }
             )
         }
@@ -267,4 +289,8 @@ private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType
 private fun NavHostController.navigateToTvSeasonScreen(tvId: Int, tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) {
     val tvSeasonListJson = Uri.encode(Gson().toJson(tvSeasonList))
     navigate("${TvSeason.route}/$tvId/$tvTitle/$tvSeasonListJson")
+}
+
+private fun NavHostController.navigateToTvSeasonDetailScreen(tvId: Int, tvSeasonNumber: Int) {
+    navigate("${TvSeasonDetail.route}/$tvId/$tvSeasonNumber")
 }
