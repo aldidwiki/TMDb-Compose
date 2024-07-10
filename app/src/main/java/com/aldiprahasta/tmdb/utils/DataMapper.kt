@@ -6,6 +6,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.search.SearchResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvEpisodeItemResponse
@@ -18,6 +19,7 @@ import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
+import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
@@ -167,6 +169,18 @@ fun TvSeasonResponse.mapTvSeasonResponseToDomainModel(): TvSeasonDetailDomainMod
                     seasonNumber = seasonNumber ?: 0
             ),
             tvEpisodeList = episodes.mapTvEpisodeItemResponseToDomainModelList()
+    )
+}
+
+fun SearchResponseModel.mapSearchResponseToDomainModel(): SearchDomainModel {
+    return SearchDomainModel(
+            id = id,
+            name = name ?: title ?: "",
+            imagePath = posterPath ?: profilePath ?: "",
+            releaseDate = releaseDate ?: firstAirDate ?: "",
+            mediaType = mediaType ?: "",
+            knownFor = knownForDepartment ?: "",
+            popularity = popularity ?: 0.0
     )
 }
 
