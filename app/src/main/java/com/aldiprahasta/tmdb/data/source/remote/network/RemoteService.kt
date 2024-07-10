@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.search.SearchResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
@@ -42,4 +43,10 @@ interface RemoteService {
             @Path("tv_id") tvId: Int,
             @Path("season_number") seasonNumber: Int
     ): Response<TvSeasonResponse>
+
+    @GET("search/multi")
+    suspend fun getSearchResults(
+            @Query("query") query: String,
+            @Query("page") page: Int
+    ): Response<SearchResponse>
 }
