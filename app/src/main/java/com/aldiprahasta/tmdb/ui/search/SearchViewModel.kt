@@ -11,12 +11,14 @@ import androidx.paging.cachedIn
 import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.GetSearchResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class SearchViewModel(getSearchResult: GetSearchResult) : ViewModel() {
     var searchQuery by mutableStateOf("")
         private set
@@ -26,6 +28,7 @@ class SearchViewModel(getSearchResult: GetSearchResult) : ViewModel() {
     }
 
     val searchResults: StateFlow<PagingData<SearchDomainModel>> = snapshotFlow { searchQuery }
+            .debounce(300L)
             .flatMapLatest { q -> getSearchResult(q) }
             .cachedIn(viewModelScope)
             .stateIn(
