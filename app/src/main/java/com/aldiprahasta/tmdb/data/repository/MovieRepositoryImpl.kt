@@ -3,7 +3,7 @@ package com.aldiprahasta.tmdb.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.aldiprahasta.tmdb.data.source.paging.MoviePagingSource
+import com.aldiprahasta.tmdb.data.source.paging.PopularMoviePagingSource
 import com.aldiprahasta.tmdb.data.source.remote.MovieRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
@@ -21,7 +21,7 @@ class MovieRepositoryImpl(
         return Pager(
                 config = PagingConfig(pageSize = 10),
                 pagingSourceFactory = {
-                    MoviePagingSource(remoteService)
+                    PopularMoviePagingSource(remoteService)
                 }
         ).flow
     }

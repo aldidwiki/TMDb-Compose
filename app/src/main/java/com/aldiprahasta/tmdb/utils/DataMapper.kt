@@ -9,7 +9,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvEpisodeItemResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
@@ -118,15 +118,13 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
     } ?: emptyList()
 }
 
-fun TvResponse.mapTvResponseToTvDomainModelList(): List<TvDomainModel> {
-    return tvList.map { tvResponseModel ->
-        TvDomainModel(
-                posterPath = tvResponseModel.posterPath,
-                tvId = tvResponseModel.id,
-                title = tvResponseModel.name ?: "",
-                releaseDate = tvResponseModel.firstAirDate?.convertDate() ?: ""
-        )
-    }
+fun TvResponseModel.mapTvResponseToTvDomainModel(): TvDomainModel {
+    return TvDomainModel(
+            posterPath = posterPath,
+            tvId = id,
+            title = name ?: "",
+            releaseDate = firstAirDate?.convertDate() ?: ""
+    )
 }
 
 fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDetailDomainModel =

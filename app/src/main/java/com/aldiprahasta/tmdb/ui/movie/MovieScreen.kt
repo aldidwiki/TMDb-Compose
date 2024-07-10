@@ -13,6 +13,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
+import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
@@ -54,6 +55,11 @@ fun MovieContent(
                 if (index < popularMoviePagingItems.itemCount - 1) {
                     HorizontalDivider(Modifier.padding(vertical = 16.dp))
                 }
+            } ?: run {
+                ErrorScreen(
+                        errorMessage = "No Movies Found",
+                        modifier = Modifier.fillParentMaxSize()
+                )
             }
         }
 

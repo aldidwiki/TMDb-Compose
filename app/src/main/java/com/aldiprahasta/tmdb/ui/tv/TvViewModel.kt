@@ -2,6 +2,8 @@ package com.aldiprahasta.tmdb.ui.tv
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
@@ -21,12 +23,12 @@ class TvViewModel(tvWrapper: TvWrapper) : ViewModel() {
         tvSeasonDetailParam.value = Pair(tvId, tvSeasonNumber)
     }
 
-    val popularTv: StateFlow<UiState<List<TvDomainModel>>> = tvWrapper.getPopularTv()
-            .delayAfterLoading(300L)
+    val popularTv: StateFlow<PagingData<TvDomainModel>> = tvWrapper.getPopularTv()
+            .cachedIn(viewModelScope)
             .stateIn(
                     viewModelScope,
                     SharingStarted.WhileSubscribed(5000),
-                    UiState.Loading
+                    PagingData.empty()
             )
 
     val tvSeasonDetail: StateFlow<UiState<TvSeasonDetailDomainModel>> = tvSeasonDetailParam.flatMapLatest { pair ->

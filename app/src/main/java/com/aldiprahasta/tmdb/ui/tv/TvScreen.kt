@@ -1,25 +1,21 @@
 package com.aldiprahasta.tmdb.ui.tv
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
-import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
+import com.aldiprahasta.tmdb.utils.setupPagingLoadState
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -28,33 +24,18 @@ fun TvScreen(
         modifier: Modifier = Modifier
 ) {
     val tvViewModel: TvViewModel = koinViewModel()
-    val tvData by tvViewModel.popularTv.collectAsStateWithLifecycle()
+    val popularTvPagingItems = tvViewModel.popularTv.collectAsLazyPagingItems()
 
-    AnimatedContent(
-            targetState = tvData,
-            label = "Animated Content",
-            modifier = modifier.fillMaxWidth()
-    ) { targetState ->
-        targetState.doIfLoading {
-            LoadingScreen()
-        }
-
-        targetState.doIfError { throwable, _ ->
-            ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
-        }
-
-        targetState.doIfSuccess { popularTvList ->
-            TvContent(
-                    popularTvList = popularTvList,
-                    onItemClicked = onItemClicked
-            )
-        }
-    }
+    TvContent(
+            popularTvPagingItems = popularTvPagingItems,
+            onItemClicked = onItemClicked,
+            modifier = modifier
+    )
 }
 
 @Composable
 fun TvContent(
-        popularTvList: List<TvDomainModel>,
+        popularTvPagingItems: LazyPagingItems<TvDomainModel>,
         onItemClicked: (tvId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
@@ -62,22 +43,31 @@ fun TvContent(
             modifier = modifier,
             contentPadding = PaddingValues(10.dp)
     ) {
-        itemsIndexed(popularTvList) { index, item ->
-            ContentItem(
-                    title = item.title,
-                    releaseDate = item.releaseDate,
-                    characterName = null,
-                    posterPath = item.posterPath,
-                    onItemClicked = {
-                        onItemClicked(item.tvId)
-                    },
-                    totalEpisodeCount = null
-            )
+        items(popularTvPagingItems.itemCount) { index ->
+            popularTvPagingItems[index]?.let { popularTv ->
+                ContentItem(
+                        title = popularTv.title,
+                        releaseDate = popularTv.releaseDate,
+                        characterName = null,
+                        posterPath = popularTv.posterPath,
+                        onItemClicked = {
+                            onItemClicked(popularTv.tvId)
+                        },
+                        totalEpisodeCount = null
+                )
 
-            if (index < popularTvList.lastIndex) {
-                HorizontalDivider(Modifier.padding(vertical = 16.dp))
+                if (index < popularTvPagingItems.itemCount - 1) {
+                    HorizontalDivider(Modifier.padding(vertical = 16.dp))
+                }
+            } ?: run {
+                ErrorScreen(
+                        errorMessage = "No Tv Series Found",
+                        modifier = Modifier.fillParentMaxSize()
+                )
             }
         }
+
+        setupPagingLoadState(popularTvPagingItems)
     }
 }
 
@@ -85,7 +75,7 @@ fun TvContent(
 @Composable
 fun TvContentPreview() {
     TvContent(
-            popularTvList = listOf(
+            popularTvPagingItems = flowOf(PagingData.from(listOf(
                     TvDomainModel(
                             posterPath = null,
                             tvId = 9989,
@@ -110,7 +100,7 @@ fun TvContentPreview() {
                             title = "omnesque",
                             releaseDate = "dicam"
                     )
-            ),
+            ))).collectAsLazyPagingItems(),
             onItemClicked = {}
     )
 }

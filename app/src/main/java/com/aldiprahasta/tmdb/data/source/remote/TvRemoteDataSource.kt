@@ -3,7 +3,6 @@ package com.aldiprahasta.tmdb.data.source.remote
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.Dispatchers
@@ -15,18 +14,6 @@ import retrofit2.HttpException
 import timber.log.Timber
 
 class TvRemoteDataSource(private val remoteService: RemoteService) {
-    fun getPopularTv(): Flow<UiState<TvResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getPopularTv()
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { tvResponse ->
-            emit(UiState.Success(tvResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        emit(UiState.Error(t))
-    }.flowOn(Dispatchers.IO)
-
     fun getTvDetail(tvId: Int): Flow<UiState<TvDetailResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getTvDetail(tvId)

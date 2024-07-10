@@ -1,6 +1,5 @@
 package com.aldiprahasta.tmdb.data.source.paging
 
-import androidx.paging.LoadState
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
@@ -8,7 +7,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseMode
 import retrofit2.HttpException
 import timber.log.Timber
 
-class MoviePagingSource(
+class PopularMoviePagingSource(
         private val remoteService: RemoteService
 ) : PagingSource<Int, MovieResponseModel>() {
     override fun getRefreshKey(state: PagingState<Int, MovieResponseModel>): Int? {
@@ -24,7 +23,7 @@ class MoviePagingSource(
             val response = remoteService.getPopularMovies(page)
 
             if (!response.isSuccessful) {
-                LoadState.Error(HttpException(response))
+                throw HttpException(response)
             }
 
             LoadResult.Page(

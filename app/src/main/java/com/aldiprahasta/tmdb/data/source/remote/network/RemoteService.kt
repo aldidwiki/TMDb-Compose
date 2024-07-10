@@ -29,7 +29,7 @@ interface RemoteService {
     suspend fun getPersonCredits(@Path("person_id") personId: Int): Response<CreditResponse>
 
     @GET("tv/popular")
-    suspend fun getPopularTv(): Response<TvResponse>
+    suspend fun getPopularTv(@Query("page") page: Int): Response<TvResponse>
 
     @GET("tv/{tv_id}?append_to_response=videos,external_ids,content_ratings,aggregate_credits")
     suspend fun getTvDetail(@Path("tv_id") tvId: Int): Response<TvDetailResponse>
