@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -12,6 +13,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,7 +54,7 @@ fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchContent(
+private fun SearchContent(
         searchQuery: String,
         searchResultsPagingItems: LazyPagingItems<SearchDomainModel>,
         onSearchQueryChanged: (newQuery: String) -> Unit,
@@ -99,17 +101,11 @@ fun SearchContent(
             items(searchResultsPagingItems.itemCount) { index ->
                 searchResultsPagingItems[index]?.let { searchResult ->
                     val subTitleText = when (searchResult.mediaType) {
-                        Constant.TV_TYPE_SEARCH -> {
-                            "${searchResult.releaseDate} | TV Show"
-                        }
+                        Constant.TV_TYPE_SEARCH -> "${searchResult.releaseDate} | TV Show"
 
-                        Constant.PERSON_TYPE_SEARCH -> {
-                            searchResult.knownFor
-                        }
+                        Constant.PERSON_TYPE_SEARCH -> searchResult.knownFor
 
-                        else -> {
-                            searchResult.releaseDate
-                        }
+                        else -> searchResult.releaseDate
                     }
 
                     ContentItem(
