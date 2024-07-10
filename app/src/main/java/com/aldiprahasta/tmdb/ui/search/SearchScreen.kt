@@ -1,16 +1,164 @@
 package com.aldiprahasta.tmdb.ui.search
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
+import com.aldiprahasta.tmdb.ui.components.ContentItem
+import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.utils.Constant
+import com.aldiprahasta.tmdb.utils.setupPagingLoadState
+import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Great Things Will Come", style = MaterialTheme.typography.headlineMedium)
+    val viewModel: SearchViewModel = koinViewModel()
+    val searchResultsPagingItems = viewModel.searchResults.collectAsLazyPagingItems()
+
+    SearchContent(
+            searchQuery = viewModel.searchQuery,
+            searchResultsPagingItems = searchResultsPagingItems,
+            onSearchQueryChanged = { newQuery ->
+                viewModel.onSearchQueryChange(newQuery)
+            },
+            modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchContent(
+        searchQuery: String,
+        searchResultsPagingItems: LazyPagingItems<SearchDomainModel>,
+        onSearchQueryChanged: (newQuery: String) -> Unit,
+        modifier: Modifier = Modifier
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    SearchBar(
+            query = searchQuery,
+            onQueryChange = onSearchQueryChanged,
+            onSearch = {
+                keyboardController?.hide()
+            },
+            active = true,
+            onActiveChange = {},
+            placeholder = {
+                Text(text = "Search Movies, Tv Show, and People")
+            },
+            leadingIcon = {
+                Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                )
+            },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onSearchQueryChanged("") }) {
+                        Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null
+                        )
+                    }
+                }
+            },
+            modifier = modifier
+    ) {
+        if (searchResultsPagingItems.itemCount < 1 && searchQuery.isNotEmpty()) {
+            ErrorScreen(errorMessage = "No Search Results")
+        } else LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier.fillMaxSize()
+        ) {
+            items(searchResultsPagingItems.itemCount) { index ->
+                searchResultsPagingItems[index]?.let { searchResult ->
+                    val subTitleText = when (searchResult.mediaType) {
+                        Constant.TV_TYPE_SEARCH -> {
+                            "${searchResult.releaseDate} | TV Show"
+                        }
+
+                        Constant.PERSON_TYPE_SEARCH -> {
+                            searchResult.knownFor
+                        }
+
+                        else -> {
+                            searchResult.releaseDate
+                        }
+                    }
+
+                    ContentItem(
+                            title = searchResult.name,
+                            releaseDate = subTitleText,
+                            characterName = null,
+                            posterPath = searchResult.imagePath,
+                            totalEpisodeCount = null,
+                            onItemClicked = {}
+                    )
+
+                    if (index < searchResultsPagingItems.itemCount - 1) {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                    }
+                }
+            }
+
+            setupPagingLoadState(searchResultsPagingItems)
+        }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SearchContentPreview(modifier: Modifier = Modifier) {
+    SearchContent(
+            searchQuery = "",
+            onSearchQueryChanged = {},
+            searchResultsPagingItems = flowOf(PagingData.from(listOf(
+                    SearchDomainModel(
+                            id = 6081,
+                            name = "Daryl Shields",
+                            imagePath = "dapibus",
+                            releaseDate = "fugit",
+                            mediaType = "menandri",
+                            knownFor = "amet",
+                            popularity = 2.3
+                    ),
+                    SearchDomainModel(
+                            id = 6081,
+                            name = "Daryl Shields",
+                            imagePath = "dapibus",
+                            releaseDate = "fugit",
+                            mediaType = "menandri",
+                            knownFor = "amet",
+                            popularity = 2.3
+                    ),
+                    SearchDomainModel(
+                            id = 6081,
+                            name = "Daryl Shields",
+                            imagePath = "dapibus",
+                            releaseDate = "fugit",
+                            mediaType = "menandri",
+                            knownFor = "amet",
+                            popularity = 2.3
+                    ),
+            ))).collectAsLazyPagingItems()
+    )
 }

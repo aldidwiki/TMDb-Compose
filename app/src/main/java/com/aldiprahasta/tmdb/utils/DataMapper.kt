@@ -177,7 +177,7 @@ fun SearchResponseModel.mapSearchResponseToDomainModel(): SearchDomainModel {
             id = id,
             name = name ?: title ?: "",
             imagePath = posterPath ?: profilePath ?: "",
-            releaseDate = releaseDate ?: firstAirDate ?: "",
+            releaseDate = releaseDate?.convertDate() ?: firstAirDate?.convertDate() ?: "",
             mediaType = mediaType ?: "",
             knownFor = knownForDepartment ?: "",
             popularity = popularity ?: 0.0
