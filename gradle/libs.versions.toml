@@ -18,6 +18,7 @@ androidx-navigation = "2.7.7"
 androidx-palette = "1.0.0"
 androidx-constraintlayout = "1.0.1"
 material-icons = "1.6.7"
+paging = "3.3.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -46,6 +47,8 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-palette = { group = "androidx.palette", name = "palette", version.ref = "androidx-palette" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidx-constraintlayout" }
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "material-icons" }
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

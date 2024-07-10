@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.androidx.palette)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.material.icons)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
