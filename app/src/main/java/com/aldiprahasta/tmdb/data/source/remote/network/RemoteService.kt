@@ -10,10 +10,11 @@ import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RemoteService {
     @GET("movie/popular")
-    suspend fun getPopularMovies(): Response<MovieResponse>
+    suspend fun getPopularMovies(@Query("page") page: Int): Response<MovieResponse>
 
     @GET("movie/{movie_id}?append_to_response=release_dates,credits,external_ids,videos")
     suspend fun getMovieDetail(@Path("movie_id") movieId: Int): Response<MovieDetailResponse>

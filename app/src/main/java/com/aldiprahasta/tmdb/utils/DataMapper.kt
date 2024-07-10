@@ -4,7 +4,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
@@ -24,15 +24,13 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 
-fun MovieResponse.mapMovieResponseToMovieDomainModelList(): List<MovieDomainModel> {
-    return this.movieResponseModelList.map { movieResponseModel ->
-        MovieDomainModel(
-                title = movieResponseModel.title ?: "",
-                posterPath = movieResponseModel.posterPath,
-                releaseDate = movieResponseModel.releaseDate?.convertDate() ?: "",
-                movieId = movieResponseModel.id
-        )
-    }
+fun MovieResponseModel.mapMovieResponseToMovieDomainModel(): MovieDomainModel {
+    return MovieDomainModel(
+            title = title ?: "",
+            posterPath = posterPath,
+            releaseDate = releaseDate?.convertDate() ?: "",
+            movieId = id
+    )
 }
 
 fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): ContentDetailDomainModel {

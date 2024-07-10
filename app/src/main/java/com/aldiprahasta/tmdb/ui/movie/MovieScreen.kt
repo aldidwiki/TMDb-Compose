@@ -1,35 +1,28 @@
 package com.aldiprahasta.tmdb.ui.movie
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
-import com.aldiprahasta.tmdb.ui.components.ErrorScreen
-import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.utils.UiState
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MovieScreen(onMovieClicked: (movieId: Int) -> Unit, modifier: Modifier = Modifier) {
     val viewModel: MovieViewModel = koinViewModel()
-    val popularMovieList by viewModel.popularMovieList.collectAsStateWithLifecycle()
+    val popularMoviePagingItems = viewModel.popularMovieList.collectAsLazyPagingItems()
 
     MovieContent(
-            popularMovieList = popularMovieList,
+            popularMoviePagingItems = popularMoviePagingItems,
             modifier = modifier,
             onItemClicked = { movieId ->
                 onMovieClicked(movieId)
@@ -38,40 +31,29 @@ fun MovieScreen(onMovieClicked: (movieId: Int) -> Unit, modifier: Modifier = Mod
 
 @Composable
 fun MovieContent(
-        popularMovieList: UiState<List<MovieDomainModel>>,
+        popularMoviePagingItems: LazyPagingItems<MovieDomainModel>,
         onItemClicked: (movieId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    AnimatedContent(
-            targetState = popularMovieList,
-            label = "Animated Content",
-            modifier = modifier.fillMaxSize()
-    ) { targetState ->
-        targetState.doIfSuccess { movieList ->
-            LazyColumn(contentPadding = PaddingValues(10.dp)) {
-                itemsIndexed(movieList) { index, movie ->
-                    ContentItem(
-                            title = movie.title,
-                            releaseDate = movie.releaseDate,
-                            posterPath = movie.posterPath,
-                            characterName = null,
-                            onItemClicked = { onItemClicked(movie.movieId) },
-                            totalEpisodeCount = null
-                    )
+    LazyColumn(
+            contentPadding = PaddingValues(10.dp),
+            modifier = modifier
+    ) {
+        items(popularMoviePagingItems.itemCount) { index ->
+            popularMoviePagingItems[index]?.let { movie ->
+                ContentItem(
+                        title = movie.title,
+                        releaseDate = movie.releaseDate,
+                        posterPath = movie.posterPath,
+                        characterName = null,
+                        onItemClicked = { onItemClicked(movie.movieId) },
+                        totalEpisodeCount = null
+                )
 
-                    if (index < movieList.lastIndex) {
-                        HorizontalDivider(Modifier.padding(vertical = 16.dp))
-                    }
+                if (index < popularMoviePagingItems.itemCount - 1) {
+                    HorizontalDivider(Modifier.padding(vertical = 16.dp))
                 }
             }
-        }
-
-        targetState.doIfError { _, _ ->
-            ErrorScreen(errorMessage = "No Movies Found")
-        }
-
-        targetState.doIfLoading {
-            LoadingScreen()
         }
     }
 }
@@ -80,7 +62,7 @@ fun MovieContent(
 @Composable
 fun MovieContentPreview() {
     MovieContent(
-            popularMovieList = UiState.Success(listOf(
+            popularMoviePagingItems = flowOf(PagingData.from(listOf(
                     MovieDomainModel(
                             "Dune: Part Two",
                             "",
@@ -99,7 +81,7 @@ fun MovieContentPreview() {
                             "24 December 2023",
                             12312
                     )
-            )),
+            ))).collectAsLazyPagingItems(),
             onItemClicked = {},
     )
 }
