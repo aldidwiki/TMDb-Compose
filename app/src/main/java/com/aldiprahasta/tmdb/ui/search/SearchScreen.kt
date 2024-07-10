@@ -30,7 +30,10 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchScreen(modifier: Modifier = Modifier) {
+fun SearchScreen(
+        onItemClicked: (contentId: Int, mediaType: String) -> Unit,
+        modifier: Modifier = Modifier
+) {
     val viewModel: SearchViewModel = koinViewModel()
     val searchResultsPagingItems = viewModel.searchResults.collectAsLazyPagingItems()
 
@@ -39,6 +42,9 @@ fun SearchScreen(modifier: Modifier = Modifier) {
             searchResultsPagingItems = searchResultsPagingItems,
             onSearchQueryChanged = { newQuery ->
                 viewModel.onSearchQueryChange(newQuery)
+            },
+            onItemClicked = { contentId, mediaType ->
+                onItemClicked(contentId, mediaType)
             },
             modifier = modifier
     )
@@ -50,6 +56,7 @@ fun SearchContent(
         searchQuery: String,
         searchResultsPagingItems: LazyPagingItems<SearchDomainModel>,
         onSearchQueryChanged: (newQuery: String) -> Unit,
+        onItemClicked: (contentId: Int, mediaType: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -63,7 +70,7 @@ fun SearchContent(
             active = true,
             onActiveChange = {},
             placeholder = {
-                Text(text = "Search Movies, Tv Show, and People")
+                Text(text = "Search Movie, Tv Show, and People")
             },
             leadingIcon = {
                 Icon(
@@ -111,7 +118,9 @@ fun SearchContent(
                             characterName = null,
                             posterPath = searchResult.imagePath,
                             totalEpisodeCount = null,
-                            onItemClicked = {}
+                            onItemClicked = {
+                                onItemClicked(searchResult.id, searchResult.mediaType)
+                            }
                     )
 
                     if (index < searchResultsPagingItems.itemCount - 1) {
@@ -159,6 +168,7 @@ private fun SearchContentPreview(modifier: Modifier = Modifier) {
                             knownFor = "amet",
                             popularity = 2.3
                     ),
-            ))).collectAsLazyPagingItems()
+            ))).collectAsLazyPagingItems(),
+            onItemClicked = { _, _ -> }
     )
 }

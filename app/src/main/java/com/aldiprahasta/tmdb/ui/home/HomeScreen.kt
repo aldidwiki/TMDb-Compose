@@ -54,6 +54,7 @@ import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonDetailScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
+import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.parcelableArrayList
 import com.google.gson.Gson
@@ -160,7 +161,15 @@ fun TMDbNavHostController(
         }
 
         composable(route = Search.route) {
-            SearchScreen()
+            SearchScreen(onItemClicked = { contentId, mediaType ->
+                when (mediaType) {
+                    Constant.MOVIE_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
+
+                    Constant.TV_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
+
+                    Constant.PERSON_TYPE_SEARCH -> navController.navigateToPersonDetail(contentId)
+                }
+            })
         }
 
         composable(
