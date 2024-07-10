@@ -7,10 +7,20 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.PagingErrorFooter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
@@ -116,6 +126,47 @@ suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
 
 fun <T> Flow<UiState<T>>.delayAfterLoading(timeMillis: Long): Flow<UiState<T>> = onEach { state ->
     if (state != UiState.Loading) delay(timeMillis)
+}
+
+fun <T : Any> LazyListScope.setupPagingLoadState(lazyPagingItems: LazyPagingItems<T>) {
+    lazyPagingItems.apply {
+        when {
+            loadState.refresh is LoadState.Loading -> {
+                item { LoadingScreen(modifier = Modifier.fillParentMaxSize()) }
+            }
+
+            loadState.refresh is LoadState.Error -> {
+                val error = loadState.refresh as LoadState.Error
+                item {
+                    ErrorScreen(
+                            errorMessage = error.error.localizedMessage ?: "No Data Found",
+                            modifier = Modifier.fillParentMaxSize()
+                    )
+                }
+            }
+
+            loadState.append is LoadState.Loading -> {
+                item {
+                    LoadingScreen(
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
+                            indicatorSizeInDp = 30.dp
+                    )
+                }
+            }
+
+            loadState.append is LoadState.Error -> {
+                val error = loadState.append as LoadState.Error
+                item {
+                    PagingErrorFooter(
+                            errorMessage = error.error.localizedMessage,
+                            onRetryClicked = { retry() }
+                    )
+                }
+            }
+        }
+    }
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? = when {

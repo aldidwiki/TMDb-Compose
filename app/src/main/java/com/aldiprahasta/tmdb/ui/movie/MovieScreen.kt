@@ -13,6 +13,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
+import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,6 +56,8 @@ fun MovieContent(
                 }
             }
         }
+
+        setupPagingLoadState(popularMoviePagingItems)
     }
 }
 
