@@ -40,6 +40,7 @@ import com.aldiprahasta.tmdb.CreditDetail
 import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.Search
 import com.aldiprahasta.tmdb.Tv
 import com.aldiprahasta.tmdb.TvSeason
 import com.aldiprahasta.tmdb.TvSeasonDetail
@@ -48,6 +49,7 @@ import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
+import com.aldiprahasta.tmdb.ui.search.SearchScreen
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
 import com.aldiprahasta.tmdb.ui.tv.TvSeasonDetailScreen
@@ -155,6 +157,10 @@ fun TMDbNavHostController(
             TvScreen(onItemClicked = { tvId ->
                 navController.navigateToContentDetail(tvId, MediaType.TV_TYPE.name)
             })
+        }
+
+        composable(route = Search.route) {
+            SearchScreen()
         }
 
         composable(
@@ -268,6 +274,7 @@ fun TMDbNavHostController(
 
 private fun navigationItem() = listOf(
         Movie,
+        Search,
         Tv
 )
 

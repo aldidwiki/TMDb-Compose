@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
@@ -25,6 +26,12 @@ object Tv : TMDbDestinations {
     override val route: String = "tv_show"
     override val icon = Icons.Default.Tv
     override val label = "Tv Show"
+}
+
+object Search : TMDbDestinations {
+    override val route: String = "search"
+    override val icon: ImageVector = Icons.Default.Search
+    override val label: String = "Search"
 }
 
 object ContentDetail : TMDbDestinations {
