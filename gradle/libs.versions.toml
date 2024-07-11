@@ -20,6 +20,7 @@ androidx-constraintlayout = "1.0.1"
 material-icons = "1.6.7"
 paging = "3.3.0"
 splash = "1.0.1"
+browser = "1.8.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -51,6 +52,7 @@ androidx-material-icons = { group = "androidx.compose.material", name = "materia
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 androidx-core-splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

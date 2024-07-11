@@ -9,12 +9,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.utils.Constant
+import com.aldiprahasta.tmdb.utils.openBrowser
 
 @Composable
 fun ContentDetailExternal(
@@ -25,7 +26,7 @@ fun ContentDetailExternal(
         googleId: String?,
         modifier: Modifier = Modifier
 ) {
-    val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     Row(
             modifier = modifier.fillMaxWidth(),
@@ -33,7 +34,7 @@ fun ContentDetailExternal(
     ) {
         facebookId?.let {
             IconButton(onClick = {
-                uriHandler.openUri(Constant.FACEBOOK_BASE_URL + facebookId)
+                context.openBrowser(Constant.FACEBOOK_BASE_URL + facebookId)
             }) {
                 Image(
                         painter = painterResource(id = R.drawable.facebook_logo),
@@ -45,7 +46,7 @@ fun ContentDetailExternal(
 
         instagramId?.let {
             IconButton(onClick = {
-                uriHandler.openUri(Constant.INSTAGRAM_BASE_URL + instagramId)
+                context.openBrowser(Constant.INSTAGRAM_BASE_URL + instagramId)
             }) {
                 Image(
                         painter = painterResource(id = R.drawable.instagram_logo),
@@ -57,7 +58,7 @@ fun ContentDetailExternal(
 
         googleId?.let {
             IconButton(onClick = {
-                uriHandler.openUri(Constant.GOOGLE_SEARCH_BASE_URL + googleId)
+                context.openBrowser(Constant.GOOGLE_SEARCH_BASE_URL + googleId)
             }) {
                 Image(
                         painter = painterResource(id = R.drawable.ic_google),
@@ -69,7 +70,7 @@ fun ContentDetailExternal(
 
         twitterId?.let {
             IconButton(onClick = {
-                uriHandler.openUri(Constant.TWITTER_BASE_URL + twitterId)
+                context.openBrowser(Constant.TWITTER_BASE_URL + twitterId)
             }) {
                 Image(
                         painter = painterResource(id = R.drawable.twitter_logo),
@@ -81,7 +82,7 @@ fun ContentDetailExternal(
 
         imdbPair.second?.let { imdbId ->
             IconButton(onClick = {
-                uriHandler.openUri(
+                context.openBrowser(
                         if (imdbPair.first) Constant.IMDB_BASE_URL + imdbId
                         else Constant.IMDB_PROFILE_URL + imdbId
                 )

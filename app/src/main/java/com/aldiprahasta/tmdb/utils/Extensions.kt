@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -175,4 +177,10 @@ fun <T : Any> LazyListScope.setupPagingLoadState(lazyPagingItems: LazyPagingItem
 inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? = when {
     SDK_INT >= 33 -> getParcelableArrayList(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableArrayList(key)
+}
+
+fun Context.openBrowser(url: String) {
+    CustomTabsIntent.Builder().apply {
+        setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+    }.build().launchUrl(this, Uri.parse(url))
 }
