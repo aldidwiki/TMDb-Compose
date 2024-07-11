@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -13,7 +12,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,6 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchScreen(
         onItemClicked: (contentId: Int, mediaType: String) -> Unit,
+        onBackPressed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: SearchViewModel = koinViewModel()
@@ -48,6 +47,7 @@ fun SearchScreen(
             onItemClicked = { contentId, mediaType ->
                 onItemClicked(contentId, mediaType)
             },
+            onBackPressed = onBackPressed,
             modifier = modifier
     )
 }
@@ -59,6 +59,7 @@ private fun SearchContent(
         searchResultsPagingItems: LazyPagingItems<SearchDomainModel>,
         onSearchQueryChanged: (newQuery: String) -> Unit,
         onItemClicked: (contentId: Int, mediaType: String) -> Unit,
+        onBackPressed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -70,7 +71,9 @@ private fun SearchContent(
                 keyboardController?.hide()
             },
             active = true,
-            onActiveChange = {},
+            onActiveChange = { state ->
+                if (!state) onBackPressed()
+            },
             placeholder = {
                 Text(text = "Search Movie, Tv Show, and People")
             },
@@ -165,6 +168,7 @@ private fun SearchContentPreview(modifier: Modifier = Modifier) {
                             popularity = 2.3
                     ),
             ))).collectAsLazyPagingItems(),
-            onItemClicked = { _, _ -> }
+            onItemClicked = { _, _ -> },
+            onBackPressed = {}
     )
 }

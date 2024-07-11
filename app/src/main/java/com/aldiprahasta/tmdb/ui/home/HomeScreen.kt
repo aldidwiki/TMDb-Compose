@@ -125,7 +125,7 @@ fun TMDbBottomNavigation(
                     colors = NavigationBarItemDefaults.colors(indicatorColor = TMDBSecondaryColor),
                     selected = tmDbDestinations.route == navController.currentDestination()?.route,
                     onClick = {
-                        navController.navigate(tmDbDestinations.route)
+                        navController.navigateSingleTopTo(tmDbDestinations.route)
                     },
                     icon = {
                         Icon(imageVector = tmDbDestinations.icon, contentDescription = null)
@@ -161,15 +161,19 @@ fun TMDbNavHostController(
         }
 
         composable(route = Search.route) {
-            SearchScreen(onItemClicked = { contentId, mediaType ->
-                when (mediaType) {
-                    Constant.MOVIE_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
+            SearchScreen(
+                    onBackPressed = {
+                        navController.navigateUp()
+                    },
+                    onItemClicked = { contentId, mediaType ->
+                        when (mediaType) {
+                            Constant.MOVIE_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
 
-                    Constant.TV_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
+                            Constant.TV_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
 
-                    Constant.PERSON_TYPE_SEARCH -> navController.navigateToPersonDetail(contentId)
-                }
-            })
+                            Constant.PERSON_TYPE_SEARCH -> navController.navigateToPersonDetail(contentId)
+                        }
+                    })
         }
 
         composable(
