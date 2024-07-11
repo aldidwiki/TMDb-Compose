@@ -10,7 +10,7 @@ object Constant {
     const val SHARE_BASE_URL = "https://www.themoviedb.org/"
     const val GOOGLE_SEARCH_BASE_URL = "https://www.google.com/search?q="
 
-    const val MOVIE_TYPE_SEARCH = "movie"
-    const val TV_TYPE_SEARCH = "tv"
-    const val PERSON_TYPE_SEARCH = "person"
+    const val MOVIE_MEDIA_TYPE = "movie"
+    const val TV_MEDIA_TYPE = "tv"
+    const val PERSON_MEDIA_TYPE = "person"
 }

@@ -81,7 +81,7 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
 }
 
 fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType): List<CastDomainModel> {
-    return casts?.sortedByDescending { it.releaseDate }?.map { castResponseModel ->
+    return casts?.map { castResponseModel ->
         when (mediaType) {
             MediaType.MOVIE_TYPE -> CastDomainModel(
                     name = castResponseModel.name ?: "",
@@ -101,7 +101,8 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
                     order = castResponseModel.order,
                     id = castResponseModel.id,
                     mediaType = castResponseModel.mediaType,
-                    releaseDate = castResponseModel.releaseDate?.convertDate() ?: castResponseModel.firstAirDate?.convertDate() ?: "",
+                    releaseDate = castResponseModel.releaseDate?.convertDate()
+                            ?: castResponseModel.firstAirDate?.convertDate() ?: "",
                     totalEpisodeCount = castResponseModel.episodeCount
             )
 
@@ -116,7 +117,15 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
                     totalEpisodeCount = castResponseModel.totalEpisodeCount
             )
         }
-
+    }?.sortedByDescending {
+        if (mediaType == MediaType.PERSON_TYPE) {
+            it.releaseDate?.convertDate(
+                    inFormat = "MMMM dd, yyyy",
+                    outFormat = "yyyy-MM-dd"
+            )
+        } else {
+            ""
+        }
     } ?: emptyList()
 }
 

@@ -31,9 +31,12 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
 
-fun String.convertDate(): String {
-    val parser = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val formatter = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+fun String.convertDate(
+        inFormat: String = "yyyy-MM-dd",
+        outFormat: String = "MMMM dd, yyyy"
+): String {
+    val parser = SimpleDateFormat(inFormat, Locale.getDefault())
+    val formatter = SimpleDateFormat(outFormat, Locale.getDefault())
 
     val date = parser.parse(this.ifEmpty { return this })
     return date?.let {

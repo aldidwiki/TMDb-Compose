@@ -104,9 +104,9 @@ private fun SearchContent(
             items(searchResultsPagingItems.itemCount) { index ->
                 searchResultsPagingItems[index]?.let { searchResult ->
                     val subTitleText = when (searchResult.mediaType) {
-                        Constant.TV_TYPE_SEARCH -> "${searchResult.releaseDate} | TV Show"
+                        Constant.TV_MEDIA_TYPE -> "${searchResult.releaseDate} | TV Show"
 
-                        Constant.PERSON_TYPE_SEARCH -> searchResult.knownFor
+                        Constant.PERSON_MEDIA_TYPE -> searchResult.knownFor
 
                         else -> searchResult.releaseDate
                     }

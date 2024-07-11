@@ -167,11 +167,11 @@ fun TMDbNavHostController(
                     },
                     onItemClicked = { contentId, mediaType ->
                         when (mediaType) {
-                            Constant.MOVIE_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
+                            Constant.MOVIE_MEDIA_TYPE -> navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
 
-                            Constant.TV_TYPE_SEARCH -> navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
+                            Constant.TV_MEDIA_TYPE -> navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
 
-                            Constant.PERSON_TYPE_SEARCH -> navController.navigateToPersonDetail(contentId)
+                            Constant.PERSON_MEDIA_TYPE -> navController.navigateToPersonDetail(contentId)
                         }
                     })
         }
@@ -236,10 +236,13 @@ fun TMDbNavHostController(
                     onBackPressed = {
                         navController.navigateUp()
                     },
-                    onItemClicked = { id ->
+                    onItemClicked = { id, mediaType ->
                         when (contentType) {
                             MediaType.MOVIE_TYPE.name, MediaType.TV_TYPE.name -> navController.navigateToPersonDetail(id) // movie credit consist people
-                            MediaType.PERSON_TYPE.name -> navController.navigateToContentDetail(id, MediaType.MOVIE_TYPE.name) // reverse, person credit consist movie/tv
+                            MediaType.PERSON_TYPE.name -> when (mediaType) {
+                                Constant.MOVIE_MEDIA_TYPE -> navController.navigateToContentDetail(id, MediaType.MOVIE_TYPE.name)
+                                Constant.TV_MEDIA_TYPE -> navController.navigateToContentDetail(id, MediaType.TV_TYPE.name)
+                            } // reverse, person credit consist movie/tv
                         }
                     }
             )

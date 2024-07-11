@@ -39,7 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CreditScreen(
         contentId: Pair<Int, String>,
         onBackPressed: () -> Unit,
-        onItemClicked: (contentId: Int) -> Unit,
+        onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
@@ -87,7 +87,9 @@ fun CreditScreen(
             targetState.doIfSuccess { casts ->
                 CreditContent(
                         casts = casts,
-                        onItemClicked = onItemClicked
+                        onItemClicked = { contentId, mediaType ->
+                            onItemClicked(contentId, mediaType)
+                        }
                 )
             }
         }
@@ -97,7 +99,7 @@ fun CreditScreen(
 @Composable
 fun CreditContent(
         casts: List<CastDomainModel>,
-        onItemClicked: (contentId: Int) -> Unit,
+        onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -111,7 +113,7 @@ fun CreditContent(
                     posterPath = item.imagePath,
                     characterName = item.characterName,
                     onItemClicked = {
-                        onItemClicked(item.id)
+                        onItemClicked(item.id, item.mediaType)
                     },
                     totalEpisodeCount = item.totalEpisodeCount
             )
@@ -179,6 +181,6 @@ fun CreditContentPreview() {
                             totalEpisodeCount = 10
                     )
             ),
-            onItemClicked = {}
+            onItemClicked = { _, _ -> }
     )
 }
