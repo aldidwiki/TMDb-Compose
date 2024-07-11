@@ -1,6 +1,10 @@
 package com.aldiprahasta.tmdb.ui.tv
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -84,6 +88,9 @@ fun TvSeasonDetailScreen(
         AnimatedContent(
                 targetState = tvSeasonDetail,
                 label = "Animated Content",
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
+                },
                 modifier = Modifier.padding(innerPadding)
         ) { targetState ->
             targetState.doIfLoading {

@@ -1,6 +1,10 @@
 package com.aldiprahasta.tmdb.ui.credit
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -96,6 +100,9 @@ fun CreditScreen(
         AnimatedContent(
                 targetState = creditData,
                 label = "Animated Content",
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
+                },
                 modifier = Modifier.padding(innerPadding)
         ) { targetState ->
             targetState.doIfLoading {

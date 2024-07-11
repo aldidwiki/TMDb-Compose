@@ -2,6 +2,10 @@ package com.aldiprahasta.tmdb.ui.details
 
 import android.app.Activity
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -182,6 +186,9 @@ private fun ContentDetail(
     AnimatedContent(
             targetState = contentDetail,
             label = "Animated Content",
+            transitionSpec = {
+                fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
+            },
             modifier = modifier.fillMaxSize()
     ) { targetState ->
         targetState.doIfLoading {
