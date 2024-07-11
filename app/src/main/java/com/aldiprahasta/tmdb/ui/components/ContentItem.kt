@@ -51,14 +51,14 @@ fun ContentItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
             )
-            releaseDate?.let {
+            if (!releaseDate.isNullOrEmpty()) {
                 Text(
                         text = releaseDate,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1
                 )
             }
-            characterName?.let {
+            if (!characterName.isNullOrEmpty()) {
                 Text(
                         text = characterName,
                         style = MaterialTheme.typography.labelMedium,

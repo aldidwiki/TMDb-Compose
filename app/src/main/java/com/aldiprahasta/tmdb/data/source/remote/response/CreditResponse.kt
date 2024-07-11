@@ -58,7 +58,13 @@ data class CastResponseModel(
         val roles: List<RolesResponseModel>?,
 
         @field:SerializedName("total_episode_count")
-        val totalEpisodeCount: Int?
+        val totalEpisodeCount: Int?,
+
+        @field:SerializedName("first_air_date")
+        val firstAirDate: String?,
+
+        @field:SerializedName("episode_count")
+        val episodeCount: Int?
 )
 
 data class RolesResponseModel(

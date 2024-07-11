@@ -95,14 +95,14 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
             )
 
             MediaType.PERSON_TYPE -> CastDomainModel(
-                    name = castResponseModel.title ?: "",
-                    characterName = castResponseModel.character ?: "",
+                    name = castResponseModel.title ?: castResponseModel.name ?: "",
+                    characterName = castResponseModel.character?.ifEmpty { "Self" } ?: "",
                     imagePath = castResponseModel.posterPath ?: "",
                     order = castResponseModel.order,
                     id = castResponseModel.id,
                     mediaType = castResponseModel.mediaType,
-                    releaseDate = castResponseModel.releaseDate?.convertDate(),
-                    totalEpisodeCount = null
+                    releaseDate = castResponseModel.releaseDate?.convertDate() ?: castResponseModel.firstAirDate?.convertDate() ?: "",
+                    totalEpisodeCount = castResponseModel.episodeCount
             )
 
             MediaType.TV_TYPE -> CastDomainModel(
