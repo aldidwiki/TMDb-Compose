@@ -48,7 +48,7 @@ fun TvSeasonScreen(
                         title = {
                             Text(
                                     text = "$tvTitle's Seasons",
-                                    maxLines = 2,
+                                    maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                             )
                         },
