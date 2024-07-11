@@ -273,7 +273,6 @@ private fun PersonBiography(
         Text(
                 text = biography,
                 style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Justify,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                         .animateContentSize()
