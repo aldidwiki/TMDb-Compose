@@ -158,10 +158,11 @@ private fun SetStatusBarColor(rgbColorPalette: Int) {
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
     val view = LocalView.current
     val window = (view.context as Activity).window
-    window.statusBarColor = rgbColorPalette
-    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
 
-    DisposableEffect(view) {
+    DisposableEffect(rgbColorPalette) {
+        window.statusBarColor = rgbColorPalette
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+
         onDispose {
             window.statusBarColor = primaryColor
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
