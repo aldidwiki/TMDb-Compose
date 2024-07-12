@@ -37,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.ContentDetail
 import com.aldiprahasta.tmdb.CreditDetail
+import com.aldiprahasta.tmdb.Favorite
 import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.R
@@ -47,6 +48,7 @@ import com.aldiprahasta.tmdb.TvSeasonDetail
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
+import com.aldiprahasta.tmdb.ui.favorite.FavoriteScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.search.SearchScreen
@@ -158,6 +160,10 @@ fun TMDbNavHostController(
             TvScreen(onItemClicked = { tvId ->
                 navController.navigateToContentDetail(tvId, MediaType.TV_TYPE.name)
             })
+        }
+
+        composable(route = Favorite.route) {
+            FavoriteScreen()
         }
 
         composable(route = Search.route) {
@@ -290,8 +296,9 @@ fun TMDbNavHostController(
 
 private fun navigationItem() = listOf(
         Movie,
-        Search,
-        Tv
+        Tv,
+        Favorite,
+        Search
 )
 
 @Composable

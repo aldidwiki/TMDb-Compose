@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Search
@@ -32,6 +33,12 @@ object Search : TMDbDestinations {
     override val route: String = "search"
     override val icon: ImageVector = Icons.Default.Search
     override val label: String = "Search"
+}
+
+object Favorite : TMDbDestinations {
+    override val route: String = "favorite"
+    override val icon: ImageVector = Icons.Default.Favorite
+    override val label: String = "Favorite"
 }
 
 object ContentDetail : TMDbDestinations {
