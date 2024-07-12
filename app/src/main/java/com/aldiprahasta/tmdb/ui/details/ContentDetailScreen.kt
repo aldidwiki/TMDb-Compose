@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +30,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -81,8 +79,7 @@ fun ContentDetailScreen(
     var posterPath by remember { mutableStateOf<String?>(null) }
     var palette by remember { mutableStateOf<Palette?>(null) }
     posterPath?.let {
-        val scope = rememberCoroutineScope()
-        LaunchedEffect(scope) {
+        LaunchedEffect(it) {
             val bitmap = context.getImageBitmap(it)
             palette = Palette.Builder(bitmap).generate()
         }
@@ -159,13 +156,12 @@ fun ContentDetailScreen(
 @Composable
 private fun SetStatusBarColor(rgbColorPalette: Int) {
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
-    val isDarkMode = isSystemInDarkTheme()
     val view = LocalView.current
     val window = (view.context as Activity).window
     window.statusBarColor = rgbColorPalette
     WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
-    
-    DisposableEffect(isDarkMode) {
+
+    DisposableEffect(view) {
         onDispose {
             window.statusBarColor = primaryColor
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
