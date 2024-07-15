@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +28,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +43,7 @@ import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
-import com.aldiprahasta.tmdb.utils.Constant
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -117,6 +117,7 @@ fun CreditScreen(
             targetState.doIfSuccess { casts ->
                 CreditContent(
                         casts = casts,
+                        contentType = contentId.second,
                         onItemClicked = { contentId, mediaType ->
                             onItemClicked(contentId, mediaType)
                         }
@@ -129,27 +130,43 @@ fun CreditScreen(
 @Composable
 fun CreditContent(
         casts: List<CastDomainModel>,
+        contentType: String,
         onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-            contentPadding = PaddingValues(10.dp),
-            modifier = modifier
-    ) {
-        itemsIndexed(casts) { index, item ->
-            ContentItem(
-                    title = item.name,
-                    releaseDate = item.releaseDate,
-                    posterPath = item.imagePath,
-                    characterName = item.characterName,
-                    onItemClicked = {
-                        onItemClicked(item.id, item.mediaType)
-                    },
-                    totalEpisodeCount = item.totalEpisodeCount,
-            )
+    var comparator by remember { mutableStateOf(orderComparator) }
 
-            if (index < casts.lastIndex) {
-                HorizontalDivider(Modifier.padding(vertical = 16.dp))
+    Column(modifier = modifier) {
+        if (contentType != MediaType.PERSON_TYPE.name) {
+            SortingChip(
+                    modifier = Modifier.padding(10.dp),
+                    onSelectedChip = {
+                        comparator = it
+                    }
+            )
+        }
+
+        LazyColumn(
+                contentPadding = PaddingValues(10.dp),
+        ) {
+            itemsIndexed(
+                    if (contentType != MediaType.PERSON_TYPE.name) casts.sortedWith(comparator)
+                    else casts
+            ) { index, item ->
+                ContentItem(
+                        title = item.name,
+                        releaseDate = item.releaseDate,
+                        posterPath = item.imagePath,
+                        characterName = item.characterName,
+                        onItemClicked = {
+                            onItemClicked(item.id, item.mediaType)
+                        },
+                        totalEpisodeCount = item.totalEpisodeCount,
+                )
+
+                if (index < casts.lastIndex) {
+                    HorizontalDivider(Modifier.padding(vertical = 16.dp))
+                }
             }
         }
     }
@@ -249,6 +266,7 @@ fun CreditContentPreview() {
                             totalEpisodeCount = 10
                     )
             ),
-            onItemClicked = { _, _ -> }
+            onItemClicked = { _, _ -> },
+            contentType = MediaType.PERSON_TYPE.name
     )
 }
