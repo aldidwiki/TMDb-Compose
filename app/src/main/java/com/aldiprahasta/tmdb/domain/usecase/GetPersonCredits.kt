@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.repository.PersonRepository
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
+import com.aldiprahasta.tmdb.utils.convertDate
 import com.aldiprahasta.tmdb.utils.mapCreditResponseToCastDomainModelList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,6 +22,12 @@ class GetPersonCredits(private val personRepository: PersonRepository) {
 
                     is UiState.Success -> UiState.Success(
                             state.data.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
+                                    .sortedByDescending {
+                                        it.releaseDate?.convertDate(
+                                                inFormat = "MMMM dd, yyyy",
+                                                outFormat = "yyyyMMdd"
+                                        )
+                                    }
                     )
                 }
             }
