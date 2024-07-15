@@ -72,7 +72,7 @@ fun CreditScreen(
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
     creditViewModel.setContentId(contentId)
-    val creditData by creditViewModel.credits.collectAsStateWithLifecycle()
+    val creditsWithGenresData by creditViewModel.creditsWithGenres.collectAsStateWithLifecycle()
     val contentType = contentId.second
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -114,7 +114,7 @@ fun CreditScreen(
                 )
             }) { innerPadding ->
         AnimatedContent(
-                targetState = creditData,
+                targetState = creditsWithGenresData,
                 label = "Animated Content",
                 transitionSpec = {
                     fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
@@ -129,7 +129,7 @@ fun CreditScreen(
                 ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
             }
 
-            targetState.doIfSuccess { casts ->
+            targetState.doIfSuccess { (casts) ->
                 CreditContent(
                         casts = casts,
                         contentType = contentType,

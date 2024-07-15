@@ -26,6 +26,7 @@ import com.aldiprahasta.tmdb.ui.components.PagingErrorFooter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.transform
 import java.sql.Date
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -183,4 +184,51 @@ fun Context.openBrowser(url: String) {
     CustomTabsIntent.Builder().apply {
         setShareState(CustomTabsIntent.SHARE_STATE_OFF)
     }.build().launchUrl(this, Uri.parse(url))
+}
+
+fun <T, R, E> Flow<Triple<UiState<T>, UiState<R>, UiState<E>>>.asUiStateTriple(): Flow<UiState<Triple<T, R, E>>> = transform { state ->
+    val (stateFirst, stateSecond, stateThird) = state
+    var stateFirstData: T? = null
+    var stateSecondData: R? = null
+    var stateThirdData: E? = null
+
+    when (stateFirst) {
+        is UiState.Loading -> emit(UiState.Loading)
+        is UiState.Error -> {
+            emit(UiState.Error(stateFirst.throwable, stateFirst.errorMessage))
+            return@transform
+        }
+
+        is UiState.Success -> {
+            stateFirstData = stateFirst.data
+        }
+    }
+
+    when (stateSecond) {
+        is UiState.Loading -> emit(UiState.Loading)
+        is UiState.Error -> {
+            emit(UiState.Error(stateSecond.throwable, stateSecond.errorMessage))
+            return@transform
+        }
+
+        is UiState.Success -> {
+            stateSecondData = stateSecond.data
+        }
+    }
+
+    when (stateThird) {
+        is UiState.Loading -> emit(UiState.Loading)
+        is UiState.Error -> {
+            emit(UiState.Error(stateThird.throwable, stateThird.errorMessage))
+            return@transform
+        }
+
+        is UiState.Success -> {
+            stateThirdData = stateThird.data
+        }
+    }
+
+    if (stateFirstData != null && stateSecondData != null && stateThirdData != null) {
+        emit(UiState.Success(Triple(stateFirstData, stateSecondData, stateThirdData)))
+    }
 }
