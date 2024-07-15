@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.utils
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
@@ -16,6 +17,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
+import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
@@ -182,6 +184,15 @@ fun SearchResponseModel.mapSearchResponseToDomainModel(): SearchDomainModel {
             knownFor = knownForDepartment ?: "",
             popularity = popularity ?: 0.0
     )
+}
+
+fun GenreResponse.mapGenreResponseToDomainModelList(): List<GenreDomainModel> {
+    return this.genres.map {
+        GenreDomainModel(
+                id = it.id,
+                name = it.name
+        )
+    }
 }
 
 private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {

@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.di
 
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieDetail
+import com.aldiprahasta.tmdb.domain.usecase.GetMovieGenreList
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
@@ -9,6 +10,7 @@ import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
 import com.aldiprahasta.tmdb.domain.usecase.GetSearchResult
 import com.aldiprahasta.tmdb.domain.usecase.GetTvCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetTvDetail
+import com.aldiprahasta.tmdb.domain.usecase.GetTvGenreList
 import com.aldiprahasta.tmdb.domain.usecase.GetTvSeasonDetail
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
@@ -27,6 +29,8 @@ val useCaseModule = module {
     factoryOf(::GetTvCredits)
     factoryOf(::GetTvSeasonDetail)
     factoryOf(::GetSearchResult)
+    factoryOf(::GetMovieGenreList)
+    factoryOf(::GetTvGenreList)
 }
 
 val useCaseWrapperModule = module {
