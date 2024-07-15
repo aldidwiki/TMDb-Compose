@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.domain.usecase
 
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.repository.PersonRepository
+import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.convertDate
@@ -24,7 +25,7 @@ class GetPersonCredits(private val personRepository: PersonRepository) {
                             state.data.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
                                     .sortedByDescending {
                                         it.releaseDate?.convertDate(
-                                                inFormat = "MMMM dd, yyyy",
+                                                inFormat = Constant.APP_DATE_FORMAT,
                                                 outFormat = "yyyyMMdd"
                                         )
                                     }

@@ -13,4 +13,7 @@ object Constant {
     const val MOVIE_MEDIA_TYPE = "movie"
     const val TV_MEDIA_TYPE = "tv"
     const val PERSON_MEDIA_TYPE = "person"
+
+    const val SOURCE_DATE_FORMAT = "yyyy-MM-dd"
+    const val APP_DATE_FORMAT = "MMMM dd, yyyy"
 }

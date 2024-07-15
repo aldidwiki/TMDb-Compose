@@ -34,8 +34,8 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 fun String.convertDate(
-        inFormat: String = "yyyy-MM-dd",
-        outFormat: String = "MMMM dd, yyyy"
+        inFormat: String = Constant.SOURCE_DATE_FORMAT,
+        outFormat: String = Constant.APP_DATE_FORMAT
 ): String {
     val parser = SimpleDateFormat(inFormat, Locale.getDefault())
     val formatter = SimpleDateFormat(outFormat, Locale.getDefault())
