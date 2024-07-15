@@ -16,4 +16,5 @@ object Constant {
 
     const val SOURCE_DATE_FORMAT = "yyyy-MM-dd"
     const val APP_DATE_FORMAT = "MMMM dd, yyyy"
+    const val SORTING_DATE_FORMAT = "yyyyMMdd"
 }
