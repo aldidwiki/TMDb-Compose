@@ -43,6 +43,7 @@ import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.ModalSheetGenre
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.doIfError
@@ -76,6 +77,7 @@ fun CreditScreen(
     val contentType = contentId.second
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    var showModalSheet by remember { mutableStateOf(false) }
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -100,7 +102,7 @@ fun CreditScreen(
                         actions = {
                             if (contentType == MediaType.PERSON_TYPE.name) {
                                 IconButton(onClick = {
-
+                                    showModalSheet = true
                                 }) {
                                     Icon(
                                             imageVector = Icons.Default.FilterAlt,
@@ -129,7 +131,17 @@ fun CreditScreen(
                 ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
             }
 
-            targetState.doIfSuccess { (casts) ->
+            targetState.doIfSuccess { (casts, movieGenres, tvGenres) ->
+                ModalSheetGenre(
+                        movieGenreList = movieGenres,
+                        tvGenreList = tvGenres,
+                        showModelSheet = showModalSheet,
+                        onDismissRequest = { showModalSheet = false },
+                        onFilterApplied = { selectedGenre ->
+
+                        }
+                )
+
                 CreditContent(
                         casts = casts,
                         contentType = contentType,
