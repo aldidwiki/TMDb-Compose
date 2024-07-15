@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +47,7 @@ import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
+import com.aldiprahasta.tmdb.utils.openBrowser
 
 @Composable
 fun ContentDetailCard(
@@ -134,7 +134,6 @@ private fun ContentDetailUserScoreWithTrailer(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier.fillMaxWidth()
     ) {
-        val uriHandler = LocalUriHandler.current
         val sheetState = rememberModalBottomSheetState()
         val context = LocalContext.current
         var showBottomSheet by remember { mutableStateOf(false) }
@@ -161,7 +160,7 @@ private fun ContentDetailUserScoreWithTrailer(
                     items(trailers) { model ->
                         TextButton(
                                 onClick = {
-                                    uriHandler.openUri(Constant.YOUTUBE_BASE_URL + model.key)
+                                    context.openBrowser(Constant.YOUTUBE_BASE_URL + model.key)
                                 }) {
                             Text(text = model.name)
                         }
@@ -205,7 +204,7 @@ private fun ContentDetailUserScoreWithTrailer(
                 }
 
                 trailers.size == 1 -> {
-                    uriHandler.openUri(Constant.YOUTUBE_BASE_URL + trailers.first().key)
+                    context.openBrowser(Constant.YOUTUBE_BASE_URL + trailers.first().key)
                 }
 
                 else -> {
