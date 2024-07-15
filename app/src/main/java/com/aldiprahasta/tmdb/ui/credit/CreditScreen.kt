@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -72,6 +73,7 @@ fun CreditScreen(
     val creditViewModel: CreditViewModel = koinViewModel()
     creditViewModel.setContentId(contentId)
     val creditData by creditViewModel.credits.collectAsStateWithLifecycle()
+    val contentType = contentId.second
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -93,6 +95,19 @@ fun CreditScreen(
                                         tint = Color.White,
                                         contentDescription = null
                                 )
+                            }
+                        },
+                        actions = {
+                            if (contentType == MediaType.PERSON_TYPE.name) {
+                                IconButton(onClick = {
+
+                                }) {
+                                    Icon(
+                                            imageVector = Icons.Default.FilterAlt,
+                                            contentDescription = null,
+                                            tint = Color.White
+                                    )
+                                }
                             }
                         },
                         scrollBehavior = scrollBehavior
@@ -117,7 +132,7 @@ fun CreditScreen(
             targetState.doIfSuccess { casts ->
                 CreditContent(
                         casts = casts,
-                        contentType = contentId.second,
+                        contentType = contentType,
                         onItemClicked = { contentId, mediaType ->
                             onItemClicked(contentId, mediaType)
                         }
