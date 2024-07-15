@@ -117,15 +117,6 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
                     totalEpisodeCount = castResponseModel.totalEpisodeCount
             )
         }
-    }?.sortedByDescending {
-        if (mediaType == MediaType.PERSON_TYPE) {
-            it.releaseDate?.convertDate(
-                    inFormat = "MMMM dd, yyyy",
-                    outFormat = "yyyy-MM-dd"
-            )
-        } else {
-            ""
-        }
     } ?: emptyList()
 }
 

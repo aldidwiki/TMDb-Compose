@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +27,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +43,7 @@ import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
+import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -131,34 +132,24 @@ fun CreditContent(
         onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    var comparator by remember { mutableStateOf(orderComparator) }
+    LazyColumn(
+            contentPadding = PaddingValues(10.dp),
+            modifier = modifier
+    ) {
+        itemsIndexed(casts) { index, item ->
+            ContentItem(
+                    title = item.name,
+                    releaseDate = item.releaseDate,
+                    posterPath = item.imagePath,
+                    characterName = item.characterName,
+                    onItemClicked = {
+                        onItemClicked(item.id, item.mediaType)
+                    },
+                    totalEpisodeCount = item.totalEpisodeCount,
+            )
 
-    Column(modifier = modifier) {
-        SortingChip(
-                modifier = Modifier.padding(10.dp),
-                onSelectedChip = { sortingComparator ->
-                    comparator = sortingComparator
-                }
-        )
-
-        LazyColumn(
-                contentPadding = PaddingValues(10.dp)
-        ) {
-            itemsIndexed(casts.sortedWith(comparator)) { index, item ->
-                ContentItem(
-                        title = item.name,
-                        releaseDate = item.releaseDate,
-                        posterPath = item.imagePath,
-                        characterName = item.characterName,
-                        onItemClicked = {
-                            onItemClicked(item.id, item.mediaType)
-                        },
-                        totalEpisodeCount = item.totalEpisodeCount,
-                )
-
-                if (index < casts.lastIndex) {
-                    HorizontalDivider(Modifier.padding(vertical = 16.dp))
-                }
+            if (index < casts.lastIndex) {
+                HorizontalDivider(Modifier.padding(vertical = 16.dp))
             }
         }
     }
