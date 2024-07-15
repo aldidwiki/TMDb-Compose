@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.data.source.remote
 
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.utils.UiState
@@ -44,6 +45,18 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
         if (!response.isSuccessful) throw HttpException(response)
         else response.body()?.let { tvSeasonResponse ->
             emit(UiState.Success(tvSeasonResponse))
+        }
+    }.catch { t ->
+        Timber.e(t)
+        UiState.Error(t)
+    }.flowOn(Dispatchers.IO)
+
+    fun getTvGenres(): Flow<UiState<GenreResponse>> = flow {
+        emit(UiState.Loading)
+        val response = remoteService.getTvGenres()
+        if (!response.isSuccessful) throw HttpException(response)
+        else response.body()?.let { genreResponse ->
+            emit(UiState.Success(genreResponse))
         }
     }.catch { t ->
         Timber.e(t)

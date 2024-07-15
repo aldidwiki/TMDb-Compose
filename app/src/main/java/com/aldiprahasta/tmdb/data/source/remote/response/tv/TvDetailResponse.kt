@@ -2,7 +2,7 @@ package com.aldiprahasta.tmdb.data.source.remote.response.tv
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.google.gson.annotations.SerializedName
 
@@ -36,7 +36,7 @@ data class TvDetailResponse(
         val backdropPath: String?,
 
         @field:SerializedName("genres")
-        val genres: List<GenreResponse>?,
+        val genres: List<GenreResponseModel>?,
 
         @field:SerializedName("original_name")
         val originalName: String?,

@@ -19,7 +19,7 @@ import androidx.paging.compose.LazyPagingItems
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponseModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.PagingErrorFooter
@@ -64,7 +64,7 @@ fun Double?.formatVoteAverage(): Int {
     return format.roundToInt()
 }
 
-fun List<GenreResponse>?.convertGenreToSingleText(): String {
+fun List<GenreResponseModel>?.convertGenreToSingleText(): String {
     val outputGenre = StringBuilder()
     this?.sortedBy { it.name }?.forEachIndexed { index, genresItem ->
         outputGenre.append(genresItem.name)

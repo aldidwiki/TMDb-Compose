@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.domain.repository
 
 import androidx.paging.PagingData
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
@@ -16,4 +17,6 @@ interface TvRepository {
     fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>>
 
     fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>>
+
+    fun getTvGenres(): Flow<UiState<GenreResponse>>
 }

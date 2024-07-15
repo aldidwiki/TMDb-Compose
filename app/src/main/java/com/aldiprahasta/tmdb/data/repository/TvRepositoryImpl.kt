@@ -7,6 +7,7 @@ import com.aldiprahasta.tmdb.data.source.paging.PopularTvPagingSource
 import com.aldiprahasta.tmdb.data.source.remote.TvRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
@@ -37,5 +38,9 @@ class TvRepositoryImpl(
 
     override fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> {
         return tvRemoteDataSource.getTvSeasonDetail(tvId, tvSeasonNumber)
+    }
+
+    override fun getTvGenres(): Flow<UiState<GenreResponse>> {
+        return tvRemoteDataSource.getTvGenres()
     }
 }

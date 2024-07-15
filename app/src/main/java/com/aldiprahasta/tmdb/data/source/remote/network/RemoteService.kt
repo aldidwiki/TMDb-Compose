@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.data.source.remote.network
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
@@ -49,4 +50,10 @@ interface RemoteService {
             @Query("query") query: String,
             @Query("page") page: Int
     ): Response<SearchResponse>
+
+    @GET("genre/movie/list")
+    suspend fun getMovieGenres(): Response<GenreResponse>
+
+    @GET("genre/tv/list")
+    suspend fun getTvGenres(): Response<GenreResponse>
 }
