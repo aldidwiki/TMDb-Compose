@@ -7,6 +7,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -22,6 +25,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -154,9 +159,15 @@ fun CreditScreen(
                 if (filteredCasts.isNotEmpty()) {
                     CreditContent(
                             casts = filteredCasts,
+                            selectedGenres = selectedGenreSet,
                             contentType = contentType,
                             onItemClicked = { contentId, mediaType ->
                                 onItemClicked(contentId, mediaType)
+                            },
+                            onGenreFilterChipClicked = { genre ->
+                                selectedGenreSet = selectedGenreSet.toMutableSet().apply {
+                                    remove(genre)
+                                }
                             }
                     )
                 } else {
@@ -173,8 +184,10 @@ fun CreditScreen(
 @Composable
 fun CreditContent(
         casts: List<CastDomainModel>,
+        selectedGenres: Set<GenreDomainModel>,
         contentType: String,
         onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
+        onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
         modifier: Modifier = Modifier
 ) {
     var comparator by remember { mutableStateOf(orderComparator) }
@@ -186,6 +199,12 @@ fun CreditContent(
                     onSelectedChip = {
                         comparator = it
                     }
+            )
+        } else if (contentType == MediaType.PERSON_TYPE.name && selectedGenres.isNotEmpty()) {
+            GenreFilterChip(
+                    selectedGenres = selectedGenres,
+                    modifier = Modifier.padding(10.dp),
+                    onGenreFilterChipClicked = onGenreFilterChipClicked
             )
         }
 
@@ -253,6 +272,48 @@ private fun SortingChip(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun GenreFilterChip(
+        selectedGenres: Set<GenreDomainModel>,
+        onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
+        modifier: Modifier = Modifier
+) {
+    var genres by remember { mutableStateOf(setOf<GenreDomainModel>()) }
+
+    LaunchedEffect(key1 = true) {
+        genres = genres.toMutableSet().apply {
+            addAll(selectedGenres)
+        }
+    }
+
+    FlowRow(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        genres.forEach { genre ->
+            InputChip(
+                    selected = false,
+                    onClick = {
+                        genres = genres.toMutableSet().apply {
+                            remove(genre)
+                        }
+                        onGenreFilterChipClicked(genre)
+                    },
+                    label = {
+                        Text(text = genre.name)
+                    },
+                    trailingIcon = {
+                        Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null
+                        )
+                    }
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CreditContentPreview() {
@@ -310,6 +371,15 @@ fun CreditContentPreview() {
                     )
             ),
             onItemClicked = { _, _ -> },
-            contentType = MediaType.PERSON_TYPE.name
+            contentType = MediaType.PERSON_TYPE.name,
+            selectedGenres = setOf(
+                    GenreDomainModel(id = 7171, name = "Rena Flynn"),
+                    GenreDomainModel(id = 7171, name = "Rena Flynn"),
+                    GenreDomainModel(id = 7171, name = "Rena Flynn"),
+                    GenreDomainModel(id = 7171, name = "Rena Flynn"),
+                    GenreDomainModel(id = 7171, name = "Rena Flynn"),
+                    GenreDomainModel(id = 7171, name = "Rena Flynn"),
+            ),
+            onGenreFilterChipClicked = {}
     )
 }
