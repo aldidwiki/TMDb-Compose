@@ -33,7 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -138,9 +138,8 @@ fun CreditScreen(
             }
 
             targetState.doIfSuccess { (casts, movieGenres, tvGenres) ->
-                var selectedGenreSet by remember { mutableStateOf(setOf<GenreDomainModel>()) }
-                val filteredCasts = if (selectedGenreSet.isNotEmpty()) casts.filter { cast ->
-                    selectedGenreSet.any { genre ->
+                val filteredCasts = if (creditViewModel.selectedGenreSet.isNotEmpty()) casts.filter { cast ->
+                    creditViewModel.selectedGenreSet.any { genre ->
                         cast.genreIds?.contains(genre.id) ?: true
                     }
                 } else casts
@@ -148,27 +147,29 @@ fun CreditScreen(
                 ModalSheetGenre(
                         movieGenreList = movieGenres,
                         tvGenreList = tvGenres,
-                        selectedGenreSet = selectedGenreSet,
+                        selectedGenreSet = creditViewModel.selectedGenreSet,
                         showModelSheet = showModalSheet,
                         onDismissRequest = { showModalSheet = false },
                         onFilterApplied = { selectedGenre ->
-                            selectedGenreSet = selectedGenre
+                            creditViewModel.updateSelectedGenreSet(selectedGenre)
                         }
                 )
 
                 if (filteredCasts.isNotEmpty()) {
                     CreditContent(
                             casts = filteredCasts,
-                            selectedGenres = selectedGenreSet,
+                            selectedGenres = creditViewModel.selectedGenreSet,
                             contentType = contentType,
                             onItemClicked = { contentId, mediaType ->
                                 onItemClicked(contentId, mediaType)
                             },
                             onGenreFilterChipClicked = { genre ->
-                                selectedGenreSet = selectedGenreSet.toMutableSet().apply {
-                                    remove(genre)
-                                }
-                            }
+                                creditViewModel.updateSelectedGenreSet(
+                                        creditViewModel.selectedGenreSet.toMutableSet().apply {
+                                            remove(genre)
+                                        }
+                                )
+                            },
                     )
                 } else {
                     ErrorScreen(
@@ -279,10 +280,11 @@ private fun GenreFilterChip(
         onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    var genres by remember { mutableStateOf(setOf<GenreDomainModel>()) }
+    var genres by remember { mutableStateOf(selectedGenres) }
 
-    LaunchedEffect(key1 = true) {
+    SideEffect {
         genres = genres.toMutableSet().apply {
+            clear()
             addAll(selectedGenres)
         }
     }
@@ -380,6 +382,6 @@ fun CreditContentPreview() {
                     GenreDomainModel(id = 7171, name = "Rena Flynn"),
                     GenreDomainModel(id = 7171, name = "Rena Flynn"),
             ),
-            onGenreFilterChipClicked = {}
+            onGenreFilterChipClicked = {},
     )
 }

@@ -1,5 +1,8 @@
 package com.aldiprahasta.tmdb.ui.credit
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
@@ -22,6 +25,13 @@ class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
     private val contentId = MutableStateFlow(Pair(0, MediaType.MOVIE_TYPE.name))
     fun setContentId(contentId: Pair<Int, String>) {
         this.contentId.value = contentId
+    }
+
+    var selectedGenreSet by mutableStateOf(setOf<GenreDomainModel>())
+        private set
+
+    fun updateSelectedGenreSet(newSelectedGenreSet: Set<GenreDomainModel>) {
+        selectedGenreSet = newSelectedGenreSet
     }
 
     val creditsWithGenres: StateFlow<UiState<Triple<List<CastDomainModel>, List<GenreDomainModel>, List<GenreDomainModel>>>> =
