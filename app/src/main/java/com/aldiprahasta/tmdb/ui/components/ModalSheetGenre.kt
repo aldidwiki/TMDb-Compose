@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +16,11 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +39,7 @@ import kotlinx.coroutines.launch
 fun ModalSheetGenre(
         movieGenreList: List<GenreDomainModel>,
         tvGenreList: List<GenreDomainModel>,
+        selectedGenreSet: Set<GenreDomainModel>,
         showModelSheet: Boolean,
         onDismissRequest: () -> Unit,
         onFilterApplied: (selectedGenres: Set<GenreDomainModel>) -> Unit,
@@ -60,6 +64,7 @@ fun ModalSheetGenre(
         ) {
             ModalSheetGenreContent(
                     genres = genres,
+                    selectedGenreSet = selectedGenreSet,
                     onFilterApplied = {
                         onFilterApplied(it)
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -74,10 +79,17 @@ fun ModalSheetGenre(
 @Composable
 private fun ModalSheetGenreContent(
         genres: List<GenreDomainModel>,
+        selectedGenreSet: Set<GenreDomainModel>,
         onFilterApplied: (selectedGenres: Set<GenreDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
     var selectedGenres by remember { mutableStateOf(setOf<GenreDomainModel>()) }
+
+    LaunchedEffect(key1 = true) {
+        selectedGenres = selectedGenres.toMutableSet().apply {
+            addAll(selectedGenreSet)
+        }
+    }
 
     Column(
             modifier = modifier.fillMaxSize()
@@ -110,14 +122,30 @@ private fun ModalSheetGenreContent(
             }
         }
 
-        Button(
+        Row(
                 modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                onClick = {
-                    onFilterApplied(selectedGenres)
-                }) {
-            Text(text = "Apply Filter")
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+        ) {
+            Button(
+                    modifier = Modifier.weight(1f),
+                    enabled = selectedGenres.isNotEmpty(),
+                    onClick = {
+                        onFilterApplied(selectedGenres)
+                    }
+            ) {
+                Text(text = "Apply Filter")
+            }
+
+            OutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        onFilterApplied(emptySet())
+                    }
+            ) {
+                Text(text = "Reset Filter")
+            }
         }
     }
 }
@@ -133,6 +161,7 @@ private fun ModalSheetGenreContentPreview(modifier: Modifier = Modifier) {
                     GenreDomainModel(id = 1871, name = "Otis Rosales"),
                     GenreDomainModel(id = 1871, name = "Otis Rosales"),
             ),
+            selectedGenreSet = setOf(),
             onFilterApplied = {}
     )
 }

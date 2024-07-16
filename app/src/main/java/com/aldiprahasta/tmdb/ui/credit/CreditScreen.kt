@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
+import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
@@ -132,13 +133,16 @@ fun CreditScreen(
             }
 
             targetState.doIfSuccess { (casts, movieGenres, tvGenres) ->
+                var selectedGenreSet by remember { mutableStateOf(setOf<GenreDomainModel>()) }
+
                 ModalSheetGenre(
                         movieGenreList = movieGenres,
                         tvGenreList = tvGenres,
+                        selectedGenreSet = selectedGenreSet,
                         showModelSheet = showModalSheet,
                         onDismissRequest = { showModalSheet = false },
                         onFilterApplied = { selectedGenre ->
-
+                            selectedGenreSet = selectedGenre
                         }
                 )
 
