@@ -105,7 +105,8 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
                     mediaType = castResponseModel.mediaType,
                     releaseDate = castResponseModel.releaseDate?.convertDate()
                             ?: castResponseModel.firstAirDate?.convertDate() ?: "",
-                    totalEpisodeCount = castResponseModel.episodeCount
+                    totalEpisodeCount = castResponseModel.episodeCount,
+                    genreIds = castResponseModel.genreIds
             )
 
             MediaType.TV_TYPE -> CastDomainModel(

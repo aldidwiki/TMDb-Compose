@@ -8,5 +8,6 @@ data class CastDomainModel(
         val order: Int,
         val mediaType: String?,
         val releaseDate: String?,
-        val totalEpisodeCount: Int?
+        val totalEpisodeCount: Int?,
+        val genreIds: List<Int>? = null
 )

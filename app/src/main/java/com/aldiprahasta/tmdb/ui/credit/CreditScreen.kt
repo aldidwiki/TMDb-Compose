@@ -122,7 +122,7 @@ fun CreditScreen(
                 transitionSpec = {
                     fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
                 },
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
         ) { targetState ->
             targetState.doIfLoading {
                 LoadingScreen()
@@ -134,6 +134,11 @@ fun CreditScreen(
 
             targetState.doIfSuccess { (casts, movieGenres, tvGenres) ->
                 var selectedGenreSet by remember { mutableStateOf(setOf<GenreDomainModel>()) }
+                val filteredCasts = if (selectedGenreSet.isNotEmpty()) casts.filter { cast ->
+                    selectedGenreSet.any { genre ->
+                        cast.genreIds?.contains(genre.id) ?: true
+                    }
+                } else casts
 
                 ModalSheetGenre(
                         movieGenreList = movieGenres,
@@ -146,13 +151,20 @@ fun CreditScreen(
                         }
                 )
 
-                CreditContent(
-                        casts = casts,
-                        contentType = contentType,
-                        onItemClicked = { contentId, mediaType ->
-                            onItemClicked(contentId, mediaType)
-                        }
-                )
+                if (filteredCasts.isNotEmpty()) {
+                    CreditContent(
+                            casts = filteredCasts,
+                            contentType = contentType,
+                            onItemClicked = { contentId, mediaType ->
+                                onItemClicked(contentId, mediaType)
+                            }
+                    )
+                } else {
+                    ErrorScreen(
+                            errorMessage = "No Movies/TV Show Found",
+                            modifier = Modifier.padding(20.dp)
+                    )
+                }
             }
         }
     }
