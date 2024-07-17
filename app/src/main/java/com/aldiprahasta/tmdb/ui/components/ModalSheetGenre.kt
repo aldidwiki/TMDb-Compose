@@ -91,16 +91,18 @@ private fun ModalSheetGenreContent(
         }
     }
 
-    Column(
-            modifier = modifier.fillMaxSize()
-    ) {
+    Column(modifier = modifier) {
         Text(
                 text = "Filter by Genre",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(16.dp)
         )
 
-        LazyColumn(modifier = Modifier.weight(1f)) {
+        LazyColumn(
+                modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+        ) {
             items(genres) { genre ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
