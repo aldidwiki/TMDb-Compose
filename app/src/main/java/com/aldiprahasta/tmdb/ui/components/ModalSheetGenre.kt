@@ -20,7 +20,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +39,7 @@ fun ModalSheetGenre(
         movieGenreList: List<GenreDomainModel>,
         tvGenreList: List<GenreDomainModel>,
         selectedGenreSet: Set<GenreDomainModel>,
-        showModelSheet: Boolean,
+        showModalSheet: Boolean,
         onDismissRequest: () -> Unit,
         onFilterApplied: (selectedGenres: Set<GenreDomainModel>) -> Unit,
         modifier: Modifier = Modifier
@@ -51,7 +50,7 @@ fun ModalSheetGenre(
     val configuration = LocalConfiguration.current
     val screenHeight = (configuration.screenHeightDp * 0.75).dp
 
-    if (showModelSheet) {
+    if (showModalSheet) {
         val genres = mutableListOf<GenreDomainModel>().apply {
             addAll(movieGenreList)
             addAll(tvGenreList)
@@ -83,13 +82,7 @@ private fun ModalSheetGenreContent(
         onFilterApplied: (selectedGenres: Set<GenreDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    var selectedGenres by remember { mutableStateOf(setOf<GenreDomainModel>()) }
-
-    LaunchedEffect(key1 = true) {
-        selectedGenres = selectedGenres.toMutableSet().apply {
-            addAll(selectedGenreSet)
-        }
-    }
+    var selectedGenres by remember { mutableStateOf((selectedGenreSet)) }
 
     Column(modifier = modifier) {
         Text(

@@ -33,7 +33,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -148,7 +147,7 @@ fun CreditScreen(
                         movieGenreList = movieGenres,
                         tvGenreList = tvGenres,
                         selectedGenreSet = creditViewModel.selectedGenreSet,
-                        showModelSheet = showModalSheet,
+                        showModalSheet = showModalSheet,
                         onDismissRequest = { showModalSheet = false },
                         onFilterApplied = { selectedGenre ->
                             creditViewModel.updateSelectedGenreSet(selectedGenre)
@@ -183,7 +182,7 @@ fun CreditScreen(
 }
 
 @Composable
-fun CreditContent(
+private fun CreditContent(
         casts: List<CastDomainModel>,
         selectedGenres: Set<GenreDomainModel>,
         contentType: String,
@@ -197,7 +196,7 @@ fun CreditContent(
         if (contentType != MediaType.PERSON_TYPE.name) {
             SortingChip(
                     modifier = Modifier.padding(10.dp),
-                    onSelectedChip = {
+                    onSortingChipClicked = {
                         comparator = it
                     }
             )
@@ -237,7 +236,7 @@ fun CreditContent(
 
 @Composable
 private fun SortingChip(
-        onSelectedChip: (comparator: Comparator<CastDomainModel>) -> Unit,
+        onSortingChipClicked: (comparator: Comparator<CastDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val chips = mapOf(
@@ -258,10 +257,10 @@ private fun SortingChip(
                     ),
                     selected = label == selectedChip,
                     onClick = {
-                        onSelectedChip(comparator)
+                        onSortingChipClicked(comparator)
                         selectedChip = if (label != selectedChip) label
                         else {
-                            onSelectedChip(orderComparator) // default comparator
+                            onSortingChipClicked(orderComparator) // default comparator
                             ""
                         }
                     },
@@ -280,14 +279,7 @@ private fun GenreFilterChip(
         onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    var genres by remember { mutableStateOf(selectedGenres) }
-
-    SideEffect {
-        genres = genres.toMutableSet().apply {
-            clear()
-            addAll(selectedGenres)
-        }
-    }
+    var genres by remember(key1 = selectedGenres) { mutableStateOf(selectedGenres) }
 
     FlowRow(
             modifier = modifier.fillMaxWidth(),
@@ -318,7 +310,7 @@ private fun GenreFilterChip(
 
 @Preview(showBackground = true)
 @Composable
-fun CreditContentPreview() {
+private fun CreditContentPreview() {
     CreditContent(
             casts = listOf(
                     CastDomainModel(
