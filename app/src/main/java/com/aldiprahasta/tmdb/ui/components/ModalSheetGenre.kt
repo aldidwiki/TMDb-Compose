@@ -123,6 +123,15 @@ private fun ModalSheetGenreContent(
                         .padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
+            OutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        onFilterApplied(emptySet())
+                    }
+            ) {
+                Text(text = "Reset Filter")
+            }
+
             Button(
                     modifier = Modifier.weight(1f),
                     enabled = selectedGenres.isNotEmpty(),
@@ -131,15 +140,6 @@ private fun ModalSheetGenreContent(
                     }
             ) {
                 Text(text = "Apply Filter")
-            }
-
-            OutlinedButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        onFilterApplied(emptySet())
-                    }
-            ) {
-                Text(text = "Reset Filter")
             }
         }
     }
