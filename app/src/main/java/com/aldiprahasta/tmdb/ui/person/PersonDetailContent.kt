@@ -83,7 +83,10 @@ fun PersonScreen(
     personViewModel.setPersonId(personId)
 
     val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
+    val favoriteStatus by personViewModel.getFavoriteStatus.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
+    personViewModel.updateFavoriteState(favoriteStatus)
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -144,6 +147,12 @@ fun PersonScreen(
             }
 
             targetState.doIfSuccess { personDetail ->
+                if (personViewModel.isFavorite) {
+                    personViewModel.addToFavorite(personDetail)
+                } else {
+                    personViewModel.deleteFavorite(personId)
+                }
+
                 PersonDetailContent(
                         personDomainModel = personDetail,
                         onCreditClicked = { creditId, mediaType ->
@@ -342,6 +351,7 @@ private fun PersonBiography(
 fun PersonDetailContentPreview() {
     PersonDetailContent(
             personDomainModel = PersonDomainModel(
+                    id = 12345,
                     profilePath = null,
                     name = "Timothée Chalamet",
                     birthDay = "1995-12-27".convertDate(),

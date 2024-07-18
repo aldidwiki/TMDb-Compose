@@ -6,18 +6,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
-import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
+import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class PersonViewModel(getPersonDetail: GetPersonDetail) : ViewModel() {
+class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : ViewModel() {
     private val personId = MutableStateFlow(0)
     fun setPersonId(personId: Int) {
         this.personId.value = personId
@@ -30,11 +32,33 @@ class PersonViewModel(getPersonDetail: GetPersonDetail) : ViewModel() {
         this.isFavorite = isFavorite
     }
 
+    val getFavoriteStatus: StateFlow<Boolean> = personId.flatMapLatest {
+        personDetailWrapper.getFavoriteStatus(it)
+    }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            false
+    )
+
     val personDetail: StateFlow<UiState<PersonDomainModel>> = personId.flatMapLatest { id ->
-        getPersonDetail(id)
+        personDetailWrapper.getPersonDetail(id)
     }.delayAfterLoading(300L).stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             UiState.Loading
     )
+
+    fun addToFavorite(personDomainModel: PersonDomainModel) {
+        viewModelScope.launch {
+            personDetailWrapper.insertFavorite(
+                    personDomainModel.mapDomainModelToEntity()
+            )
+        }
+    }
+
+    fun deleteFavorite(personId: Int) {
+        viewModelScope.launch {
+            personDetailWrapper.deleteFavorite(personId)
+        }
+    }
 }

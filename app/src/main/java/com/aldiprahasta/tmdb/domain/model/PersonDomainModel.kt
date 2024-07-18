@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.domain.model
 
 data class PersonDomainModel(
+        val id: Int,
         val profilePath: String?,
         val name: String,
         val birthDay: String,

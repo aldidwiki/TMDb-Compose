@@ -69,6 +69,7 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
 
 fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
     return PersonDomainModel(
+            id = id,
             profilePath = profilePath,
             name = name ?: "",
             birthDay = birthday?.convertDate() ?: "",
@@ -213,6 +214,16 @@ fun ContentDetailDomainModel.mapDomainModelToEntity(mediaType: String): Favorite
             releaseDate = releaseDate,
             imagePath = posterPath,
             mediaType = mediaType
+    )
+}
+
+fun PersonDomainModel.mapDomainModelToEntity(): FavoriteEntity {
+    return FavoriteEntity(
+            id = id,
+            title = name,
+            releaseDate = "",
+            imagePath = profilePath,
+            mediaType = MediaType.PERSON_TYPE.name
     )
 }
 

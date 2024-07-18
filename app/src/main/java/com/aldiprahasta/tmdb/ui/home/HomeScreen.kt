@@ -164,7 +164,11 @@ fun TMDbNavHostController(
 
         composable(route = Favorite.route) {
             FavoriteScreen(onItemClicked = { contentId, mediaType ->
-                navController.navigateToContentDetail(contentId, mediaType)
+                if (mediaType == MediaType.PERSON_TYPE.name) {
+                    navController.navigateToPersonDetail(contentId)
+                } else {
+                    navController.navigateToContentDetail(contentId, mediaType)
+                }
             })
         }
 

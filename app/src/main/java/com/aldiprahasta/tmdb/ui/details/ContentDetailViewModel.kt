@@ -10,6 +10,7 @@ import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -57,7 +58,9 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
 
     fun addToFavorite(contentDetailDomainModel: ContentDetailDomainModel, mediaType: String) {
         viewModelScope.launch {
-            detailWrapper.insertFavorite(contentDetailDomainModel, mediaType)
+            detailWrapper.insertFavorite(
+                    contentDetailDomainModel.mapDomainModelToEntity(mediaType),
+            )
         }
     }
 
