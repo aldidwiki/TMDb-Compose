@@ -1,5 +1,8 @@
 package com.aldiprahasta.tmdb.ui.person
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
@@ -18,6 +21,13 @@ class PersonViewModel(getPersonDetail: GetPersonDetail) : ViewModel() {
     private val personId = MutableStateFlow(0)
     fun setPersonId(personId: Int) {
         this.personId.value = personId
+    }
+
+    var isFavorite by mutableStateOf(false)
+        private set
+
+    fun updateFavoriteState(isFavorite: Boolean) {
+        this.isFavorite = isFavorite
     }
 
     val personDetail: StateFlow<UiState<PersonDomainModel>> = personId.flatMapLatest { id ->

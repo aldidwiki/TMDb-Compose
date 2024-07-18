@@ -5,6 +5,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,11 +23,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -89,6 +95,32 @@ fun PersonScreen(
                                 onBackPressed()
                             }) {
                                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            }
+                        },
+                        actions = {
+                            IconToggleButton(
+                                    checked = personViewModel.isFavorite,
+                                    onCheckedChange = { personViewModel.updateFavoriteState(!personViewModel.isFavorite) }
+                            ) {
+                                AnimatedContent(
+                                        targetState = personViewModel.isFavorite,
+                                        label = "Animated Favorite Button",
+                                        transitionSpec = { scaleIn() togetherWith scaleOut() }
+                                ) { targetState ->
+                                    if (targetState) {
+                                        Icon(
+                                                imageVector = Icons.Default.Favorite,
+                                                contentDescription = null,
+                                                tint = Color.Red
+                                        )
+                                    } else {
+                                        Icon(
+                                                imageVector = Icons.Default.FavoriteBorder,
+                                                contentDescription = null,
+                                                tint = Color.Red
+                                        )
+                                    }
+                                }
                             }
                         },
                         scrollBehavior = scrollBehavior
