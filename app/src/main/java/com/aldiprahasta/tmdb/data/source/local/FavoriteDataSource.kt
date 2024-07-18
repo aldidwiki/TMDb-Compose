@@ -13,4 +13,6 @@ class FavoriteDataSource(private val favoriteDao: FavoriteDao) {
         if (favorites.isNotEmpty()) emit(UiState.Success(favorites))
         else emit(UiState.Error(NullPointerException(), "No Favorites Found"))
     }
+
+    fun isContentFavorite(id: Int): Flow<Boolean> = favoriteDao.isContentFavorite(id)
 }

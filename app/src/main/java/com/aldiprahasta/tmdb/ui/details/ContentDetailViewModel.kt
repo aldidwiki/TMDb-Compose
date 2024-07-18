@@ -1,5 +1,8 @@
 package com.aldiprahasta.tmdb.ui.details
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
@@ -21,6 +24,21 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
     fun setId(contentParam: Pair<Int, String>) {
         this.contentParam.value = contentParam
     }
+
+    var isFavorite by mutableStateOf(false)
+        private set
+
+    fun updateFavoriteState(isFavorite: Boolean) {
+        this.isFavorite = isFavorite
+    }
+
+    val getFavoriteStatus: StateFlow<Boolean> = contentParam.flatMapLatest { (contentId, _) ->
+        detailWrapper.getFavoriteStatus(contentId)
+    }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            false
+    )
 
     val contentDetail: StateFlow<UiState<ContentDetailDomainModel>> = contentParam.flatMapLatest { param ->
         val contentId = param.first

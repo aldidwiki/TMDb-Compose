@@ -72,13 +72,17 @@ fun ContentDetailScreen(
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
     viewModel.setId(contentParam)
+
     val (contentId, contentType) = contentParam
+
     val contentDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
+    val favoriteStatus by viewModel.getFavoriteStatus.collectAsStateWithLifecycle()
+
+    viewModel.updateFavoriteState(favoriteStatus)
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val context = LocalContext.current
-    var isFavorite by remember { mutableStateOf(false) }
     var posterPath by remember { mutableStateOf<String?>(null) }
     var palette by remember { mutableStateOf<Palette?>(null) }
     posterPath?.let {
@@ -123,11 +127,11 @@ fun ContentDetailScreen(
                         },
                         actions = {
                             IconToggleButton(
-                                    checked = isFavorite,
-                                    onCheckedChange = { isFavorite = !isFavorite }
+                                    checked = viewModel.isFavorite,
+                                    onCheckedChange = { viewModel.updateFavoriteState(!viewModel.isFavorite) }
                             ) {
                                 AnimatedContent(
-                                        targetState = isFavorite,
+                                        targetState = viewModel.isFavorite,
                                         transitionSpec = { scaleIn() togetherWith scaleOut() },
                                         label = "Animated Like Button"
                                 ) { targetState ->
@@ -156,8 +160,10 @@ fun ContentDetailScreen(
                 onSuccessFetch = {
                     posterPath = it.posterPath
 
-                    if (isFavorite) {
+                    if (viewModel.isFavorite) {
                         viewModel.addToFavorite(it, contentType)
+                    } else {
+                        viewModel.deleteFavorite(contentId)
                     }
                 },
                 onCastClicked = { personId ->

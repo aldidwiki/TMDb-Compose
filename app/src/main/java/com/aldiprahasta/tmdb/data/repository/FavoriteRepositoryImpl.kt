@@ -15,6 +15,10 @@ class FavoriteRepositoryImpl(
         return favoriteDataSource.getAllFavorites()
     }
 
+    override fun isContentFavorite(id: Int): Flow<Boolean> {
+        return favoriteDataSource.isContentFavorite(id)
+    }
+
     override suspend fun insertFavorite(favoriteEntity: FavoriteEntity) {
         favoriteDao.insertFavorite(favoriteEntity)
     }
