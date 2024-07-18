@@ -72,6 +72,7 @@ fun ContentDetailScreen(
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
     viewModel.setId(contentParam)
+    val (contentId, contentType) = contentParam
     val contentDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -154,6 +155,10 @@ fun ContentDetailScreen(
                 colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
                 onSuccessFetch = {
                     posterPath = it.posterPath
+
+                    if (isFavorite) {
+                        viewModel.addToFavorite(it, contentType)
+                    }
                 },
                 onCastClicked = { personId ->
                     onCastClicked(personId)

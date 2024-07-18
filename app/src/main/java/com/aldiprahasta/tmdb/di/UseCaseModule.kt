@@ -12,6 +12,9 @@ import com.aldiprahasta.tmdb.domain.usecase.GetTvCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetTvDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetTvGenreList
 import com.aldiprahasta.tmdb.domain.usecase.GetTvSeasonDetail
+import com.aldiprahasta.tmdb.domain.usecase.favorite.DeleteFavorite
+import com.aldiprahasta.tmdb.domain.usecase.favorite.GetAllFavoriteList
+import com.aldiprahasta.tmdb.domain.usecase.favorite.InsertFavorite
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
@@ -31,6 +34,9 @@ val useCaseModule = module {
     factoryOf(::GetSearchResult)
     factoryOf(::GetMovieGenreList)
     factoryOf(::GetTvGenreList)
+    factoryOf(::InsertFavorite)
+    factoryOf(::DeleteFavorite)
+    factoryOf(::GetAllFavoriteList)
 }
 
 val useCaseWrapperModule = module {

@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.utils
 
+import com.aldiprahasta.tmdb.data.source.local.entity.FavoriteEntity
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
@@ -17,6 +18,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
+import com.aldiprahasta.tmdb.domain.model.FavoriteDomainModel
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
@@ -194,6 +196,24 @@ fun GenreResponse.mapGenreResponseToDomainModelList(): List<GenreDomainModel> {
                 name = it.name
         )
     }
+}
+
+fun FavoriteEntity.mapEntityToDomainModel(): FavoriteDomainModel = FavoriteDomainModel(
+        favoriteId = id,
+        title = title,
+        releaseDate = releaseDate,
+        imagePoster = imagePath,
+        mediaType = mediaType
+)
+
+fun ContentDetailDomainModel.mapDomainModelToEntity(mediaType: String): FavoriteEntity {
+    return FavoriteEntity(
+            id = id,
+            title = title,
+            releaseDate = releaseDate,
+            imagePath = posterPath,
+            mediaType = mediaType
+    )
 }
 
 private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {

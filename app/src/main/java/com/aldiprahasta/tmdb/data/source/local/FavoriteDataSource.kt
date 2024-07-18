@@ -10,6 +10,7 @@ class FavoriteDataSource(private val favoriteDao: FavoriteDao) {
     fun getAllFavorites(): Flow<UiState<List<FavoriteEntity>>> = flow {
         emit(UiState.Loading)
         val favorites = favoriteDao.getAllFavorites()
-        emit(UiState.Success(favorites))
+        if (favorites.isNotEmpty()) emit(UiState.Success(favorites))
+        else emit(UiState.Error(NullPointerException(), "No Favorites Found"))
     }
 }

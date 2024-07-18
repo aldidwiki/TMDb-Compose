@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ContentDetailViewModel(detailWrapper: DetailWrapper) : ViewModel() {
+class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewModel() {
     private val contentParam: MutableStateFlow<Pair<Int, String>> = MutableStateFlow(Pair(0, ""))
     fun setId(contentParam: Pair<Int, String>) {
         this.contentParam.value = contentParam
@@ -35,4 +36,16 @@ class ContentDetailViewModel(detailWrapper: DetailWrapper) : ViewModel() {
             SharingStarted.WhileSubscribed(5000),
             UiState.Loading
     )
+
+    fun addToFavorite(contentDetailDomainModel: ContentDetailDomainModel, mediaType: String) {
+        viewModelScope.launch {
+            detailWrapper.insertFavorite(contentDetailDomainModel, mediaType)
+        }
+    }
+
+    fun deleteFavorite(id: Int) {
+        viewModelScope.launch {
+            detailWrapper.deleteFavorite(id)
+        }
+    }
 }
