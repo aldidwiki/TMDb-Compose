@@ -163,7 +163,9 @@ fun TMDbNavHostController(
         }
 
         composable(route = Favorite.route) {
-            FavoriteScreen()
+            FavoriteScreen(onItemClicked = { contentId, mediaType ->
+                navController.navigateToContentDetail(contentId, mediaType)
+            })
         }
 
         composable(route = Search.route) {

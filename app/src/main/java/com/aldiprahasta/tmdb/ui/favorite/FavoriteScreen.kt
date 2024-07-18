@@ -27,7 +27,10 @@ import com.aldiprahasta.tmdb.utils.doIfSuccess
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FavoriteScreen(modifier: Modifier = Modifier) {
+fun FavoriteScreen(
+        onItemClicked: (contentId: Int, mediaType: String) -> Unit,
+        modifier: Modifier = Modifier,
+) {
     val viewModel: FavoriteViewModel = koinViewModel()
     val favoritesState by viewModel.favorites.collectAsStateWithLifecycle()
 
@@ -49,7 +52,10 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                 }
 
                 doIfSuccess { favorites ->
-                    FavoriteContent(favorites = favorites)
+                    FavoriteContent(
+                            favorites = favorites,
+                            onItemClicked = onItemClicked
+                    )
                 }
             }
         }
@@ -59,6 +65,7 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun FavoriteContent(
         favorites: List<FavoriteDomainModel>,
+        onItemClicked: (contentId: Int, mediaType: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -73,7 +80,7 @@ private fun FavoriteContent(
                     posterPath = favorite.imagePoster,
                     totalEpisodeCount = null,
                     onItemClicked = {
-
+                        onItemClicked(favorite.favoriteId, favorite.mediaType)
                     }
             )
 
@@ -87,34 +94,37 @@ private fun FavoriteContent(
 @Preview(showBackground = true)
 @Composable
 private fun FavoriteContentPreview(modifier: Modifier = Modifier) {
-    FavoriteContent(listOf(
-            FavoriteDomainModel(
-                    favoriteId = 5278,
-                    title = "prodesset",
-                    releaseDate = "magna",
-                    imagePoster = null,
-                    mediaType = "instructior"
+    FavoriteContent(
+            listOf(
+                    FavoriteDomainModel(
+                            favoriteId = 5278,
+                            title = "prodesset",
+                            releaseDate = "magna",
+                            imagePoster = null,
+                            mediaType = "instructior"
+                    ),
+                    FavoriteDomainModel(
+                            favoriteId = 5278,
+                            title = "prodesset",
+                            releaseDate = "magna",
+                            imagePoster = null,
+                            mediaType = "instructior"
+                    ),
+                    FavoriteDomainModel(
+                            favoriteId = 5278,
+                            title = "prodesset",
+                            releaseDate = "magna",
+                            imagePoster = null,
+                            mediaType = "instructior"
+                    ),
+                    FavoriteDomainModel(
+                            favoriteId = 5278,
+                            title = "prodesset",
+                            releaseDate = "magna",
+                            imagePoster = null,
+                            mediaType = "instructior"
+                    ),
             ),
-            FavoriteDomainModel(
-                    favoriteId = 5278,
-                    title = "prodesset",
-                    releaseDate = "magna",
-                    imagePoster = null,
-                    mediaType = "instructior"
-            ),
-            FavoriteDomainModel(
-                    favoriteId = 5278,
-                    title = "prodesset",
-                    releaseDate = "magna",
-                    imagePoster = null,
-                    mediaType = "instructior"
-            ),
-            FavoriteDomainModel(
-                    favoriteId = 5278,
-                    title = "prodesset",
-                    releaseDate = "magna",
-                    imagePoster = null,
-                    mediaType = "instructior"
-            ),
-    ))
+            onItemClicked = { _, _ -> }
+    )
 }
