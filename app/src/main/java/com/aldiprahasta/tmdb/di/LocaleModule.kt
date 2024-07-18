@@ -22,7 +22,9 @@ private fun provideLocalDatabase(context: Context): LocalDatabase {
             context = context,
             klass = LocalDatabase::class.java,
             name = LocalDatabase.DB_NAME
-    ).build()
+    )
+            .fallbackToDestructiveMigration()
+            .build()
 }
 
 private fun provideFavoriteDao(localDatabase: LocalDatabase): FavoriteDao {

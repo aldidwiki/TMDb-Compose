@@ -201,7 +201,7 @@ fun GenreResponse.mapGenreResponseToDomainModelList(): List<GenreDomainModel> {
 
 fun FavoriteEntity.mapEntityToDomainModel(): FavoriteDomainModel = FavoriteDomainModel(
         favoriteId = id,
-        title = title,
+        title = name,
         releaseDate = releaseDate,
         imagePoster = imagePath,
         mediaType = mediaType
@@ -210,7 +210,7 @@ fun FavoriteEntity.mapEntityToDomainModel(): FavoriteDomainModel = FavoriteDomai
 fun ContentDetailDomainModel.mapDomainModelToEntity(mediaType: String): FavoriteEntity {
     return FavoriteEntity(
             id = id,
-            title = title,
+            name = title,
             releaseDate = releaseDate,
             imagePath = posterPath,
             mediaType = mediaType
@@ -220,7 +220,7 @@ fun ContentDetailDomainModel.mapDomainModelToEntity(mediaType: String): Favorite
 fun PersonDomainModel.mapDomainModelToEntity(): FavoriteEntity {
     return FavoriteEntity(
             id = id,
-            title = name,
+            name = name,
             releaseDate = "",
             imagePath = profilePath,
             mediaType = MediaType.PERSON_TYPE.name

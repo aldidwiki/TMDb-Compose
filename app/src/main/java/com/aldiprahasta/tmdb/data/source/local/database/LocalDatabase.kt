@@ -8,7 +8,7 @@ import com.aldiprahasta.tmdb.data.source.local.entity.FavoriteEntity
         entities = [
             FavoriteEntity::class
         ],
-        version = 1
+        version = 2
 )
 abstract class LocalDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao

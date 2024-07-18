@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_table")
 data class FavoriteEntity(
         @PrimaryKey val id: Int,
-        val title: String,
+        val name: String,
         val releaseDate: String,
         val imagePath: String?,
         val mediaType: String
