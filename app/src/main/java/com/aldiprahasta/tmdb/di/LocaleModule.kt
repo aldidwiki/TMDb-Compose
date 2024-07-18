@@ -3,7 +3,6 @@ package com.aldiprahasta.tmdb.di
 import android.content.Context
 import androidx.room.Room
 import com.aldiprahasta.tmdb.data.repository.FavoriteRepositoryImpl
-import com.aldiprahasta.tmdb.data.source.local.FavoriteDataSource
 import com.aldiprahasta.tmdb.data.source.local.database.FavoriteDao
 import com.aldiprahasta.tmdb.data.source.local.database.LocalDatabase
 import com.aldiprahasta.tmdb.domain.repository.FavoriteRepository
@@ -15,7 +14,6 @@ val localeModule = module {
     singleOf(::provideLocalDatabase)
     singleOf(::provideFavoriteDao) { bind<FavoriteDao>() }
 
-    singleOf(::FavoriteDataSource)
     singleOf(::FavoriteRepositoryImpl) { bind<FavoriteRepository>() }
 }
 

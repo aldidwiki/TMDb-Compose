@@ -1,11 +1,10 @@
 package com.aldiprahasta.tmdb.domain.repository
 
 import com.aldiprahasta.tmdb.data.source.local.entity.FavoriteEntity
-import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteRepository {
-    fun getAllFavorites(): Flow<UiState<List<FavoriteEntity>>>
+    fun getAllFavorites(): Flow<List<FavoriteEntity>>
 
     fun isContentFavorite(id: Int): Flow<Boolean>
 

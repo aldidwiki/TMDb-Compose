@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface FavoriteDao {
 
     @Query("SELECT * FROM favorite_table")
-    suspend fun getAllFavorites(): List<FavoriteEntity>
+    fun getAllFavorites(): Flow<List<FavoriteEntity>>
 
     @Query("SELECT id FROM favorite_table WHERE id = :id")
     fun isContentFavorite(id: Int): Flow<Boolean>
