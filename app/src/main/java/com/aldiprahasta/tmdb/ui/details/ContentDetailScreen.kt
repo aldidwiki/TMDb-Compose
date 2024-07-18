@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,10 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
@@ -49,14 +53,11 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.utils.Constant
-import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.getImageBitmap
-import com.aldiprahasta.tmdb.utils.shareIt
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +77,7 @@ fun ContentDetailScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val context = LocalContext.current
+    var isFavorite by remember { mutableStateOf(false) }
     var posterPath by remember { mutableStateOf<String?>(null) }
     var palette by remember { mutableStateOf<Palette?>(null) }
     posterPath?.let {
@@ -119,20 +121,29 @@ fun ContentDetailScreen(
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                val shareUrl = if (contentParam.second == MediaType.MOVIE_TYPE.name) {
-                                    "${Constant.SHARE_BASE_URL}movie/${contentParam.first}"
-                                } else {
-                                    "${Constant.SHARE_BASE_URL}tv/${contentParam.first}"
+                            IconToggleButton(
+                                    checked = isFavorite,
+                                    onCheckedChange = { isFavorite = !isFavorite }
+                            ) {
+                                AnimatedContent(
+                                        targetState = isFavorite,
+                                        transitionSpec = { scaleIn() togetherWith scaleOut() },
+                                        label = "Animated Like Button"
+                                ) { targetState ->
+                                    if (targetState) {
+                                        Icon(
+                                                imageVector = Icons.Default.Favorite,
+                                                contentDescription = null,
+                                                tint = Color(titleTextColor)
+                                        )
+                                    } else {
+                                        Icon(
+                                                imageVector = Icons.Default.FavoriteBorder,
+                                                contentDescription = null,
+                                                tint = Color(titleTextColor)
+                                        )
+                                    }
                                 }
-
-                                context.shareIt(shareUrl)
-                            }) {
-                                Icon(
-                                        imageVector = Icons.Default.Share,
-                                        contentDescription = "Share Button",
-                                        tint = Color(titleTextColor)
-                                )
                             }
                         }
                 )
