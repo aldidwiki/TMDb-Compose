@@ -71,15 +71,15 @@ private val orderComparator = Comparator<CastDomainModel> { left, right ->
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreditScreen(
-        contentId: Pair<Int, String>,
+        creditParam: Pair<Int, String>,
         onBackPressed: () -> Unit,
         onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
-    creditViewModel.setContentId(contentId)
+    creditViewModel.setCreditParam(creditParam)
     val creditsWithGenresData by creditViewModel.creditsWithGenres.collectAsStateWithLifecycle()
-    val contentType = contentId.second
+    val contentType = creditParam.second
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var showModalSheet by remember { mutableStateOf(false) }

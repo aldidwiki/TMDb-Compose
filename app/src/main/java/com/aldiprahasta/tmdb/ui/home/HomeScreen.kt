@@ -238,7 +238,7 @@ fun TMDbNavHostController(
             val contentType = navBackStackEntry.arguments?.getString(CreditDetail.CONTENT_TYPE_ARG)
                     ?: MediaType.MOVIE_TYPE.name
             CreditScreen(
-                    contentId = Pair(contentId, contentType),
+                    creditParam = Pair(contentId, contentType),
                     onBackPressed = {
                         navController.navigateUp()
                     },

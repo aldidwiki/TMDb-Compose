@@ -22,9 +22,9 @@ import kotlinx.coroutines.flow.zip
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
-    private val contentId = MutableStateFlow(Pair(0, MediaType.MOVIE_TYPE.name))
-    fun setContentId(contentId: Pair<Int, String>) {
-        this.contentId.value = contentId
+    private val creditParam = MutableStateFlow(Pair(0, MediaType.MOVIE_TYPE.name))
+    fun setCreditParam(contentId: Pair<Int, String>) {
+        this.creditParam.value = contentId
     }
 
     var selectedGenreSet by mutableStateOf(setOf<GenreDomainModel>())
@@ -35,7 +35,7 @@ class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
     }
 
     val creditsWithGenres: StateFlow<UiState<Triple<List<CastDomainModel>, List<GenreDomainModel>, List<GenreDomainModel>>>> =
-            contentId.flatMapLatest { (contentId, contentType) ->
+            creditParam.flatMapLatest { (contentId, contentType) ->
                 when (contentType) {
                     MediaType.MOVIE_TYPE.name -> creditWrapper.getMovieCredits(contentId)
                     MediaType.TV_TYPE.name -> creditWrapper.getTvCredits(contentId)
