@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
@@ -41,7 +41,7 @@ fun ContentBilledCast(
                 verticalAlignment = Alignment.CenterVertically,
                 contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            itemsIndexed(casts.take(10)) { index, item ->
+            items(casts.take(10)) { item ->
                 BilledCastItem(
                         name = item.name,
                         characterName = item.characterName,
@@ -50,15 +50,15 @@ fun ContentBilledCast(
                             onCastClicked(item.id, item.mediaType)
                         }
                 )
+            }
 
-                if (index == casts.take(10).lastIndex) {
-                    TextButton(onClick = onViewMoreClicked) {
-                        Text(text = "View more")
-                        Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null
-                        )
-                    }
+            item {
+                TextButton(onClick = onViewMoreClicked) {
+                    Text(text = "View more")
+                    Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null
+                    )
                 }
             }
         }
@@ -67,7 +67,7 @@ fun ContentBilledCast(
 
 @Preview(showBackground = true, widthDp = 480)
 @Composable
-fun ContentBilledCastPreview() {
+private fun ContentBilledCastPreview() {
     ContentBilledCast(
             sectionTitle = "Top Billed Cast",
             casts = listOf(
