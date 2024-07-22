@@ -5,12 +5,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +24,7 @@ import com.aldiprahasta.tmdb.domain.model.FavoriteDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.SwipeBox
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -54,7 +58,10 @@ fun FavoriteScreen(
                 doIfSuccess { favorites ->
                     FavoriteContent(
                             favorites = favorites,
-                            onItemClicked = onItemClicked
+                            onItemClicked = onItemClicked,
+                            onSwipeDelete = {
+                                viewModel.deleteFavorite(it)
+                            }
                     )
                 }
             }
@@ -62,10 +69,12 @@ fun FavoriteScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FavoriteContent(
         favorites: List<FavoriteDomainModel>,
         onItemClicked: (contentId: Int, mediaType: String) -> Unit,
+        onSwipeDelete: (contentId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -73,16 +82,23 @@ private fun FavoriteContent(
             contentPadding = PaddingValues(16.dp)
     ) {
         itemsIndexed(favorites) { index, favorite ->
-            ContentItem(
-                    title = favorite.title,
-                    releaseDate = favorite.releaseDate,
-                    characterName = null,
-                    posterPath = favorite.imagePoster,
-                    totalEpisodeCount = null,
-                    onItemClicked = {
-                        onItemClicked(favorite.favoriteId, favorite.mediaType)
-                    }
-            )
+            SwipeBox(onDelete = {
+                onSwipeDelete(favorite.favoriteId)
+            }) {
+                ContentItem(
+                        title = favorite.title,
+                        releaseDate = favorite.releaseDate,
+                        characterName = null,
+                        posterPath = favorite.imagePoster,
+                        totalEpisodeCount = null,
+                        modifier = Modifier
+                                .animateItemPlacement()
+                                .background(MaterialTheme.colorScheme.background),
+                        onItemClicked = {
+                            onItemClicked(favorite.favoriteId, favorite.mediaType)
+                        }
+                )
+            }
 
             if (index < favorites.size - 1) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
@@ -125,6 +141,7 @@ private fun FavoriteContentPreview(modifier: Modifier = Modifier) {
                             mediaType = "instructior"
                     ),
             ),
-            onItemClicked = { _, _ -> }
+            onItemClicked = { _, _ -> },
+            onSwipeDelete = {}
     )
 }

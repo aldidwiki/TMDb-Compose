@@ -18,6 +18,7 @@ import com.aldiprahasta.tmdb.domain.usecase.favorite.GetFavoriteStatus
 import com.aldiprahasta.tmdb.domain.usecase.favorite.InsertFavorite
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
+import com.aldiprahasta.tmdb.domain.usecase.wrapper.FavoriteWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
 import org.koin.core.module.dsl.factoryOf
@@ -47,4 +48,5 @@ val useCaseWrapperModule = module {
     factoryOf(::DetailWrapper)
     factoryOf(::TvWrapper)
     factoryOf(::PersonDetailWrapper)
+    factoryOf(::FavoriteWrapper)
 }
