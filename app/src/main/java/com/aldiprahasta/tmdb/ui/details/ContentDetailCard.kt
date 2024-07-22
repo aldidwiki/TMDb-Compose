@@ -62,10 +62,7 @@ fun ContentDetailCard(
     ) {
         Column {
             contentDetailDomainModel.backdropPath?.let { path ->
-                ImageLoaderBackdrop(
-                        imagePath = path,
-                        imageType = ImageType.BACKDROP
-                )
+                ImageLoaderBackdrop(imagePath = path)
             }
             ContentDetailPosterWithInfo(
                     posterPath = contentDetailDomainModel.posterPath,

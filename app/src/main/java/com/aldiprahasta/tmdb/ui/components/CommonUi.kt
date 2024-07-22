@@ -14,6 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -47,13 +51,14 @@ fun ImageLoader(
 @Composable
 fun ImageLoaderBackdrop(
         imagePath: String,
-        imageType: ImageType,
         modifier: Modifier = Modifier
 ) {
-    AsyncImage(
-            model = "https://image.tmdb.org/t/p/${imageType.size}/$imagePath",
+    var isError by remember { mutableStateOf(false) }
+    if (!isError) AsyncImage(
+            model = "https://image.tmdb.org/t/p/${ImageType.BACKDROP.size}/$imagePath",
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
+            onError = { isError = true },
             modifier = modifier
                     .fillMaxWidth()
                     .height(200.dp)
