@@ -19,7 +19,9 @@ class GetTvDetail(private val tvRepository: TvRepository) {
                     )
 
                     is UiState.Success -> UiState.Success(
-                            state.data.mapTvDetailResponseToContentDetailDomainModel()
+                            state.data.mapTvDetailResponseToContentDetailDomainModel().apply {
+                                casts = casts.sortedByDescending { it.totalEpisodeCount }
+                            }
                     )
                 }
             }
