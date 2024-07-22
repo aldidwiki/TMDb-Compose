@@ -68,6 +68,12 @@ private val orderComparator = Comparator<CastDomainModel> { left, right ->
     left.order.compareTo(right.order)
 }
 
+private val totalEpisodeComparator = Comparator<CastDomainModel> { left, right ->
+    val episodeCountLeft = left.totalEpisodeCount ?: 0
+    val episodeCountRight = right.totalEpisodeCount ?: 0
+    episodeCountRight.compareTo(episodeCountLeft)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreditScreen(
@@ -190,15 +196,22 @@ private fun CreditContent(
         onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    var comparator by remember { mutableStateOf(orderComparator) }
+    var comparator by remember {
+        if (contentType == MediaType.TV_TYPE.name)
+            mutableStateOf(totalEpisodeComparator)
+        else
+            mutableStateOf(orderComparator)
+    }
 
     Column(modifier = modifier) {
         if (contentType != MediaType.PERSON_TYPE.name) {
             SortingChip(
+                    defaultComparator = if (contentType == MediaType.TV_TYPE.name)
+                        totalEpisodeComparator
+                    else
+                        orderComparator,
                     modifier = Modifier.padding(10.dp),
-                    onSortingChipClicked = {
-                        comparator = it
-                    }
+                    onSortingChipClicked = { comparator = it }
             )
         } else if (contentType == MediaType.PERSON_TYPE.name && selectedGenres.isNotEmpty()) {
             GenreFilterChip(
@@ -236,6 +249,7 @@ private fun CreditContent(
 
 @Composable
 private fun SortingChip(
+        defaultComparator: Comparator<CastDomainModel>,
         onSortingChipClicked: (comparator: Comparator<CastDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
@@ -260,7 +274,7 @@ private fun SortingChip(
                         onSortingChipClicked(comparator)
                         selectedChip = if (label != selectedChip) label
                         else {
-                            onSortingChipClicked(orderComparator) // default comparator
+                            onSortingChipClicked(defaultComparator)
                             ""
                         }
                     },

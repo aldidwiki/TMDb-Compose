@@ -133,7 +133,7 @@ fun NetworksItem(
                     imageType = ImageType.LOGO,
                     modifier = Modifier
                             .padding(vertical = 4.dp)
-                            .width(40.dp)
+                            .width(50.dp)
                             .height(20.dp)
             )
         }
