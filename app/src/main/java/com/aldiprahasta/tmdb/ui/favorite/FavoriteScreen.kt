@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -69,7 +68,6 @@ fun FavoriteScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FavoriteContent(
         favorites: List<FavoriteDomainModel>,
@@ -91,9 +89,7 @@ private fun FavoriteContent(
                         characterName = null,
                         posterPath = favorite.imagePoster,
                         totalEpisodeCount = null,
-                        modifier = Modifier
-                                .animateItemPlacement()
-                                .background(MaterialTheme.colorScheme.background),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         onItemClicked = {
                             onItemClicked(favorite.favoriteId, favorite.mediaType)
                         }
