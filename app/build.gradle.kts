@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -62,6 +63,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.coil.compose)
     implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.retrofit.kotlinx)
     implementation(libs.squareup.retrofit.gson)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.jackwharton.timber)
@@ -78,6 +80,7 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.serialization)
 
     ksp(libs.androidx.room.compiler)
 
