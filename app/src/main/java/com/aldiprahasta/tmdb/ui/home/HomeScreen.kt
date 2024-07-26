@@ -59,7 +59,8 @@ import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.parcelableArrayList
-import com.google.gson.Gson
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -334,7 +335,7 @@ private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType
 }
 
 private fun NavHostController.navigateToTvSeasonScreen(tvId: Int, tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) {
-    val tvSeasonListJson = Uri.encode(Gson().toJson(tvSeasonList))
+    val tvSeasonListJson = Uri.encode(Json.encodeToString(value = tvSeasonList))
     navigate("${TvSeason.route}/$tvId/$tvTitle/$tvSeasonListJson")
 }
 

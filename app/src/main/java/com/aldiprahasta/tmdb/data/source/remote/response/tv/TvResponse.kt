@@ -1,44 +1,47 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.tv
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TvResponse(
-        @field:SerializedName("results")
+        @SerialName("results")
         val tvList: List<TvResponseModel>
 )
 
+@Serializable
 data class TvResponseModel(
 
-        @field:SerializedName("first_air_date")
+        @SerialName("first_air_date")
         val firstAirDate: String?,
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("original_language")
+        @SerialName("original_language")
         val originalLanguage: String?,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?,
 
-        @field:SerializedName("backdrop_path")
+        @SerialName("backdrop_path")
         val backdropPath: String?,
 
-        @field:SerializedName("original_name")
+        @SerialName("original_name")
         val originalName: String?,
 
-        @field:SerializedName("popularity")
+        @SerialName("popularity")
         val popularity: Double?,
 
-        @field:SerializedName("vote_average")
+        @SerialName("vote_average")
         val voteAverage: Double?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("vote_count")
+        @SerialName("vote_count")
         val voteCount: Int?
 )

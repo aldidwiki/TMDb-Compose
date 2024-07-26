@@ -1,20 +1,22 @@
 package com.aldiprahasta.tmdb.data.source.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ExternalIdResponse(
-        @field:SerializedName("imdb_id")
+        @SerialName("imdb_id")
         val imdbId: String?,
 
-        @field:SerializedName("wikidata_id")
+        @SerialName("wikidata_id")
         val wikidataId: String?,
 
-        @field:SerializedName("twitter_id")
+        @SerialName("twitter_id")
         val twitterId: String?,
 
-        @field:SerializedName("facebook_id")
+        @SerialName("facebook_id")
         val facebookId: String?,
 
-        @field:SerializedName("instagram_id")
+        @SerialName("instagram_id")
         val instagramId: String?
 )

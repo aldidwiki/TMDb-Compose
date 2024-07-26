@@ -1,82 +1,86 @@
 package com.aldiprahasta.tmdb.data.source.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CreditResponse(
-        @field:SerializedName("cast")
+        @SerialName("cast")
         val casts: List<CastResponseModel>?
 )
 
+@Serializable
 data class CastResponseModel(
 
-        @field:SerializedName("cast_id")
+        @SerialName("cast_id")
         val castId: Int?,
 
-        @field:SerializedName("character")
+        @SerialName("character")
         val character: String?,
 
-        @field:SerializedName("gender")
+        @SerialName("gender")
         val gender: Int?,
 
-        @field:SerializedName("credit_id")
+        @SerialName("credit_id")
         val creditId: String?,
 
-        @field:SerializedName("known_for_department")
+        @SerialName("known_for_department")
         val knownForDepartment: String?,
 
-        @field:SerializedName("original_name")
+        @SerialName("original_name")
         val originalName: String?,
 
-        @field:SerializedName("popularity")
+        @SerialName("popularity")
         val popularity: Double?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("profile_path")
+        @SerialName("profile_path")
         val profilePath: String?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("order")
-        val order: Int,
+        @SerialName("order")
+        val order: Int?,
 
-        @field:SerializedName("media_type")
+        @SerialName("media_type")
         val mediaType: String?,
 
-        @field:SerializedName("title")
+        @SerialName("title")
         val title: String?,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?,
 
-        @field:SerializedName("release_date")
+        @SerialName("release_date")
         val releaseDate: String?,
 
-        @field:SerializedName("roles")
+        @SerialName("roles")
         val roles: List<RolesResponseModel>?,
 
-        @field:SerializedName("total_episode_count")
+        @SerialName("total_episode_count")
         val totalEpisodeCount: Int?,
 
-        @field:SerializedName("first_air_date")
+        @SerialName("first_air_date")
         val firstAirDate: String?,
 
-        @field:SerializedName("episode_count")
+        @SerialName("episode_count")
         val episodeCount: Int?,
 
-        @field:SerializedName("genre_ids")
+        @SerialName("genre_ids")
         val genreIds: List<Int>?
 )
 
+@Serializable
 data class RolesResponseModel(
-        @field:SerializedName("credit_id")
+        @SerialName("credit_id")
         val creditId: String,
 
-        @field:SerializedName("character")
+        @SerialName("character")
         val character: String?,
 
-        @field:SerializedName("episode_count")
+        @SerialName("episode_count")
         val episodeCount: Int?
 )

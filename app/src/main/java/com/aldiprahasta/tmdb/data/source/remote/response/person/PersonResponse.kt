@@ -2,46 +2,48 @@ package com.aldiprahasta.tmdb.data.source.remote.response.person
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PersonResponse(
 
-        @field:SerializedName("birthday")
+        @SerialName("birthday")
         val birthday: String?,
 
-        @field:SerializedName("gender")
+        @SerialName("gender")
         val gender: Int?,
 
-        @field:SerializedName("imdb_id")
+        @SerialName("imdb_id")
         val imdbId: String?,
 
-        @field:SerializedName("known_for_department")
+        @SerialName("known_for_department")
         val knownForDepartment: String?,
 
-        @field:SerializedName("profile_path")
+        @SerialName("profile_path")
         val profilePath: String?,
 
-        @field:SerializedName("biography")
+        @SerialName("biography")
         val biography: String?,
 
-        @field:SerializedName("deathday")
+        @SerialName("deathday")
         val deathday: String?,
 
-        @field:SerializedName("place_of_birth")
+        @SerialName("place_of_birth")
         val placeOfBirth: String?,
 
-        @field:SerializedName("popularity")
+        @SerialName("popularity")
         val popularity: Double?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("external_ids")
+        @SerialName("external_ids")
         val externalIds: ExternalIdResponse,
 
-        @field:SerializedName("combined_credits")
+        @SerialName("combined_credits")
         val combinedCredits: CreditResponse?
 )

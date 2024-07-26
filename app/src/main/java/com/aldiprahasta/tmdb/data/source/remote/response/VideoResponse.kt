@@ -1,41 +1,44 @@
 package com.aldiprahasta.tmdb.data.source.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class VideoResponse(
-        @field:SerializedName("results")
+        @SerialName("results")
         val results: List<VideoResponseModel>?
 )
 
+@Serializable
 data class VideoResponseModel(
 
-        @field:SerializedName("site")
+        @SerialName("site")
         val site: String?,
 
-        @field:SerializedName("size")
+        @SerialName("size")
         val size: Int?,
 
-        @field:SerializedName("iso_3166_1")
+        @SerialName("iso_3166_1")
         val iso31661: String?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("official")
+        @SerialName("official")
         val official: Boolean?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: String,
 
-        @field:SerializedName("type")
+        @SerialName("type")
         val type: String?,
 
-        @field:SerializedName("published_at")
+        @SerialName("published_at")
         val publishedAt: String?,
 
-        @field:SerializedName("iso_639_1")
+        @SerialName("iso_639_1")
         val iso6391: String?,
 
-        @field:SerializedName("key")
+        @SerialName("key")
         val key: String?
 )

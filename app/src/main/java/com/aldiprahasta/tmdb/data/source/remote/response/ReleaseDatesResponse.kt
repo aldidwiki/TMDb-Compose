@@ -1,23 +1,27 @@
 package com.aldiprahasta.tmdb.data.source.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ReleaseDatesResponse(
-        @field:SerializedName("results")
+        @SerialName("results")
         val results: List<ResultsItem>?
 )
 
+@Serializable
 data class ResultsItem(
 
-        @field:SerializedName("release_dates")
+        @SerialName("release_dates")
         val releaseDates: List<ReleaseDatesItem>?,
 
-        @field:SerializedName("iso_3166_1")
+        @SerialName("iso_3166_1")
         val iso31661: String?
 )
 
+@Serializable
 data class ReleaseDatesItem(
 
-        @field:SerializedName("certification")
+        @SerialName("certification")
         val certification: String?
 )

@@ -24,6 +24,7 @@ browser = "1.8.0"
 room = "2.6.1"
 ksp = "2.0.0-1.0.21"
 kotlinx-serialization = "1.7.1"
+firebase-crashlytics-buildtools = "3.0.2"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -43,7 +44,6 @@ material3 = { group = "androidx.compose.material3", name = "material3" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-compose" }
 squareup-retrofit-kotlinx = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "squareup-retrofit" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
-squareup-retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "squareup-retrofit" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging-interceptor" }
 jackwharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle-compose" }
@@ -61,6 +61,7 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebase-crashlytics-buildtools" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -1,35 +1,38 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.movie
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MovieResponse(
-        @field:SerializedName("results")
+        @SerialName("results")
         val movieResponseModelList: List<MovieResponseModel>
 )
 
+@Serializable
 data class MovieResponseModel(
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("original_language")
+        @SerialName("original_language")
         val originalLanguage: String?,
 
-        @field:SerializedName("original_title")
+        @SerialName("original_title")
         val originalTitle: String?,
 
-        @field:SerializedName("release_date")
+        @SerialName("release_date")
         val releaseDate: String?,
 
-        @field:SerializedName("popularity")
+        @SerialName("popularity")
         val popularity: Double?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("title")
+        @SerialName("title")
         val title: String?,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?
 )

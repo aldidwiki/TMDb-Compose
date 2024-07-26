@@ -1,71 +1,74 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.search
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SearchResponse(
-        @field:SerializedName("total_pages")
+        @SerialName("total_pages")
         val totalPages: Int,
 
-        @field:SerializedName("total_results")
+        @SerialName("total_results")
         val totalResults: Int,
 
-        @field:SerializedName("page")
+        @SerialName("page")
         val page: Int,
 
-        @field:SerializedName("results")
+        @SerialName("results")
         val results: List<SearchResponseModel>
 )
 
+@Serializable
 data class SearchResponseModel(
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("original_language")
+        @SerialName("original_language")
         val originalLanguage: String?,
 
-        @field:SerializedName("original_title")
+        @SerialName("original_title")
         val originalTitle: String?,
 
-        @field:SerializedName("title")
+        @SerialName("title")
         val title: String?,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?,
 
-        @field:SerializedName("backdrop_path")
+        @SerialName("backdrop_path")
         val backdropPath: String?,
 
-        @field:SerializedName("media_type")
+        @SerialName("media_type")
         val mediaType: String?,
 
-        @field:SerializedName("release_date")
+        @SerialName("release_date")
         val releaseDate: String?,
 
-        @field:SerializedName("popularity")
+        @SerialName("popularity")
         val popularity: Double?,
 
-        @field:SerializedName("vote_average")
+        @SerialName("vote_average")
         val voteAverage: Double?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("vote_count")
+        @SerialName("vote_count")
         val voteCount: Int?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("first_air_date")
+        @SerialName("first_air_date")
         val firstAirDate: String?,
 
-        @field:SerializedName("gender")
+        @SerialName("gender")
         val gender: Int?,
 
-        @field:SerializedName("known_for_department")
+        @SerialName("known_for_department")
         val knownForDepartment: String?,
 
-        @field:SerializedName("profile_path")
+        @SerialName("profile_path")
         val profilePath: String?
 )

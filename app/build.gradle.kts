@@ -64,7 +64,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.retrofit.kotlinx)
-    implementation(libs.squareup.retrofit.gson)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.jackwharton.timber)
     implementation(libs.lifecycle.viewmodel.compose)
@@ -81,6 +80,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.serialization)
+    implementation(libs.firebase.crashlytics.buildtools)
 
     ksp(libs.androidx.room.compiler)
 

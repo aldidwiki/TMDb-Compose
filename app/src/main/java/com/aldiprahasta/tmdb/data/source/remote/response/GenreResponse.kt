@@ -1,17 +1,20 @@
 package com.aldiprahasta.tmdb.data.source.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GenreResponse(
-        @field:SerializedName("genres")
+        @SerialName("genres")
         val genres: List<GenreResponseModel>
 )
 
+@Serializable
 data class GenreResponseModel(
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int
 )

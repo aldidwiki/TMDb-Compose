@@ -4,140 +4,146 @@ import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TvDetailResponse(
 
-        @field:SerializedName("first_air_date")
+        @SerialName("first_air_date")
         val firstAirDate: String?,
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("original_language")
+        @SerialName("original_language")
         val originalLanguage: String?,
 
-        @field:SerializedName("number_of_episodes")
+        @SerialName("number_of_episodes")
         val numberOfEpisodes: Int?,
 
-        @field:SerializedName("languages")
+        @SerialName("languages")
         val languages: List<String>?,
 
-        @field:SerializedName("networks")
+        @SerialName("networks")
         val networks: List<NetworksItemResponse>?,
 
-        @field:SerializedName("type")
+        @SerialName("type")
         val type: String?,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?,
 
-        @field:SerializedName("backdrop_path")
+        @SerialName("backdrop_path")
         val backdropPath: String?,
 
-        @field:SerializedName("genres")
+        @SerialName("genres")
         val genres: List<GenreResponseModel>?,
 
-        @field:SerializedName("original_name")
+        @SerialName("original_name")
         val originalName: String?,
 
-        @field:SerializedName("popularity")
+        @SerialName("popularity")
         val popularity: Double?,
 
-        @field:SerializedName("vote_average")
+        @SerialName("vote_average")
         val voteAverage: Double?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("tagline")
+        @SerialName("tagline")
         val tagline: String?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("number_of_seasons")
+        @SerialName("number_of_seasons")
         val numberOfSeasons: Int?,
 
-        @field:SerializedName("last_air_date")
+        @SerialName("last_air_date")
         val lastAirDate: String?,
 
-        @field:SerializedName("vote_count")
+        @SerialName("vote_count")
         val voteCount: Double?,
 
-        @field:SerializedName("homepage")
+        @SerialName("homepage")
         val homepage: String?,
 
-        @field:SerializedName("status")
+        @SerialName("status")
         val status: String?,
 
-        @field:SerializedName("videos")
+        @SerialName("videos")
         val videos: VideoResponse?,
 
-        @field:SerializedName("external_ids")
+        @SerialName("external_ids")
         val externalIds: ExternalIdResponse,
 
-        @field:SerializedName("content_ratings")
+        @SerialName("content_ratings")
         val contentRatings: ContentRatingResponse,
 
-        @field:SerializedName("aggregate_credits")
+        @SerialName("aggregate_credits")
         val credits: CreditResponse?,
 
-        @field:SerializedName("seasons")
+        @SerialName("seasons")
         val seasons: List<TvSeasonItemResponse>?,
 )
 
+@Serializable
 data class NetworksItemResponse(
 
-        @field:SerializedName("logo_path")
+        @SerialName("logo_path")
         val logoPath: String?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("origin_country")
+        @SerialName("origin_country")
         val originCountry: String?
 )
 
+@Serializable
 data class ContentRatingResponse(
-        @field:SerializedName("results")
+        @SerialName("results")
         val results: List<ContentRatingResponseModel>?
 )
 
+@Serializable
 data class ContentRatingResponseModel(
-        @field:SerializedName("iso_3166_1")
+        @SerialName("iso_3166_1")
         val code: String?,
 
-        @field:SerializedName("rating")
+        @SerialName("rating")
         val rating: String?
 )
 
+@Serializable
 data class TvSeasonItemResponse(
 
-        @field:SerializedName("air_date")
+        @SerialName("air_date")
         val airDate: String?,
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("episode_count")
+        @SerialName("episode_count")
         val episodeCount: Int?,
 
-        @field:SerializedName("vote_average")
+        @SerialName("vote_average")
         val voteAverage: Double?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("season_number")
+        @SerialName("season_number")
         val seasonNumber: Int?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?
 )

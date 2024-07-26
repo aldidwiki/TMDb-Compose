@@ -1,71 +1,74 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.tv
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TvSeasonResponse(
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("air_date")
+        @SerialName("air_date")
         val airDate: String?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("poster_path")
+        @SerialName("poster_path")
         val posterPath: String?,
 
-        @field:SerializedName("season_number")
+        @SerialName("season_number")
         val seasonNumber: Int?,
 
-        @field:SerializedName("vote_average")
+        @SerialName("vote_average")
         val voteAverage: Double?,
 
-        @field:SerializedName("episodes")
+        @SerialName("episodes")
         val episodes: List<TvEpisodeItemResponse>
 )
 
+@Serializable
 data class TvEpisodeItemResponse(
 
-        @field:SerializedName("episode_type")
+        @SerialName("episode_type")
         val episodeType: String?,
 
-        @field:SerializedName("production_code")
+        @SerialName("production_code")
         val productionCode: String?,
 
-        @field:SerializedName("overview")
+        @SerialName("overview")
         val overview: String?,
 
-        @field:SerializedName("show_id")
+        @SerialName("show_id")
         val showId: Int?,
 
-        @field:SerializedName("season_number")
+        @SerialName("season_number")
         val seasonNumber: Int?,
 
-        @field:SerializedName("runtime")
+        @SerialName("runtime")
         val runtime: Int?,
 
-        @field:SerializedName("still_path")
+        @SerialName("still_path")
         val stillPath: String?,
 
-        @field:SerializedName("air_date")
+        @SerialName("air_date")
         val airDate: String?,
 
-        @field:SerializedName("episode_number")
+        @SerialName("episode_number")
         val episodeNumber: Int?,
 
-        @field:SerializedName("vote_average")
+        @SerialName("vote_average")
         val voteAverage: Double?,
 
-        @field:SerializedName("name")
+        @SerialName("name")
         val name: String?,
 
-        @field:SerializedName("id")
+        @SerialName("id")
         val id: Int,
 
-        @field:SerializedName("vote_count")
+        @SerialName("vote_count")
         val voteCount: Int?
 )

@@ -4,12 +4,14 @@ import com.aldiprahasta.tmdb.data.source.remote.MovieRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.PersonRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.TvRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 val remoteModule = module {
     singleOf(::provideRetrofit)
@@ -22,29 +24,35 @@ val remoteModule = module {
 
 private fun provideRetrofit(): Retrofit {
     val loggingInterceptor = HttpLoggingInterceptor()
-        .setLevel(HttpLoggingInterceptor.Level.BODY)
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
 
     val client = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .addInterceptor { chain ->
-            val original = chain.request()
-            val request = original.newBuilder()
-                .addHeader(
-                    "Authorization",
-                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNTBlZjRkN2I0ZDNjOTk1MzUxOGE2ZTJlZDQ5OTI4ZSIsInN1YiI6IjVmZDZkYjUyZDhlMjI1MDA0MTFiMzZlMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ObyQC30cOIxcfWiFBzp4mFX3BMxsQky6BXnONZtrzQw"
-                )
-                .addHeader("accept", "application/json")
-                .build()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val request = original.newBuilder()
+                        .addHeader(
+                                "Authorization",
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNTBlZjRkN2I0ZDNjOTk1MzUxOGE2ZTJlZDQ5OTI4ZSIsInN1YiI6IjVmZDZkYjUyZDhlMjI1MDA0MTFiMzZlMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ObyQC30cOIxcfWiFBzp4mFX3BMxsQky6BXnONZtrzQw"
+                        )
+                        .addHeader("accept", "application/json")
+                        .build()
 
-            chain.proceed(request)
-        }
-        .build()
+                chain.proceed(request)
+            }
+            .build()
+
+    val mediaType = "application/json".toMediaType()
+    val json = Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
 
     return Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build()
+            .baseUrl("https://api.themoviedb.org/3/")
+            .addConverterFactory(json.asConverterFactory(mediaType))
+            .client(client)
+            .build()
 }
 
 private fun provideRemoteService(retrofit: Retrofit): RemoteService {
