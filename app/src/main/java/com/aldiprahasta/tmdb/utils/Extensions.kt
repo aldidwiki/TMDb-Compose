@@ -23,9 +23,13 @@ import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponseModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.PagingErrorFooter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import java.sql.Date
 import java.text.NumberFormat
@@ -232,3 +236,12 @@ fun <T, R, E> Flow<Triple<UiState<T>, UiState<R>, UiState<E>>>.asUiStateTriple()
         emit(UiState.Success(Triple(stateFirstData, stateSecondData, stateThirdData)))
     }
 }
+
+fun <T> Flow<UiState<T>>.toStateFlow(
+        scope: CoroutineScope,
+        stopTimeoutMillis: Long = 5000L
+): StateFlow<UiState<T>> = this.stateIn(
+        scope,
+        SharingStarted.WhileSubscribed(stopTimeoutMillis),
+        UiState.Loading
+)

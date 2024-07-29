@@ -10,6 +10,7 @@ import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
 import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
+import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,11 +43,7 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
 
     val personDetail: StateFlow<UiState<PersonDomainModel>> = personId.flatMapLatest { id ->
         personDetailWrapper.getPersonDetail(id)
-    }.delayAfterLoading(300L).stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            UiState.Loading
-    )
+    }.delayAfterLoading(300L).toStateFlow(viewModelScope)
 
     fun addToFavorite(personDomainModel: PersonDomainModel) {
         viewModelScope.launch {

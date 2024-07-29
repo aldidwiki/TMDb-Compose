@@ -9,6 +9,7 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,10 +37,6 @@ class TvViewModel(tvWrapper: TvWrapper) : ViewModel() {
         tvWrapper.getTvSeasonDetail(tvId, tvSeasonNumber)
     }
             .delayAfterLoading(300L)
-            .stateIn(
-                    viewModelScope,
-                    SharingStarted.WhileSubscribed(5000),
-                    UiState.Loading
-            )
+            .toStateFlow(viewModelScope)
 
 }

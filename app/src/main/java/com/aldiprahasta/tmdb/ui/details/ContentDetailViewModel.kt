@@ -11,6 +11,7 @@ import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
 import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
+import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -50,11 +51,7 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
         } else {
             detailWrapper.getTvDetail(contentId)
         }
-    }.delayAfterLoading(300L).stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            UiState.Loading
-    )
+    }.delayAfterLoading(300L).toStateFlow(viewModelScope)
 
     fun addToFavorite(contentDetailDomainModel: ContentDetailDomainModel, mediaType: String) {
         viewModelScope.launch {

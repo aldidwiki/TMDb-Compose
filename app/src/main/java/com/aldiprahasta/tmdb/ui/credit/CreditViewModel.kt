@@ -12,12 +12,11 @@ import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.asUiStateTriple
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.zip
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -45,9 +44,5 @@ class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
                 Pair(credits, movieGenres)
             }.zip(creditWrapper.getTvGenreList()) { (credits, movieGenres), tvGenres ->
                 Triple(credits, movieGenres, tvGenres)
-            }.asUiStateTriple().delayAfterLoading(300L).stateIn(
-                    viewModelScope,
-                    SharingStarted.WhileSubscribed(5000),
-                    UiState.Loading
-            )
+            }.asUiStateTriple().delayAfterLoading(300L).toStateFlow(viewModelScope)
 }
