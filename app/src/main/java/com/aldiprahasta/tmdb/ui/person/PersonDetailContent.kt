@@ -223,7 +223,8 @@ private fun PersonDetailContent(
                 onCastClicked = { creditId, mediaType ->
                     onCreditClicked(creditId, mediaType)
                 },
-                onViewMoreClicked = onViewMoreClicked
+                onViewMoreClicked = onViewMoreClicked,
+                characterAgeParams = Pair(personDomainModel.name, personDomainModel.birthDay)
         )
     }
 }

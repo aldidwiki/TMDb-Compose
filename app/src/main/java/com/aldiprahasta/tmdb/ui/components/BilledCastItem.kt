@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,25 +14,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BilledCastItem(
         name: String,
         characterName: String,
         profilePath: String?,
         onItemClicked: () -> Unit,
+        onItemLongClicked: () -> Unit,
         modifier: Modifier = Modifier
 ) {
+    val haptics = LocalHapticFeedback.current
+
     ElevatedCard(
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             modifier = modifier
                     .size(width = 100.dp, height = 200.dp)
-                    .clickable {
-                        onItemClicked()
-                    },
+                    .combinedClickable(
+                            onClick = onItemClicked,
+                            onLongClick = {
+                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onItemLongClicked()
+                            }
+                    ),
             shape = RoundedCornerShape(6.dp)
     ) {
         Column {
@@ -70,6 +81,7 @@ fun BilledCastItemPreview() {
             name = "Timothée Chalamet",
             characterName = "Paul Atreides",
             profilePath = "/BE2sdjpgsa2rNTFa66f7upkaOP.jpg",
-            onItemClicked = {}
+            onItemClicked = {},
+            onItemLongClicked = {}
     )
 }

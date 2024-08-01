@@ -117,6 +117,24 @@ fun getAge(birthday: String, deathDay: String?): String {
     return age.toString()
 }
 
+fun getCharacterAge(birthday: String, releaseDate: String?): String {
+    val contentReleaseDate = SimpleDateFormat(Constant.APP_DATE_FORMAT, Locale.getDefault()).also {
+        it.calendar.time = it.parse(releaseDate ?: "") ?: java.util.Date()
+    }.calendar
+
+    val birthDate = SimpleDateFormat(Constant.APP_DATE_FORMAT, Locale.getDefault()).also {
+        it.calendar.time = it.parse(birthday ?: "") ?: java.util.Date()
+    }.calendar
+
+    var characterAge = contentReleaseDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR)
+
+    if (contentReleaseDate.get(Calendar.DAY_OF_YEAR) < birthDate.get(Calendar.DAY_OF_YEAR)) {
+        characterAge -= 1
+    }
+
+    return characterAge.toString()
+}
+
 fun Int?.formatGender(): String = when (this) {
     1 -> "Female"
     2 -> "Male"

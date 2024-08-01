@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.components
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,9 +18,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
+import com.aldiprahasta.tmdb.utils.getCharacterAge
 
 @Composable
 fun ContentBilledCast(
@@ -27,8 +30,11 @@ fun ContentBilledCast(
         casts: List<CastDomainModel>,
         onCastClicked: (contentId: Int, mediaType: String?) -> Unit,
         onViewMoreClicked: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        characterAgeParams: Pair<String, String>? = null
 ) {
+    val context = LocalContext.current
+
     Column(modifier = modifier) {
         Text(
                 text = sectionTitle,
@@ -48,6 +54,15 @@ fun ContentBilledCast(
                         profilePath = item.imagePath,
                         onItemClicked = {
                             onCastClicked(item.id, item.mediaType)
+                        },
+                        onItemLongClicked = {
+                            characterAgeParams?.let {(personName, personBirthDay) ->
+                                Toast.makeText(
+                                        context,
+                                        "$personName was ${getCharacterAge(personBirthDay, item.releaseDate)} years old in this movie/tv show",
+                                        Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }
                 )
             }
