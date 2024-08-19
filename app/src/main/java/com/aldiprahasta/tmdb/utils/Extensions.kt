@@ -164,10 +164,9 @@ fun <T : Any> LazyListScope.setupPagingLoadState(lazyPagingItems: LazyPagingItem
             }
 
             loadState.refresh is LoadState.Error -> {
-                val error = loadState.refresh as LoadState.Error
                 item {
                     ErrorScreen(
-                        modifier = Modifier.fillParentMaxSize()
+                            modifier = Modifier.fillParentMaxSize()
                     )
                 }
             }

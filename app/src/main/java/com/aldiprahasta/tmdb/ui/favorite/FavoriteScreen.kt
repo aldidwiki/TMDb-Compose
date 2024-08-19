@@ -51,7 +51,7 @@ fun FavoriteScreen(
                 }
 
                 doIfError { _, errorMessage ->
-                    ErrorScreen()
+                    ErrorScreen(errorMessage = errorMessage)
                 }
 
                 doIfSuccess { favorites ->

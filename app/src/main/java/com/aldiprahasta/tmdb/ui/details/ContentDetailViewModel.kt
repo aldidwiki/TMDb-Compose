@@ -42,10 +42,7 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
             false
     )
 
-    val contentDetail: StateFlow<UiState<ContentDetailDomainModel>> = contentParam.flatMapLatest { param ->
-        val contentId = param.first
-        val contentType = param.second
-
+    val contentDetail: StateFlow<UiState<ContentDetailDomainModel>> = contentParam.flatMapLatest { (contentId, contentType) ->
         if (contentType == MediaType.MOVIE_TYPE.name) {
             detailWrapper.getMovieDetail(contentId)
         } else {

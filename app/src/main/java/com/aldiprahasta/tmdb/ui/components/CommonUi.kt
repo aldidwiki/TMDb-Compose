@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -68,18 +70,29 @@ fun ImageLoaderBackdrop(
 }
 
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier) {
+fun ErrorScreen(
+        modifier: Modifier = Modifier,
+        errorMessage: String? = null
+) {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.error_animation))
 
     Box(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
     ) {
-        LottieAnimation(
-                composition = composition,
-                iterations = LottieConstants.IterateForever,
-                modifier = Modifier.size(250.dp)
-        )
+        errorMessage?.let { message ->
+            Text(
+                    textAlign = TextAlign.Center,
+                    text = message,
+                    style = MaterialTheme.typography.displaySmall
+            )
+        } ?: run {
+            LottieAnimation(
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever,
+                    modifier = Modifier.size(250.dp)
+            )
+        }
     }
 }
 
@@ -95,7 +108,6 @@ fun LoadingScreen(
         CircularProgressIndicator(Modifier.size(indicatorSizeInDp))
     }
 }
-
 
 @Composable
 fun PagingErrorFooter(
