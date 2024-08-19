@@ -24,7 +24,7 @@ import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
-val useCaseModule = module {
+private val interactionModule = module {
     factoryOf(::GetPopularMovieList)
     factoryOf(::GetMovieDetail)
     factoryOf(::GetPersonDetail)
@@ -43,10 +43,14 @@ val useCaseModule = module {
     factoryOf(::GetFavoriteStatus)
 }
 
-val useCaseWrapperModule = module {
+private val interactionWrapperModule = module {
     factoryOf(::CreditWrapper)
     factoryOf(::DetailWrapper)
     factoryOf(::TvWrapper)
     factoryOf(::PersonDetailWrapper)
     factoryOf(::FavoriteWrapper)
+}
+
+val useCaseModule = module {
+    includes(interactionModule, interactionWrapperModule)
 }

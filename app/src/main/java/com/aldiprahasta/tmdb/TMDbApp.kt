@@ -5,7 +5,6 @@ import com.aldiprahasta.tmdb.di.localeModule
 import com.aldiprahasta.tmdb.di.remoteModule
 import com.aldiprahasta.tmdb.di.repositoryModule
 import com.aldiprahasta.tmdb.di.useCaseModule
-import com.aldiprahasta.tmdb.di.useCaseWrapperModule
 import com.aldiprahasta.tmdb.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -22,7 +21,6 @@ class TMDbApp : Application() {
                     repositoryModule,
                     useCaseModule,
                     viewModelModule,
-                    useCaseWrapperModule
             )
         }
 

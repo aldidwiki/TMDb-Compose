@@ -6,15 +6,15 @@ import com.aldiprahasta.tmdb.data.repository.FavoriteRepositoryImpl
 import com.aldiprahasta.tmdb.data.source.local.database.FavoriteDao
 import com.aldiprahasta.tmdb.data.source.local.database.LocalDatabase
 import com.aldiprahasta.tmdb.domain.repository.FavoriteRepository
-import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val localeModule = module {
     singleOf(::provideLocalDatabase)
-    singleOf(::provideFavoriteDao) { bind<FavoriteDao>() }
+    singleOf(::provideFavoriteDao)
 
-    singleOf(::FavoriteRepositoryImpl) { bind<FavoriteRepository>() }
+    singleOf(::FavoriteRepositoryImpl) bind FavoriteRepository::class
 }
 
 private fun provideLocalDatabase(context: Context): LocalDatabase {

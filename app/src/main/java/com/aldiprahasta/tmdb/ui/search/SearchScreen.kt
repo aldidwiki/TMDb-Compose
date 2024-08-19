@@ -96,7 +96,7 @@ private fun SearchContent(
             modifier = modifier
     ) {
         if (searchResultsPagingItems.itemCount < 1 && searchQuery.isNotEmpty()) {
-            ErrorScreen()
+            ErrorScreen(errorMessage = "No Data Found")
         } else LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 modifier = Modifier.fillMaxSize()
