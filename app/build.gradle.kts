@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.serialization)
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.airbnb.lottie.compose)
 
     ksp(libs.androidx.room.compiler)
 

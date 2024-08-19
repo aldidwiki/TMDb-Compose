@@ -139,7 +139,7 @@ fun CreditScreen(
             }
 
             targetState.doIfError { throwable, _ ->
-                ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+                ErrorScreen()
             }
 
             targetState.doIfSuccess { (casts, movieGenres, tvGenres) ->
@@ -178,8 +178,7 @@ fun CreditScreen(
                     )
                 } else {
                     ErrorScreen(
-                            errorMessage = "No Movies/TV Show Found",
-                            modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(20.dp)
                     )
                 }
             }

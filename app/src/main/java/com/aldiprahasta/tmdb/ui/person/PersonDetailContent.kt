@@ -143,7 +143,7 @@ fun PersonScreen(
             }
 
             targetState.doIfError { throwable, _ ->
-                ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+                ErrorScreen()
             }
 
             targetState.doIfSuccess { personDetail ->

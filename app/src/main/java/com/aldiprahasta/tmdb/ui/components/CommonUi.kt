@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -22,11 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.aldiprahasta.tmdb.R
 
 @Composable
@@ -66,15 +68,17 @@ fun ImageLoaderBackdrop(
 }
 
 @Composable
-fun ErrorScreen(errorMessage: String?, modifier: Modifier = Modifier) {
+fun ErrorScreen(modifier: Modifier = Modifier) {
+    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.error_animation))
+
     Box(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
     ) {
-        Text(
-                textAlign = TextAlign.Center,
-                text = errorMessage ?: "No Data Found",
-                style = MaterialTheme.typography.displaySmall
+        LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier.size(250.dp)
         )
     }
 }

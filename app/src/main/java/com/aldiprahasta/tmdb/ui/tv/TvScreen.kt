@@ -61,8 +61,7 @@ fun TvContent(
                 }
             } ?: run {
                 ErrorScreen(
-                        errorMessage = "No Tv Series Found",
-                        modifier = Modifier.fillParentMaxSize()
+                    modifier = Modifier.fillParentMaxSize()
                 )
             }
         }

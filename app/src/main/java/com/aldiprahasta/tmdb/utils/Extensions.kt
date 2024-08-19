@@ -167,8 +167,7 @@ fun <T : Any> LazyListScope.setupPagingLoadState(lazyPagingItems: LazyPagingItem
                 val error = loadState.refresh as LoadState.Error
                 item {
                     ErrorScreen(
-                            errorMessage = error.error.localizedMessage ?: "No Data Found",
-                            modifier = Modifier.fillParentMaxSize()
+                        modifier = Modifier.fillParentMaxSize()
                     )
                 }
             }

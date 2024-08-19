@@ -57,7 +57,6 @@ fun MovieContent(
                 }
             } ?: run {
                 ErrorScreen(
-                        errorMessage = "No Movies Found",
                         modifier = Modifier.fillParentMaxSize()
                 )
             }

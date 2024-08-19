@@ -98,7 +98,7 @@ fun TvSeasonDetailScreen(
             }
 
             targetState.doIfError { throwable, _ ->
-                ErrorScreen(errorMessage = throwable.localizedMessage ?: "No Season Detail")
+                ErrorScreen()
             }
 
             targetState.doIfSuccess { data: TvSeasonDetailDomainModel ->

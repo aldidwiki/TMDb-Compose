@@ -215,7 +215,7 @@ private fun ContentDetail(
         }
 
         targetState.doIfError { throwable, _ ->
-            ErrorScreen(errorMessage = throwable.localizedMessage ?: "")
+            ErrorScreen()
         }
 
         targetState.doIfSuccess { contentDetailDomainModel ->
