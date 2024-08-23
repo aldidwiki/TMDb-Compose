@@ -8,6 +8,7 @@ import com.aldiprahasta.tmdb.data.source.remote.MovieRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
 import com.aldiprahasta.tmdb.domain.repository.MovieRepository
@@ -37,5 +38,9 @@ class MovieRepositoryImpl(
 
     override fun getMovieGenres(): Flow<UiState<GenreResponse>> {
         return movieRemoteDataSource.getMovieGenres()
+    }
+
+    override fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> {
+        return movieRemoteDataSource.getMovieImages(movieId)
     }
 }

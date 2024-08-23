@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.data.source.local.entity.FavoriteEntity
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
@@ -20,6 +21,7 @@ import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.FavoriteDomainModel
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
+import com.aldiprahasta.tmdb.domain.model.ImageDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
@@ -225,6 +227,14 @@ fun PersonDomainModel.mapDomainModelToEntity(): FavoriteEntity {
             imagePath = profilePath,
             mediaType = MediaType.PERSON_TYPE.name
     )
+}
+
+fun ImageResponse.mapImageResponseToDomainList(isBackdrop: Boolean): List<ImageDomainModel> {
+    return if (isBackdrop) backdrops?.map { imageResponseModel ->
+        ImageDomainModel(filePath = imageResponseModel.filePath)
+    } ?: emptyList() else posters?.map { imageResponseModel ->
+        ImageDomainModel(filePath = imageResponseModel.filePath)
+    } ?: emptyList()
 }
 
 private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {

@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.data.source.remote
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,18 @@ class MovieRemoteDataSource(private val remoteService: RemoteService) {
         if (!response.isSuccessful) throw HttpException(response)
         else response.body()?.let { genreResponse ->
             emit(UiState.Success(genreResponse))
+        }
+    }.catch { t ->
+        Timber.e(t)
+        emit(UiState.Error(t))
+    }.flowOn(Dispatchers.IO)
+
+    fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> = flow {
+        emit(UiState.Loading)
+        val response = remoteService.getMovieImages(movieId)
+        if (!response.isSuccessful) throw HttpException(response)
+        else response.body()?.let { imageResponse ->
+            emit(UiState.Success(imageResponse))
         }
     }.catch { t ->
         Timber.e(t)
