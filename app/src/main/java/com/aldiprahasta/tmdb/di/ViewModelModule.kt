@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.di
 import com.aldiprahasta.tmdb.ui.credit.CreditViewModel
 import com.aldiprahasta.tmdb.ui.details.ContentDetailViewModel
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteViewModel
+import com.aldiprahasta.tmdb.ui.image.ImageViewModel
 import com.aldiprahasta.tmdb.ui.movie.MovieViewModel
 import com.aldiprahasta.tmdb.ui.person.PersonViewModel
 import com.aldiprahasta.tmdb.ui.search.SearchViewModel
@@ -18,4 +19,5 @@ val viewModelModule = module {
     viewModelOf(::TvViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::FavoriteViewModel)
+    viewModelOf(::ImageViewModel)
 }
