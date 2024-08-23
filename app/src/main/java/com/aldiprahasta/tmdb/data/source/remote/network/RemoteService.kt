@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.data.source.remote.network
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
@@ -56,4 +57,7 @@ interface RemoteService {
 
     @GET("genre/tv/list")
     suspend fun getTvGenres(): Response<GenreResponse>
+
+    @GET("movie/{movie_id}/images")
+    suspend fun getMovieImages(@Path("movie_id") movieId: Int): Response<ImageResponse>
 }
