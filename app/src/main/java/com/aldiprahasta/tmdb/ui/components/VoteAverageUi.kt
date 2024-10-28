@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -39,7 +38,7 @@ fun VoteAverageUi(
                             shape = RoundedCornerShape(4.dp)
                     )
                     .padding(horizontal = 4.dp)
-                    .width(40.dp),
+                    .padding(vertical = 2.dp)
     ) {
         Image(
                 imageVector = Icons.Default.Star,

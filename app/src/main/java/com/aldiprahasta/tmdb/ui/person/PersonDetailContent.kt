@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -194,7 +195,8 @@ private fun PersonDetailContent(
                     text = personDomainModel.name,
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 28.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.size(4.dp))
             ContentDetailExternal(
