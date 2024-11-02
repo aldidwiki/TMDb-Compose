@@ -1,7 +1,6 @@
 package com.aldiprahasta.tmdb.utils
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -92,17 +91,6 @@ fun String.getLanguageDisplayName(): String = if (this.isNotEmpty()) {
     this
 }
 
-fun Context.shareIt(text: String) {
-    val sendIntent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, text)
-        type = "text/plain"
-    }
-
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    startActivity(shareIntent)
-}
-
 fun getAge(birthday: String, deathDay: String?): String {
     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).calendar
     date.time = Date.valueOf(birthday)
@@ -123,7 +111,7 @@ fun getCharacterAge(birthday: String, releaseDate: String?): String {
     }.calendar
 
     val birthDate = SimpleDateFormat(Constant.APP_DATE_FORMAT, Locale.getDefault()).also {
-        it.calendar.time = it.parse(birthday ?: "") ?: java.util.Date()
+        it.calendar.time = it.parse(birthday) ?: java.util.Date()
     }.calendar
 
     var characterAge = contentReleaseDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR)
