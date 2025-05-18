@@ -129,15 +129,15 @@ fun Int?.formatGender(): String = when (this) {
     else -> "Not Sure"
 }
 
-suspend fun Context.getImageBitmap(imagePath: String): Bitmap {
+suspend fun Context.getImageBitmap(imagePath: String): Bitmap? {
     val loader = ImageLoader(this)
     val request = ImageRequest.Builder(this)
-            .data("https://image.tmdb.org/t/p/w500/$imagePath")
+            .data("https://image.tmdb.org/t/p/w185/$imagePath")
             .allowHardware(false)
             .build()
 
-    val result = (loader.execute(request) as SuccessResult).drawable
-    return (result as BitmapDrawable).bitmap
+    val result = (loader.execute(request) as? SuccessResult)?.drawable
+    return (result as? BitmapDrawable)?.bitmap
 }
 
 fun <T> Flow<UiState<T>>.delayAfterLoading(timeMillis: Long): Flow<UiState<T>> = onEach { state ->

@@ -85,10 +85,14 @@ fun ContentDetailScreen(
     val context = LocalContext.current
     var posterPath by remember { mutableStateOf<String?>(null) }
     var palette by remember { mutableStateOf<Palette?>(null) }
-    posterPath?.let {
-        LaunchedEffect(it) {
-            val bitmap = context.getImageBitmap(it)
-            palette = Palette.Builder(bitmap).generate()
+    posterPath?.let { path ->
+        LaunchedEffect(path) {
+            val bitmap = context.getImageBitmap(path)
+            bitmap?.let {
+                Palette.from(it).generate { p ->
+                    palette = p
+                }
+            }
         }
     }
 
