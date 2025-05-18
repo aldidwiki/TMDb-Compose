@@ -77,7 +77,7 @@ private fun FavoriteContent(
 ) {
     LazyColumn(
             modifier = modifier,
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(vertical = 16.dp),
     ) {
         itemsIndexed(favorites) { index, favorite ->
             SwipeBox(onDelete = {
@@ -89,7 +89,9 @@ private fun FavoriteContent(
                         characterName = null,
                         posterPath = favorite.imagePoster,
                         totalEpisodeCount = null,
-                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                        modifier = Modifier
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(horizontal = 16.dp),
                         onItemClicked = {
                             onItemClicked(favorite.favoriteId, favorite.mediaType)
                         }
