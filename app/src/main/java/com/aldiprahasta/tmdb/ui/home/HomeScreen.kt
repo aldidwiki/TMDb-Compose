@@ -222,8 +222,10 @@ fun TMDbNavHostController(
                         navController.navigateUp()
                     },
                     onCreditClicked = { contentId, mediaType ->
-                        if (mediaType == "movie") {
+                        if (mediaType == Constant.MOVIE_MEDIA_TYPE) {
                             navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
+                        } else if (mediaType == Constant.TV_MEDIA_TYPE) {
+                            navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
                         }
                     },
                     onViewMoreClicked = {
