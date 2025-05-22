@@ -9,7 +9,7 @@ lifecycle-runtime-ktx = "2.8.7"
 activity-compose = "1.9.3"
 compose-bom = "2024.06.00"
 coil-compose = "2.7.0"
-squareup-retrofit = "2.11.0"
+squareup-retrofit = "3.0.0"
 okhttp-logging-interceptor = "4.12.0"
 timber = "5.0.1"
 lifecycle-compose = "2.8.7"
@@ -64,7 +64,6 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebase-crashlytics-buildtools" }
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
-
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
