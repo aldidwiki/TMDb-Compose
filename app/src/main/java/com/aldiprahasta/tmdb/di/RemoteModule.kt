@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.data.source.remote.MovieRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.PersonRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.TvRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
+import com.aldiprahasta.tmdb.utils.Constant
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -33,7 +34,7 @@ private fun provideRetrofit(): Retrofit {
                 val request = original.newBuilder()
                         .addHeader(
                                 "Authorization",
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNTBlZjRkN2I0ZDNjOTk1MzUxOGE2ZTJlZDQ5OTI4ZSIsInN1YiI6IjVmZDZkYjUyZDhlMjI1MDA0MTFiMzZlMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ObyQC30cOIxcfWiFBzp4mFX3BMxsQky6BXnONZtrzQw"
+                                "Bearer ${Constant.getApiKey()}"
                         )
                         .addHeader("accept", "application/json")
                         .build()

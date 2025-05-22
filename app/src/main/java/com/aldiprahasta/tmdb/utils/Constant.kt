@@ -1,6 +1,10 @@
 package com.aldiprahasta.tmdb.utils
 
 object Constant {
+    init {
+        System.loadLibrary("native-lib")
+    }
+
     const val IMDB_BASE_URL = "https://www.imdb.com/title/"
     const val IMDB_PROFILE_URL = "https://www.imdb.com/name/"
     const val INSTAGRAM_BASE_URL = "https://www.instagram.com/"
@@ -16,4 +20,6 @@ object Constant {
     const val SOURCE_DATE_FORMAT = "yyyy-MM-dd"
     const val APP_DATE_FORMAT = "MMMM dd, yyyy"
     const val SORTING_DATE_FORMAT = "yyyyMMdd"
+
+    external fun getApiKey(): String
 }
