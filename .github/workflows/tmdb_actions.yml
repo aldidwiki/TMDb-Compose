@@ -1,6 +1,6 @@
 name: TMDbBuild
 
-on: [ push ]
+on: workflow_dispatch
 
 jobs:
   build:
@@ -20,13 +20,18 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Decode Keystore
-        run: echo "${{ secrets.TMDB_KEYSTORE }}" | base64 --decode > /tmp/tmdb_keystore.jks
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'keystore/tmdb_keystore.jks'
+          encodedString: ${{ secrets.TMDB_KEYSTORE }}
 
       - name: Build Release
         run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=/tmp/tmdb_keystore.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TMDb-release.apk
-          path: app/release/app-release.apk
+          name: Build Artifacts
+          path: app/build/outputs/
