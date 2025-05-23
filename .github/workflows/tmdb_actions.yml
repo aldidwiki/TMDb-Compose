@@ -1,8 +1,10 @@
 name: TMDbBuild
 
+on: [ push ]
+
 jobs:
   build:
-    runs-on : macos-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -15,13 +17,16 @@ jobs:
           java-version: '17'
 
       - name: Grant execute permissions for gradlew
-        run: chmod +x ./gradlew 
+        run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run : ./gradlew assemble
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE }}" | base64 --decode > /tmp/tmdb_keystore.jks
+
+      - name: Build Release
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=/tmp/tmdb_keystore.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TMDb-debug.apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: TMDb-release.apk
+          path: app/release/app-release.apk
