@@ -20,7 +20,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Decode Keystore
-        run: echo "${{ secrets.KEYSTORE }}" | base64 --decode > /tmp/tmdb_keystore.jks
+        run: echo "${{ secrets.TMDB_KEYSTORE }}" | base64 --decode > /tmp/tmdb_keystore.jks
 
       - name: Build Release
         run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=/tmp/tmdb_keystore.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
