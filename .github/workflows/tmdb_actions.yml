@@ -19,6 +19,11 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Set Secret Properties
+        env:
+          LOCAL_PROPERTIES: ${{ secrets.LOCAL_PROPERTIES }}
+          run: echo "$LOCAL_PROPERTIES" > ./local.properties
+
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.2
@@ -32,10 +37,6 @@ jobs:
 
       - name: Build Release
         run: ./gradlew assembleRelease
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Upload Build Artifact
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
