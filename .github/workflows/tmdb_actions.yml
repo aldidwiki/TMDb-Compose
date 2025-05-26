@@ -1,6 +1,6 @@
 name: TMDbBuild
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -16,9 +16,6 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Grant execute permissions for gradlew
-        run: chmod +x ./gradlew
-
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.2
@@ -26,8 +23,15 @@ jobs:
           fileName: 'keystore/tmdb_keystore.jks'
           encodedString: ${{ secrets.TMDB_KEYSTORE }}
 
+      - name: Grant execute permissions for gradlew
+        run: chmod +x ./gradlew
+
       - name: Build Release
-        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=/keystore/tmdb_keystore.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
