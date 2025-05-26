@@ -36,8 +36,10 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Build Artifact
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7
         with:
-          name: Build Artifacts
-          path: app/build/outputs/
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
+          testers: ${{ secrets.FIREBASE_TESTERS }}
+          file: app/build/outputs/apk/release/TMDb.apk
