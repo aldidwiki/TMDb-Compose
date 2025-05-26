@@ -25,8 +25,25 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore"
+            val allFilesFromDir = File(tmpFilePath).listFiles()
+
+            if (allFilesFromDir != null) {
+                val keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo(File("keystore/tmdb_keystore.jks"))
+            }
+
+            storeFile = file("keystore/tmdb_keystore.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(
