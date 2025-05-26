@@ -23,7 +23,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.2
         with:
-          fileName: 'keystore/tmdb_keystore.jks'
+          fileName: 'app/keystore/tmdb_keystore.jks'
           encodedString: ${{ secrets.TMDB_KEYSTORE }}
 
       - name: Grant execute permissions for gradlew
