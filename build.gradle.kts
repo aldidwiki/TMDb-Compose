@@ -6,5 +6,6 @@ plugins {
     alias(libs.plugins.kotlinParcelize) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.google.service) apply false
 }
 true // Needed to make the Suppress annotation work for the plugins block

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1009319554215",
+    "project_id": "aldi-prahasta-tmdb-compose",
+    "storage_bucket": "aldi-prahasta-tmdb-compose.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009319554215:android:95782bea24ba5ddc62ff82",
+        "android_client_info": {
+          "package_name": "com.aldiprahasta.tmdb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq5WERi9VRPT6aIt9jn2P6YcHVAmbKyAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
