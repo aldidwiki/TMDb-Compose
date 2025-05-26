@@ -42,6 +42,18 @@ android {
         }
     }
 
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = if (variant.name.contains("debug")) "TMDb-debug.apk"
+                else "TMDb.apk"
+
+                output.outputFileName = outputFileName
+            }
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -57,13 +69,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
