@@ -63,7 +63,7 @@ android {
                     "proguard-rules.pro"
             )
 
-            signingConfig = signingConfigs.getByName("release")
+//            signingConfig = signingConfigs.getByName("release")
         }
     }
 
