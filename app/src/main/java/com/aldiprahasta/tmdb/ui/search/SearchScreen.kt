@@ -12,6 +12,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -64,36 +65,44 @@ private fun SearchContent(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val onActiveChange: (Boolean) -> Unit = { state ->
+        if (!state) onBackPressed()
+    }
+
     SearchBar(
-            query = searchQuery,
-            onQueryChange = onSearchQueryChanged,
-            onSearch = {
-                keyboardController?.hide()
-            },
-            active = true,
-            onActiveChange = { state ->
-                if (!state) onBackPressed()
-            },
-            placeholder = {
-                Text(text = "Search Movie, Tv Show, and People")
-            },
-            leadingIcon = {
-                Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
+            inputField = {
+                SearchBarDefaults.InputField(
+                        query = searchQuery,
+                        onQueryChange = onSearchQueryChanged,
+                        onSearch = {
+                            keyboardController?.hide()
+                        },
+                        expanded = true,
+                        onExpandedChange = onActiveChange,
+                        placeholder = {
+                            Text(text = "Search Movie, Tv Show, and People")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = null
+                            )
+                        },
+                        trailingIcon = {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { onSearchQueryChanged("") }) {
+                                    Icon(
+                                            imageVector = Icons.Default.Close,
+                                            contentDescription = null
+                                    )
+                                }
+                            }
+                        },
                 )
             },
-            trailingIcon = {
-                if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { onSearchQueryChanged("") }) {
-                        Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = null
-                        )
-                    }
-                }
-            },
-            modifier = modifier
+            expanded = true,
+            onExpandedChange = onActiveChange,
+            modifier = modifier,
     ) {
         if (searchResultsPagingItems.itemCount < 1 && searchQuery.isNotEmpty()) {
             ErrorScreen(errorMessage = "No Data Found")

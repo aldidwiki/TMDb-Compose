@@ -19,12 +19,12 @@ val localeModule = module {
 
 private fun provideLocalDatabase(context: Context): LocalDatabase {
     return Room.databaseBuilder(
-            context = context,
-            klass = LocalDatabase::class.java,
-            name = LocalDatabase.DB_NAME
+        context = context,
+        klass = LocalDatabase::class.java,
+        name = LocalDatabase.DB_NAME
     )
-            .fallbackToDestructiveMigration()
-            .build()
+        .fallbackToDestructiveMigration(false)
+        .build()
 }
 
 private fun provideFavoriteDao(localDatabase: LocalDatabase): FavoriteDao {
