@@ -1,7 +1,6 @@
 package com.aldiprahasta.tmdb.ui.components
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toDrawable
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieAnimation
@@ -42,7 +42,7 @@ fun ImageLoader(
     AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                     .data("https://image.tmdb.org/t/p/${imageType.size}/$imagePath")
-                    .placeholder(ColorDrawable(Color.GRAY))
+                    .placeholder(Color.GRAY.toDrawable())
                     .error(R.drawable.ic_broken_image)
                     .crossfade(true)
                     .build(),

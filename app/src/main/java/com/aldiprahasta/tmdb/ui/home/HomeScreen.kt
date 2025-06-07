@@ -57,7 +57,6 @@ import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.parcelableArrayList
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
