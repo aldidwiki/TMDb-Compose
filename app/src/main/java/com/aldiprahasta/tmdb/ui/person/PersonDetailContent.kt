@@ -221,7 +221,7 @@ private fun PersonDetailContent(
         Spacer(modifier = Modifier.size(20.dp))
         ContentBilledCast(
                 sectionTitle = "Known For",
-                casts = personDomainModel.credits.take(10),
+                casts = personDomainModel.credits,
                 onCastClicked = { creditId, mediaType ->
                     onCreditClicked(creditId, mediaType)
                 },

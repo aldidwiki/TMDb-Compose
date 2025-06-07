@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.utils.getCharacterAge
 
+private const val MAX_SHOWED_CREDITS = 10
+
 @Composable
 fun ContentBilledCast(
         sectionTitle: String,
@@ -47,7 +49,7 @@ fun ContentBilledCast(
                 verticalAlignment = Alignment.CenterVertically,
                 contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            items(casts.take(10)) { item ->
+            items(casts.take(MAX_SHOWED_CREDITS)) { item ->
                 BilledCastItem(
                         name = item.name,
                         characterName = item.characterName,
@@ -56,10 +58,10 @@ fun ContentBilledCast(
                             onCastClicked(item.id, item.mediaType)
                         },
                         onItemLongClicked = {
-                            characterAgeParams?.let {(personName, personBirthDay) ->
+                            characterAgeParams?.let { (personName, personBirthDay) ->
                                 Toast.makeText(
                                         context,
-                                        "$personName was ${getCharacterAge(personBirthDay, item.releaseDate)} years old in this movie/tv show",
+                                        "$personName was ${getCharacterAge(personBirthDay, item.releaseDate)} years old in this project",
                                         Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -67,13 +69,15 @@ fun ContentBilledCast(
                 )
             }
 
-            item {
-                TextButton(onClick = onViewMoreClicked) {
-                    Text(text = "View more")
-                    Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null
-                    )
+            if (casts.size > MAX_SHOWED_CREDITS) {
+                item {
+                    TextButton(onClick = onViewMoreClicked) {
+                        Text(text = "View more")
+                        Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = null
+                        )
+                    }
                 }
             }
         }
