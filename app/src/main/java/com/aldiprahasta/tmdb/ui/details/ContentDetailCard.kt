@@ -131,7 +131,7 @@ private fun ContentDetailUserScoreWithTrailer(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier.fillMaxWidth()
     ) {
-        val sheetState = rememberModalBottomSheetState()
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
         val context = LocalContext.current
         var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -145,8 +145,7 @@ private fun ContentDetailUserScoreWithTrailer(
                     onDismissRequest = {
                         showBottomSheet = false
                     },
-                    sheetState = sheetState,
-                    modifier = Modifier.height(250.dp)
+                    sheetState = sheetState
             ) {
                 Text(
                         text = "Trailers",
