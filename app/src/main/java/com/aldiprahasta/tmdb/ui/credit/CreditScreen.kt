@@ -285,7 +285,6 @@ private fun SortingChip(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun GenreFilterChip(
         selectedGenres: Set<GenreDomainModel>,

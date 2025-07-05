@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,7 +26,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
@@ -47,9 +45,6 @@ fun ModalSheetGenre(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
-    val configuration = LocalConfiguration.current
-    val screenHeight = (configuration.screenHeightDp * 0.75).dp
-
     if (showModalSheet) {
         val genres = mutableListOf<GenreDomainModel>().apply {
             addAll(movieGenreList)
@@ -57,7 +52,7 @@ fun ModalSheetGenre(
         }.distinct().sortedBy { it.name }
 
         ModalBottomSheet(
-                modifier = modifier.height(screenHeight),
+                modifier = modifier,
                 sheetState = sheetState,
                 onDismissRequest = onDismissRequest
         ) {
