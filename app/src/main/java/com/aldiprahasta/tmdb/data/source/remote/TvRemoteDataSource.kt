@@ -11,15 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
 import timber.log.Timber
 
 class TvRemoteDataSource(private val remoteService: RemoteService) {
     fun getTvDetail(tvId: Int): Flow<UiState<TvDetailResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getTvDetail(tvId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { tvDetailResponse ->
+        response?.let { tvDetailResponse ->
             emit(UiState.Success(tvDetailResponse))
         }
     }.catch { t ->
@@ -30,8 +28,7 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
     fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getTvCredits(tvId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { creditResponse ->
+        response?.let { creditResponse ->
             emit(UiState.Success(creditResponse))
         }
     }.catch { t ->
@@ -42,8 +39,7 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
     fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getTvSeasonDetail(tvId, tvSeasonNumber)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { tvSeasonResponse ->
+        response?.let { tvSeasonResponse ->
             emit(UiState.Success(tvSeasonResponse))
         }
     }.catch { t ->
@@ -54,8 +50,7 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
     fun getTvGenres(): Flow<UiState<GenreResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getTvGenres()
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { genreResponse ->
+        response?.let { genreResponse ->
             emit(UiState.Success(genreResponse))
         }
     }.catch { t ->
