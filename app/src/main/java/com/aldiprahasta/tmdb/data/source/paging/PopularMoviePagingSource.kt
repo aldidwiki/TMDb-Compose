@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
-import retrofit2.HttpException
 import timber.log.Timber
 
 class PopularMoviePagingSource(
@@ -20,16 +19,12 @@ class PopularMoviePagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResponseModel> {
         return try {
             val page = params.key ?: INITIAL_PAGE_INDEX
-            val response = remoteService.getPopularMovies(page)
-
-            if (!response.isSuccessful) {
-                throw HttpException(response)
-            }
+            val movieResponse = remoteService.getPopularMovies(page)
 
             LoadResult.Page(
-                    data = response.body()?.movieResponseModelList ?: emptyList(),
+                    data = movieResponse?.movieResponseModelList ?: emptyList(),
                     prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
-                    nextKey = if (response.body()?.movieResponseModelList.isNullOrEmpty()) null else page + 1
+                    nextKey = if (movieResponse?.movieResponseModelList.isNullOrEmpty()) null else page + 1
             )
         } catch (e: Exception) {
             Timber.e(e)

@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.search.SearchResponseModel
-import retrofit2.HttpException
 import timber.log.Timber
 
 class SearchPagingSource(
@@ -23,14 +22,10 @@ class SearchPagingSource(
             val page = params.key ?: INITIAL_PAGE_INDEX
             val response = remoteService.getSearchResults(query, page)
 
-            if (!response.isSuccessful) {
-                throw HttpException(response)
-            }
-
             LoadResult.Page(
-                    data = response.body()?.results ?: emptyList(),
+                    data = response?.results ?: emptyList(),
                     prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
-                    nextKey = if (response.body()?.results.isNullOrEmpty()) null else page + 1
+                    nextKey = if (response?.results.isNullOrEmpty()) null else page + 1
             )
         } catch (e: Exception) {
             Timber.e(e)

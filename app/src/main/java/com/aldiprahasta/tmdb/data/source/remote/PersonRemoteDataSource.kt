@@ -9,15 +9,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
 import timber.log.Timber
 
 class PersonRemoteDataSource(private val remoteService: RemoteService) {
     fun getPersonDetail(personId: Int): Flow<UiState<PersonResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getPersonDetail(personId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { personResponse ->
+        response?.let { personResponse ->
             emit(UiState.Success(personResponse))
         }
     }.catch { t ->
@@ -28,8 +26,7 @@ class PersonRemoteDataSource(private val remoteService: RemoteService) {
     fun getPersonCredits(personId: Int): Flow<UiState<CreditResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getPersonCredits(personId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { creditResponse ->
+        response?.let { creditResponse ->
             emit(UiState.Success(creditResponse))
         }
     }.catch { t ->

@@ -11,15 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
 import timber.log.Timber
 
 class MovieRemoteDataSource(private val remoteService: RemoteService) {
     fun getMovieDetail(movieId: Int): Flow<UiState<MovieDetailResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getMovieDetail(movieId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { movieDetailResponse ->
+        response?.let { movieDetailResponse ->
             emit(UiState.Success(movieDetailResponse))
         }
     }.catch { t ->
@@ -30,8 +28,7 @@ class MovieRemoteDataSource(private val remoteService: RemoteService) {
     fun getMovieCredits(movieId: Int): Flow<UiState<CreditResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getMovieCredits(movieId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { creditResponse ->
+        response?.let { creditResponse ->
             emit(UiState.Success(creditResponse))
         }
     }.catch { t ->
@@ -42,8 +39,7 @@ class MovieRemoteDataSource(private val remoteService: RemoteService) {
     fun getMovieGenres(): Flow<UiState<GenreResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getMovieGenres()
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { genreResponse ->
+        response?.let { genreResponse ->
             emit(UiState.Success(genreResponse))
         }
     }.catch { t ->
@@ -54,8 +50,7 @@ class MovieRemoteDataSource(private val remoteService: RemoteService) {
     fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> = flow {
         emit(UiState.Loading)
         val response = remoteService.getMovieImages(movieId)
-        if (!response.isSuccessful) throw HttpException(response)
-        else response.body()?.let { imageResponse ->
+        response?.let { imageResponse ->
             emit(UiState.Success(imageResponse))
         }
     }.catch { t ->

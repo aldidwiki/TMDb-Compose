@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponseModel
-import retrofit2.HttpException
 import timber.log.Timber
 
 class PopularTvPagingSource(
@@ -22,14 +21,10 @@ class PopularTvPagingSource(
             val page = params.key ?: INITIAL_PAGE_INDEX
             val response = remoteService.getPopularTv(page)
 
-            if (!response.isSuccessful) {
-                throw HttpException(response)
-            }
-
             LoadResult.Page(
-                    data = response.body()?.tvList ?: emptyList(),
+                    data = response?.tvList ?: emptyList(),
                     prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
-                    nextKey = if (response.body()?.tvList.isNullOrEmpty()) null else page + 1
+                    nextKey = if (response?.tvList.isNullOrEmpty()) null else page + 1
             )
         } catch (e: Exception) {
             Timber.e(e)
