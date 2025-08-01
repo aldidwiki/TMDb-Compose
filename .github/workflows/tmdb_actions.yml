@@ -45,3 +45,11 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           testers: ${{ secrets.FIREBASE_TESTERS }}
           file: app/build/outputs/apk/release/TMDb.apk
+
+      - name: Create Release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: TMDb Release ${{ github.ref }}
