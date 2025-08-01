@@ -41,7 +41,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          name: TMDb Release ${{ github.ref }}
+          name: TMDb Release ${{ github.ref_name }}
           token: ${{ secrets.MY_TOKEN }}
           artifacts: "app/build/outputs/apk/release/TMDb.apk"
 
