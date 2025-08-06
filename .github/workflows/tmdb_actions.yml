@@ -44,6 +44,7 @@ jobs:
           name: TMDb Release ${{ github.ref_name }}
           token: ${{ secrets.MY_TOKEN }}
           artifacts: "app/build/outputs/apk/release/TMDb.apk"
+          body: "Support 16 KB page sizes"
 
       - name: Upload Build Artifact
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
