@@ -11,5 +11,3 @@ cmake_minimum_required(VERSION 4.0.2)
 # automatically packages shared libraries with your APK.
 
 add_library(native-lib SHARED native-lib.cpp)
-
-target_link_options(native-lib PRIVATE "-Wl,-z,max-page-size=16384")

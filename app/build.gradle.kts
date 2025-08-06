@@ -29,12 +29,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        externalNativeBuild {
-            cmake {
-                arguments += listOf("-DANDROID_PLATFORM=android-30")
-            }
-        }
     }
 
     signingConfigs {
