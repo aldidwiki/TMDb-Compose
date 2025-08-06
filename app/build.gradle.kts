@@ -23,7 +23,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -68,8 +68,8 @@ android {
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
 
             signingConfig = signingConfigs.getByName("release")
@@ -100,10 +100,11 @@ android {
 
     externalNativeBuild {
         cmake {
-            path("CMakeLists.txt")
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "4.0.2"
         }
     }
-    ndkVersion = "27.1.12297006"
+    ndkVersion = "28.2.13676358"
 }
 
 dependencies {
