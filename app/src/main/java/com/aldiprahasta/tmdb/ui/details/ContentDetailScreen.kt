@@ -58,6 +58,7 @@ import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.getImageBitmap
+import com.aldiprahasta.tmdb.utils.isColorLight
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -115,6 +116,7 @@ fun ContentDetailScreen(
                         colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Color(rgbColor),
                                 titleContentColor = Color(titleTextColor),
+                                scrolledContainerColor = Color(rgbColor)
                         ),
                         scrollBehavior = scrollBehavior,
                         title = {},
@@ -181,17 +183,25 @@ fun ContentDetailScreen(
 
 @Composable
 private fun SetStatusBarColor(rgbColorPalette: Int) {
-    val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
+    val primaryColorInt = MaterialTheme.colorScheme.primary.toArgb()
     val view = LocalView.current
+
+    if (view.isInEditMode) return
+
     val window = (view.context as Activity).window
+    // Determine the icon color preference for the new status bar color
+    val useDarkIconsForPalette = isColorLight(rgbColorPalette)
+
+    // Determine the icon color preference for the primary color (for cleanup)
+    val useDarkIconsForPrimary = isColorLight(primaryColorInt)
 
     DisposableEffect(rgbColorPalette) {
         window.statusBarColor = rgbColorPalette
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIconsForPalette
 
         onDispose {
-            window.statusBarColor = primaryColor
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+            window.statusBarColor = primaryColorInt
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIconsForPrimary
         }
     }
 }

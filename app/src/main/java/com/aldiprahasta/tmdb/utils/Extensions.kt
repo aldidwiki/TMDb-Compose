@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.ImageLoader
@@ -249,3 +250,9 @@ fun <T> Flow<UiState<T>>.toStateFlow(
         SharingStarted.WhileSubscribed(stopTimeoutMillis),
         UiState.Loading
 )
+
+fun isColorLight(colorInt: Int): Boolean {
+    // Returns a value between 0.0 (darkest) and 1.0 (lightest)
+    // A common threshold is 0.5
+    return ColorUtils.calculateLuminance(colorInt) > 0.5
+}
