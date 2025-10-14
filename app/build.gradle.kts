@@ -134,7 +134,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.serialization)
-    implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.airbnb.lottie.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
