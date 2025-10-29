@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.ui.search
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -100,6 +101,7 @@ private fun SearchContent(
                         },
                 )
             },
+            windowInsets = WindowInsets(top = 0.dp),
             expanded = true,
             onExpandedChange = onActiveChange,
             modifier = modifier,
@@ -127,6 +129,7 @@ private fun SearchContent(
                             posterPath = searchResult.imagePath,
                             totalEpisodeCount = null,
                             onItemClicked = {
+                                keyboardController?.hide()
                                 onItemClicked(searchResult.id, searchResult.mediaType)
                             }
                     )
@@ -144,7 +147,7 @@ private fun SearchContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun SearchContentPreview(modifier: Modifier = Modifier) {
+private fun SearchContentPreview() {
     SearchContent(
             searchQuery = "",
             onSearchQueryChanged = {},
