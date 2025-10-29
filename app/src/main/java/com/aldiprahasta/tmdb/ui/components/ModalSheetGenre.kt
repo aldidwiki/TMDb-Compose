@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
+import com.aldiprahasta.tmdb.utils.windowHeightFraction
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +44,8 @@ fun ModalSheetGenre(
         onFilterApplied: (selectedGenres: Set<GenreDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
+    val sheetHeightDp = windowHeightFraction(0.70f)
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
@@ -59,6 +63,8 @@ fun ModalSheetGenre(
             ModalSheetGenreContent(
                     genres = genres,
                     selectedGenreSet = selectedGenreSet,
+                    modifier = Modifier
+                            .height(sheetHeightDp),
                     onFilterApplied = {
                         onFilterApplied(it)
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -142,7 +148,7 @@ private fun ModalSheetGenreContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun ModalSheetGenreContentPreview(modifier: Modifier = Modifier) {
+private fun ModalSheetGenreContentPreview() {
     ModalSheetGenreContent(
             genres = listOf(
                     GenreDomainModel(id = 1871, name = "Otis Rosales"),

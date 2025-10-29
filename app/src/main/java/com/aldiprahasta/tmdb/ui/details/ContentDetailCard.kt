@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,10 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,11 +45,14 @@ import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
 import com.aldiprahasta.tmdb.utils.openBrowser
+import com.aldiprahasta.tmdb.utils.windowHeightFraction
 
 @Composable
 fun ContentDetailCard(
         contentDetailDomainModel: ContentDetailDomainModel,
         colorPalette: Triple<Color, Color, Color>,
+        showBottomSheet: Boolean,
+        onShowBottomSheetChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Surface(
@@ -82,7 +82,9 @@ fun ContentDetailCard(
                     voteAverage = contentDetailDomainModel.voteAverage,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     colorPalette = colorPalette,
-                    videos = contentDetailDomainModel.videos
+                    videos = contentDetailDomainModel.videos,
+                    showBottomSheet = showBottomSheet,
+                    onShowBottomSheetChange = onShowBottomSheetChange
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentOverview(
@@ -124,6 +126,8 @@ private fun ContentDetailUserScoreWithTrailer(
         voteAverage: Double,
         colorPalette: Triple<Color, Color, Color>,
         videos: List<VideoDomainModel>,
+        showBottomSheet: Boolean,
+        onShowBottomSheetChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Row(
@@ -131,9 +135,9 @@ private fun ContentDetailUserScoreWithTrailer(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier.fillMaxWidth()
     ) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val context = LocalContext.current
-        var showBottomSheet by remember { mutableStateOf(false) }
+        val sheetHeightDp = windowHeightFraction(0.70f)
 
         val trailers = videos.asSequence().filter { model ->
             model.type.equals("trailer", ignoreCase = true) &&
@@ -143,22 +147,24 @@ private fun ContentDetailUserScoreWithTrailer(
         if (showBottomSheet) {
             ModalBottomSheet(
                     onDismissRequest = {
-                        showBottomSheet = false
+                        onShowBottomSheetChange(false)
                     },
                     sheetState = sheetState
             ) {
-                Text(
-                        text = "Trailers",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                LazyColumn(modifier = Modifier.padding(10.dp)) {
-                    items(trailers) { model ->
-                        TextButton(
-                                onClick = {
-                                    context.openBrowser(Constant.YOUTUBE_BASE_URL + model.key)
-                                }) {
-                            Text(text = model.name)
+                Column(modifier = Modifier.heightIn(max = sheetHeightDp)) {
+                    Text(
+                            text = "Trailers",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    LazyColumn(modifier = Modifier.padding(10.dp)) {
+                        items(trailers) { model ->
+                            TextButton(
+                                    onClick = {
+                                        context.openBrowser(Constant.YOUTUBE_BASE_URL + model.key)
+                                    }) {
+                                Text(text = model.name)
+                            }
                         }
                     }
                 }
@@ -204,7 +210,7 @@ private fun ContentDetailUserScoreWithTrailer(
                 }
 
                 else -> {
-                    showBottomSheet = true
+                    onShowBottomSheetChange(true)
                 }
             }
         }) {
@@ -338,7 +344,9 @@ fun ContentDetailCardPreview() {
                     type = "",
                     networks = emptyList(),
             ),
-            colorPalette = Triple(Color.White, Color.Black, Color.Black)
+            colorPalette = Triple(Color.White, Color.Black, Color.Black),
+            showBottomSheet = false,
+            onShowBottomSheetChange = {},
     )
 }
 
