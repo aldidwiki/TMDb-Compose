@@ -11,7 +11,11 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import androidx.paging.LoadState
@@ -255,4 +259,23 @@ fun isColorLight(colorInt: Int): Boolean {
     // Returns a value between 0.0 (darkest) and 1.0 (lightest)
     // A common threshold is 0.5
     return ColorUtils.calculateLuminance(colorInt) > 0.5
+}
+
+/**
+ * A composable function to calculate a fractional height based on the current
+ * window's available space, following adaptive layout best practices.
+ * @param fraction The percentage of the window height to use (e.g., 0.75f for 75%).
+ * @return The calculated height in Dp.
+ */
+@Composable
+fun windowHeightFraction(fraction: Float): Dp {
+    // This is the core logic from your request:
+    val density = LocalDensity.current
+    val containerSize = LocalWindowInfo.current.containerSize
+
+    // Convert the pixel height to Dp and apply the fraction
+    return with(density) {
+        // We use Int.toDp() on the pixel height, then multiply by the fraction.
+        containerSize.height.toDp() * fraction
+    }
 }
