@@ -98,6 +98,7 @@ fun CreditScreen(
                             Text(text = "Full Casts")
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
+                                scrolledContainerColor = MaterialTheme.colorScheme.primary,
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 titleContentColor = Color.White,
                         ),

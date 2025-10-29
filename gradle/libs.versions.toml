@@ -24,7 +24,6 @@ browser = "1.8.0"
 room = "2.7.2"
 ksp = "2.2.0-2.0.2"
 kotlinx-serialization = "1.9.0"
-firebase-crashlytics-buildtools = "3.0.4"
 lottie = "6.6.7"
 google-service = "4.4.3"
 firebase-bom = "33.16.0"
@@ -66,7 +65,6 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebase-crashlytics-buildtools" }
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }

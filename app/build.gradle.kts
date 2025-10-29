@@ -23,7 +23,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0.1"
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -134,7 +134,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.serialization)
-    implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.airbnb.lottie.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

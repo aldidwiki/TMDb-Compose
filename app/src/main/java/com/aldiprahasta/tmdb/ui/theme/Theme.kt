@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.aldiprahasta.tmdb.utils.isColorLight
 
 private val DarkColorScheme = darkColorScheme(
         primary = TMDBPrimaryColor,
@@ -57,7 +58,8 @@ fun TMDbTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+            WindowCompat.getInsetsController(window, view)
+                    .isAppearanceLightStatusBars = isColorLight(window.statusBarColor)
         }
     }
 
