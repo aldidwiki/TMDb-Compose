@@ -25,10 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +49,8 @@ import com.aldiprahasta.tmdb.utils.openBrowser
 fun ContentDetailCard(
         contentDetailDomainModel: ContentDetailDomainModel,
         colorPalette: Triple<Color, Color, Color>,
+        showBottomSheet: Boolean,
+        onShowBottomSheetChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Surface(
@@ -82,7 +80,9 @@ fun ContentDetailCard(
                     voteAverage = contentDetailDomainModel.voteAverage,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     colorPalette = colorPalette,
-                    videos = contentDetailDomainModel.videos
+                    videos = contentDetailDomainModel.videos,
+                    showBottomSheet = showBottomSheet,
+                    onShowBottomSheetChange = onShowBottomSheetChange
             )
             Spacer(modifier = Modifier.size(10.dp))
             ContentOverview(
@@ -124,6 +124,8 @@ private fun ContentDetailUserScoreWithTrailer(
         voteAverage: Double,
         colorPalette: Triple<Color, Color, Color>,
         videos: List<VideoDomainModel>,
+        showBottomSheet: Boolean,
+        onShowBottomSheetChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Row(
@@ -133,7 +135,6 @@ private fun ContentDetailUserScoreWithTrailer(
     ) {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
         val context = LocalContext.current
-        var showBottomSheet by remember { mutableStateOf(false) }
 
         val trailers = videos.asSequence().filter { model ->
             model.type.equals("trailer", ignoreCase = true) &&
@@ -143,7 +144,7 @@ private fun ContentDetailUserScoreWithTrailer(
         if (showBottomSheet) {
             ModalBottomSheet(
                     onDismissRequest = {
-                        showBottomSheet = false
+                        onShowBottomSheetChange(false)
                     },
                     sheetState = sheetState
             ) {
@@ -204,7 +205,7 @@ private fun ContentDetailUserScoreWithTrailer(
                 }
 
                 else -> {
-                    showBottomSheet = true
+                    onShowBottomSheetChange(true)
                 }
             }
         }) {
@@ -338,7 +339,9 @@ fun ContentDetailCardPreview() {
                     type = "",
                     networks = emptyList(),
             ),
-            colorPalette = Triple(Color.White, Color.Black, Color.Black)
+            colorPalette = Triple(Color.White, Color.Black, Color.Black),
+            showBottomSheet = false,
+            onShowBottomSheetChange = {},
     )
 }
 

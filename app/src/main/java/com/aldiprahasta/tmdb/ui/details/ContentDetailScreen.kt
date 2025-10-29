@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -106,11 +107,16 @@ fun ContentDetailScreen(
             ?: palette?.dominantSwatch?.bodyTextColor
             ?: MaterialTheme.colorScheme.onSurface.toArgb()
 
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    val blurRadius = if (showBottomSheet) 8.dp else 0.dp
+
     SetStatusBarColor(rgbColorPalette = rgbColor)
     Scaffold(
             modifier = modifier
                     .fillMaxSize()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .blur(blurRadius),
             topBar = {
                 TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -176,7 +182,9 @@ fun ContentDetailScreen(
                     onCastClicked(personId)
                 },
                 onViewMoreClicked = onViewMoreClicked,
-                onAllSeasonClicked = onAllSeasonClicked
+                onAllSeasonClicked = onAllSeasonClicked,
+                showBottomSheet = showBottomSheet,
+                onShowBottomSheetChange = { showBottomSheet = it }
         )
     }
 }
@@ -214,6 +222,8 @@ private fun ContentDetail(
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
         onAllSeasonClicked: (tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) -> Unit,
+        showBottomSheet: Boolean,
+        onShowBottomSheetChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
     AnimatedContent(
@@ -239,7 +249,9 @@ private fun ContentDetail(
             {
                 ContentDetailCard(
                         contentDetailDomainModel = contentDetailDomainModel,
-                        colorPalette = colorPalette
+                        colorPalette = colorPalette,
+                        showBottomSheet = showBottomSheet,
+                        onShowBottomSheetChange = onShowBottomSheetChange,
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 ContentBilledCast(
@@ -360,6 +372,8 @@ fun ContentDetailPreview() {
             onSuccessFetch = {},
             onCastClicked = {},
             onViewMoreClicked = {},
-            onAllSeasonClicked = { _, _ -> }
+            onAllSeasonClicked = { _, _ -> },
+            showBottomSheet = false,
+            onShowBottomSheetChange = {},
     )
 }
