@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -44,6 +45,7 @@ import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
 import com.aldiprahasta.tmdb.utils.openBrowser
+import com.aldiprahasta.tmdb.utils.windowHeightFraction
 
 @Composable
 fun ContentDetailCard(
@@ -133,8 +135,9 @@ private fun ContentDetailUserScoreWithTrailer(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier.fillMaxWidth()
     ) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val context = LocalContext.current
+        val sheetHeightDp = windowHeightFraction(0.70f)
 
         val trailers = videos.asSequence().filter { model ->
             model.type.equals("trailer", ignoreCase = true) &&
@@ -148,18 +151,20 @@ private fun ContentDetailUserScoreWithTrailer(
                     },
                     sheetState = sheetState
             ) {
-                Text(
-                        text = "Trailers",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                LazyColumn(modifier = Modifier.padding(10.dp)) {
-                    items(trailers) { model ->
-                        TextButton(
-                                onClick = {
-                                    context.openBrowser(Constant.YOUTUBE_BASE_URL + model.key)
-                                }) {
-                            Text(text = model.name)
+                Column(modifier = Modifier.heightIn(max = sheetHeightDp)) {
+                    Text(
+                            text = "Trailers",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    LazyColumn(modifier = Modifier.padding(10.dp)) {
+                        items(trailers) { model ->
+                            TextButton(
+                                    onClick = {
+                                        context.openBrowser(Constant.YOUTUBE_BASE_URL + model.key)
+                                    }) {
+                                Text(text = model.name)
+                            }
                         }
                     }
                 }
