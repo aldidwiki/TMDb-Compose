@@ -44,7 +44,7 @@ fun ModalSheetGenre(
         onFilterApplied: (selectedGenres: Set<GenreDomainModel>) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    val sheetHeightDp = windowHeightFraction(0.75f)
+    val sheetHeightDp = windowHeightFraction(0.70f)
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
