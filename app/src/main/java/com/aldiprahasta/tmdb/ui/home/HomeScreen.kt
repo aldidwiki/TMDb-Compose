@@ -6,7 +6,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -82,7 +82,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                                 Image(
                                         painter = painterResource(id = R.drawable.tmdb_logo_long),
                                         contentDescription = null,
-                                        modifier = Modifier.size(120.dp)
+                                        modifier = Modifier.width(120.dp)
                                 )
                             },
                     )
