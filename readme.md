@@ -23,21 +23,6 @@ This is an Android application for browsing Movies, TV Shows, and Persons using 
 *   [Firebase Crashlytics](https://firebase.google.com/docs/crashlytics) for crash reporting
 *   [Firebase Analytics](https://firebase.google.com/docs/analytics) for analytics
 
-## Building the App
-
-To build and run the app, you will need to:
-
-1.  Clone the repository.
-2.  Get an API key from [TMDb](https://www.themoviedb.org/documentation/api).
-3.  Create a `local.properties` file in the root of the project.
-4.  Add your TMDb API key to the `local.properties` file as follows:
-
-    ```
-    TMDB_API_KEY="YOUR_API_KEY"
-    ```
-
-5.  Open the project in Android Studio and run the app.
-
 ## Screenshots
 
 | Main Screen | Movie Detail | Favorite Screen | Person Detail |
