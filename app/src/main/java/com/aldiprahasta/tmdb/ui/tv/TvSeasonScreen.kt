@@ -42,6 +42,7 @@ fun TvSeasonScreen(
                 TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
+                                scrolledContainerColor = MaterialTheme.colorScheme.primary,
                                 titleContentColor = Color.White,
                         ),
                         scrollBehavior = scrollBehavior,
