@@ -65,6 +65,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     var isVisibleBar by remember { mutableStateOf(true) }
 
+    isVisibleBar = navigationItem().find {
+        it.route == navController.currentDestination()?.route
+    } != null
+
     Scaffold(
             modifier = modifier,
             topBar = {
@@ -106,10 +110,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 )
         )
     }
-
-    isVisibleBar = navigationItem().find {
-        it.route == navController.currentDestination()?.route
-    } != null
 }
 
 @Composable
