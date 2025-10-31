@@ -26,9 +26,9 @@ ksp = "2.2.21-2.0.4"
 kotlinx-serialization = "1.9.0"
 lottie = "6.7.0"
 google-service = "4.4.4"
-firebase-bom = "34.4.0"
+firebase-bom = "34.5.0"
 firebase-crashlytics-plugin = "3.0.6"
-firebase-appdistribution-plugin = "5.1.1"
+firebase-appdistribution-plugin = "5.2.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
