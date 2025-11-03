@@ -109,7 +109,7 @@ fun ContentDetailScreen(
 
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val blurRadius = if (showBottomSheet) 8.dp else 0.dp
+    val blurRadius = if (showBottomSheet) 6.dp else 0.dp
 
     SetStatusBarColor(rgbColorPalette = rgbColor)
     Scaffold(

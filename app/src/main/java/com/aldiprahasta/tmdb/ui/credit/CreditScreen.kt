@@ -90,7 +90,7 @@ fun CreditScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var showModalSheet by remember { mutableStateOf(false) }
 
-    val blurRadius = if (showModalSheet) 8.dp else 0.dp
+    val blurRadius = if (showModalSheet) 6.dp else 0.dp
 
     Scaffold(
             modifier = modifier
