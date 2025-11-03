@@ -279,3 +279,33 @@ fun windowHeightFraction(fraction: Float): Dp {
         containerSize.height.toDp() * fraction
     }
 }
+
+/**
+ * Function to extract a name based on its word count.
+ * - If the name consists of > 2 words, it takes only the first word.
+ * - If the name consists of <= 2 words, it returns the entire name.
+ * @param fullName The person's full name (String).
+ * @return The abbreviated name or the full name (String).
+ */
+fun extractNameByWordCount(fullName: String): String {
+    // 1. Clean up leading/trailing spaces and split based on one or more spaces
+    val nameWords = fullName.trim()
+            .split(Regex("\\s+"))
+            .filter { it.isNotBlank() } // Removes empty elements from excessive spaces
+
+    val wordCount = nameWords.size
+
+    return when {
+        // Case: More than 2 words (e.g., Three, Four, etc.)
+        wordCount > 2 -> {
+            // Take only the first word
+            nameWords.first()
+        }
+
+        // Case: 1 or 2 words
+        else -> {
+            // Join all words back into a single string
+            nameWords.joinToString(" ")
+        }
+    }
+}
