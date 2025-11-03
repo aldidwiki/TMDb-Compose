@@ -6,6 +6,7 @@ import com.aldiprahasta.tmdb.domain.usecase.GetMovieGenreList
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieImages
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
+import com.aldiprahasta.tmdb.domain.usecase.GetPersonImages
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
 import com.aldiprahasta.tmdb.domain.usecase.GetSearchResult
@@ -43,6 +44,7 @@ private val interactionModule = module {
     factoryOf(::GetAllFavoriteList)
     factoryOf(::GetFavoriteStatus)
     factoryOf(::GetMovieImages)
+    factoryOf(::GetPersonImages)
 }
 
 private val interactionWrapperModule = module {

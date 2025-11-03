@@ -31,6 +31,7 @@ import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
+import com.aldiprahasta.tmdb.ui.components.ImageType
 
 fun MovieResponseModel.mapMovieResponseToMovieDomainModel(): MovieDomainModel {
     return MovieDomainModel(
@@ -229,12 +230,22 @@ fun PersonDomainModel.mapDomainModelToEntity(): FavoriteEntity {
     )
 }
 
-fun ImageResponse.mapImageResponseToDomainList(isBackdrop: Boolean): List<ImageDomainModel> {
-    return if (isBackdrop) backdrops?.map { imageResponseModel ->
-        ImageDomainModel(filePath = imageResponseModel.filePath)
-    } ?: emptyList() else posters?.map { imageResponseModel ->
-        ImageDomainModel(filePath = imageResponseModel.filePath)
-    } ?: emptyList()
+fun ImageResponse.mapImageResponseToDomainList(imageType: ImageType): List<ImageDomainModel> {
+    return when (imageType) {
+        ImageType.POSTER -> posters?.map { responseModel ->
+            ImageDomainModel(id, responseModel.filePath)
+        } ?: emptyList()
+
+        ImageType.BACKDROP -> backdrops?.map { responseModel ->
+            ImageDomainModel(id, responseModel.filePath)
+        } ?: emptyList()
+
+        ImageType.PROFILE -> profiles?.map { responseModel ->
+            ImageDomainModel(id, responseModel.filePath)
+        } ?: emptyList()
+
+        else -> emptyList()
+    }
 }
 
 private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
