@@ -41,6 +41,17 @@ object Favorite : TMDbDestinations {
     override val label: String = "Favorite"
 }
 
+object ImageGallery : TMDbDestinations {
+    override val route: String = "image_preview"
+    const val CONTENT_ID_ARG = "content_id"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}"
+    val arguments = listOf(
+            navArgument(CONTENT_ID_ARG) {
+                type = NavType.IntType
+            }
+    )
+}
+
 object ContentDetail : TMDbDestinations {
     override val route: String = "content_detail"
     const val CONTENT_ID_ARG = "content_id"
