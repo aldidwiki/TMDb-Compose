@@ -44,10 +44,14 @@ object Favorite : TMDbDestinations {
 object ImageGallery : TMDbDestinations {
     override val route: String = "image_preview"
     const val CONTENT_ID_ARG = "content_id"
-    val routeWithArgs = "$route/{$CONTENT_ID_ARG}"
+    const val CONTENT_NAME_ARG = "content_name"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_NAME_ARG}"
     val arguments = listOf(
             navArgument(CONTENT_ID_ARG) {
                 type = NavType.IntType
+            },
+            navArgument(CONTENT_NAME_ARG) {
+                type = NavType.StringType
             }
     )
 }
