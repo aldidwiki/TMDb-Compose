@@ -12,7 +12,10 @@ data class ImageResponse(
     val backdrops: List<ImageResponseModel>?,
 
     @SerialName("posters")
-    val posters: List<ImageResponseModel>?
+    val posters: List<ImageResponseModel>?,
+
+    @SerialName("profiles")
+    val profiles: List<ImageResponseModel>?
 )
 
 @Serializable
