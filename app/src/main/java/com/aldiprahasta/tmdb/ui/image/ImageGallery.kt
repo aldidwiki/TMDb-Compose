@@ -26,12 +26,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ImageDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
@@ -56,11 +61,14 @@ fun ImageGalleryScreen(
     viewModel.setContentId(contentId)
     val imageDomainModel by viewModel.images.collectAsStateWithLifecycle()
 
+    var imageCount by remember { mutableIntStateOf(0) }
+    val imageTitle = pluralStringResource(R.plurals.image, imageCount)
+
     Scaffold(
             topBar = {
                 TopAppBar(
                         title = {
-                            Text(text = "${extractNameByWordCount(contentName)}'s Images")
+                            Text(text = "${extractNameByWordCount(contentName)}'s $imageTitle")
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
                                 scrolledContainerColor = MaterialTheme.colorScheme.primary,
@@ -96,6 +104,7 @@ fun ImageGalleryScreen(
             }
 
             state.doIfSuccess { images ->
+                imageCount = images.size
                 ImageGalleryList(images)
             }
         }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TMDb</string>
+
+    <plurals name="image">
+        <item quantity="zero">Image</item>
+        <item quantity="one">Image</item>
+        <item quantity="other">Images</item>
+    </plurals>
 </resources>
