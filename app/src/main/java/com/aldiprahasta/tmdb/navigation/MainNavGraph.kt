@@ -19,8 +19,8 @@ import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.search.SearchScreen
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
-import com.aldiprahasta.tmdb.ui.tv.TvSeasonDetailScreen
-import com.aldiprahasta.tmdb.ui.tv.TvSeasonScreen
+import com.aldiprahasta.tmdb.ui.tv.tvseason.TvSeasonDetailScreen
+import com.aldiprahasta.tmdb.ui.tv.tvseason.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.parcelableArrayList
