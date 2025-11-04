@@ -1,6 +1,5 @@
 package com.aldiprahasta.tmdb.ui.details
 
-import android.app.Activity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -23,12 +22,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,12 +33,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
@@ -55,7 +49,6 @@ import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
-import com.aldiprahasta.tmdb.utils.isColorLight
 import com.aldiprahasta.tmdb.utils.rememberPaletteColors
 import org.koin.androidx.compose.koinViewModel
 
@@ -87,7 +80,6 @@ fun ContentDetailScreen(
 
     val blurRadius = if (showBottomSheet) 6.dp else 0.dp
 
-    SetStatusBarColor(rgbColorPalette = paletteColors.rgbColor)
     Scaffold(
             modifier = modifier
                     .fillMaxSize()
@@ -166,31 +158,6 @@ fun ContentDetailScreen(
                 showBottomSheet = showBottomSheet,
                 onShowBottomSheetChange = { showBottomSheet = it }
         )
-    }
-}
-
-@Composable
-private fun SetStatusBarColor(rgbColorPalette: Int) {
-    val primaryColorInt = MaterialTheme.colorScheme.primary.toArgb()
-    val view = LocalView.current
-
-    if (view.isInEditMode) return
-
-    val window = (view.context as Activity).window
-    // Determine the icon color preference for the new status bar color
-    val useDarkIconsForPalette = isColorLight(rgbColorPalette)
-
-    // Determine the icon color preference for the primary color (for cleanup)
-    val useDarkIconsForPrimary = isColorLight(primaryColorInt)
-
-    DisposableEffect(rgbColorPalette) {
-        window.statusBarColor = rgbColorPalette
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIconsForPalette
-
-        onDispose {
-            window.statusBarColor = primaryColorInt
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIconsForPrimary
-        }
     }
 }
 
