@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -35,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,6 +68,8 @@ fun ImageGalleryScreen(
     viewModel.setContentId(contentId)
     val imageDomainModel by viewModel.images.collectAsStateWithLifecycle()
 
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
     var isPreviewDialogVisible by remember { mutableStateOf(false) }
     var imageCount by remember { mutableIntStateOf(0) }
     val imageTitle = pluralStringResource(R.plurals.image, imageCount)
@@ -75,6 +79,7 @@ fun ImageGalleryScreen(
     Scaffold(
             topBar = {
                 TopAppBar(
+                        scrollBehavior = scrollBehavior,
                         title = {
                             Text(text = "${extractNameByWordCount(contentName)}'s $imageTitle")
                         },
@@ -95,6 +100,7 @@ fun ImageGalleryScreen(
                 )
             },
             modifier = modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .blur(blurRadius)
     ) { innerPadding ->
         AnimatedContent(
