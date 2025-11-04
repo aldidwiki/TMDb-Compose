@@ -5,10 +5,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -27,14 +28,17 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ImageDomainModel
@@ -61,8 +65,11 @@ fun ImageGalleryScreen(
     viewModel.setContentId(contentId)
     val imageDomainModel by viewModel.images.collectAsStateWithLifecycle()
 
+    var isPreviewDialogVisible by remember { mutableStateOf(false) }
     var imageCount by remember { mutableIntStateOf(0) }
     val imageTitle = pluralStringResource(R.plurals.image, imageCount)
+
+    val blurRadius = if (isPreviewDialogVisible) 6.dp else 0.dp
 
     Scaffold(
             topBar = {
@@ -87,6 +94,7 @@ fun ImageGalleryScreen(
                 )
             },
             modifier = modifier
+                    .blur(blurRadius)
     ) { innerPadding ->
         AnimatedContent(
                 targetState = imageDomainModel,
@@ -105,7 +113,10 @@ fun ImageGalleryScreen(
 
             state.doIfSuccess { images ->
                 imageCount = images.size
-                ImageGalleryList(images)
+                ImageGalleryList(
+                        images = images,
+                        onPreviewDialogChange = { isPreviewDialogVisible = it },
+                )
             }
         }
     }
@@ -114,8 +125,19 @@ fun ImageGalleryScreen(
 @Composable
 fun ImageGalleryList(
         images: List<ImageDomainModel>,
+        onPreviewDialogChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
+    var isPreviewVisible by remember { mutableStateOf(false) }
+    var selectedImagePath by remember { mutableStateOf<String?>(null) }
+
+    val dismissPreview: () -> Unit = {
+        isPreviewVisible = false
+        selectedImagePath = null
+    }
+
+    onPreviewDialogChange(isPreviewVisible)
+
     LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(8.dp),
@@ -130,10 +152,38 @@ fun ImageGalleryList(
                     imagePath = image.filePath,
                     imageType = ImageType.PROFILE,
                     modifier = Modifier
-                            .height(200.dp)
+                            .aspectRatio(9f / 16f)
                             .clip(RoundedCornerShape(4.dp))
+                            .clickable {
+                                isPreviewVisible = true
+                                selectedImagePath = image.filePath
+                            }
             )
         }
+    }
+
+    if (isPreviewVisible && selectedImagePath != null) {
+        ImagePreviewDialog(
+                imagePath = selectedImagePath,
+                onDismissRequest = dismissPreview,
+        )
+    }
+}
+
+@Composable
+fun ImagePreviewDialog(
+        imagePath: String?,
+        onDismissRequest: () -> Unit,
+        modifier: Modifier = Modifier
+) {
+    Dialog(onDismissRequest) {
+        ImageLoader(
+                imagePath = imagePath,
+                imageType = ImageType.PROFILE,
+                modifier = modifier
+                        .aspectRatio(9f / 16f)
+                        .clip(RoundedCornerShape(8.dp))
+        )
     }
 }
 
@@ -162,6 +212,7 @@ private fun ImageGalleryScreenPreview() {
                             id = 0,
                             filePath = "/snk6JiXOOoRjPtHU5VMoy6qbd32.jpg"
                     ),
-            )
+            ),
+            onPreviewDialogChange = {}
     )
 }
