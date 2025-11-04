@@ -46,6 +46,7 @@ import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.ProfileZoomableImageWithBounds
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -177,12 +178,9 @@ fun ImagePreviewDialog(
         modifier: Modifier = Modifier
 ) {
     Dialog(onDismissRequest) {
-        ImageLoader(
+        ProfileZoomableImageWithBounds(
                 imagePath = imagePath,
-                imageType = ImageType.PROFILE,
                 modifier = modifier
-                        .aspectRatio(9f / 16f)
-                        .clip(RoundedCornerShape(8.dp))
         )
     }
 }
