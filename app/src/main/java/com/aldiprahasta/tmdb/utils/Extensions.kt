@@ -3,8 +3,6 @@ package com.aldiprahasta.tmdb.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.browser.customtabs.CustomTabsIntent
@@ -18,6 +16,8 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
+import androidx.core.net.toUri
+import androidx.core.os.BundleCompat
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.ImageLoader
@@ -91,7 +91,10 @@ fun Long.formatCurrency(): String {
 }
 
 fun String.getLanguageDisplayName(): String = if (this.isNotEmpty()) {
-    Locale(this).displayLanguage
+    val locale = Locale.Builder()
+            .setLanguage(this)
+            .build()
+    locale.displayLanguage
 } else {
     this
 }
@@ -188,15 +191,14 @@ fun <T : Any> LazyListScope.setupPagingLoadState(lazyPagingItems: LazyPagingItem
     }
 }
 
-inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? = when {
-    SDK_INT >= 33 -> getParcelableArrayList(key, T::class.java)
-    else -> @Suppress("DEPRECATION") getParcelableArrayList(key)
+inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? {
+    return BundleCompat.getParcelableArrayList<T>(this, key, T::class.java)
 }
 
 fun Context.openBrowser(url: String) {
     CustomTabsIntent.Builder().apply {
         setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-    }.build().launchUrl(this, Uri.parse(url))
+    }.build().launchUrl(this, url.toUri())
 }
 
 fun <T, R, E> Flow<Triple<UiState<T>, UiState<R>, UiState<E>>>.asUiStateTriple(): Flow<UiState<Triple<T, R, E>>> = transform { state ->
