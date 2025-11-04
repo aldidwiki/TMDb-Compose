@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.data.repository
 
 import com.aldiprahasta.tmdb.data.source.remote.PersonRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.domain.repository.PersonRepository
 import com.aldiprahasta.tmdb.utils.UiState
@@ -14,5 +15,9 @@ class PersonRepositoryImpl(private val personRemoteDataSource: PersonRemoteDataS
 
     override fun getPersonCredit(personId: Int): Flow<UiState<CreditResponse>> {
         return personRemoteDataSource.getPersonCredits(personId)
+    }
+
+    override fun getPersonImages(personId: Int): Flow<UiState<ImageResponse>> {
+        return personRemoteDataSource.getPersonImages(personId)
     }
 }

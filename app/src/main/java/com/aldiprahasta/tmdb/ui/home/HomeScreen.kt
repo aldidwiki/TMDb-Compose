@@ -40,6 +40,7 @@ import com.aldiprahasta.tmdb.BuildConfig
 import com.aldiprahasta.tmdb.ContentDetail
 import com.aldiprahasta.tmdb.CreditDetail
 import com.aldiprahasta.tmdb.Favorite
+import com.aldiprahasta.tmdb.ImageGallery
 import com.aldiprahasta.tmdb.Movie
 import com.aldiprahasta.tmdb.PersonDetail
 import com.aldiprahasta.tmdb.R
@@ -51,6 +52,7 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteScreen
+import com.aldiprahasta.tmdb.ui.image.ImageGalleryScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.search.SearchScreen
@@ -198,6 +200,23 @@ fun TMDbNavHostController(
         }
 
         composable(
+                route = ImageGallery.routeWithArgs,
+                arguments = ImageGallery.arguments
+        ) { navBackStackEntry ->
+            val contentId = navBackStackEntry.arguments?.getInt(ImageGallery.CONTENT_ID_ARG, 0) ?: 0
+            val contentName = navBackStackEntry.arguments?.getString(ImageGallery.CONTENT_NAME_ARG)
+                    ?: ""
+
+            ImageGalleryScreen(
+                    contentId = contentId,
+                    contentName = contentName,
+                    onBackPressed = {
+                        navController.navigateUp()
+                    }
+            )
+        }
+
+        composable(
                 route = ContentDetail.routeWithArgs,
                 arguments = ContentDetail.arguments
         ) { navBackStateEntry ->
@@ -242,6 +261,9 @@ fun TMDbNavHostController(
                     },
                     onViewMoreClicked = {
                         navController.navigateToCreditDetail(personId, MediaType.PERSON_TYPE.name)
+                    },
+                    onPersonImageClicked = { personId, personName ->
+                        navController.navigateToImageGalleryScreen(personId, personName)
                     }
             )
         }
@@ -351,4 +373,8 @@ private fun NavHostController.navigateToTvSeasonScreen(tvId: Int, tvTitle: Strin
 
 private fun NavHostController.navigateToTvSeasonDetailScreen(tvId: Int, tvSeasonNumber: Int) {
     navigate("${TvSeasonDetail.route}/$tvId/$tvSeasonNumber")
+}
+
+private fun NavHostController.navigateToImageGalleryScreen(contentId: Int, contentName: String) {
+    navigate("${ImageGallery.route}/$contentId/$contentName")
 }

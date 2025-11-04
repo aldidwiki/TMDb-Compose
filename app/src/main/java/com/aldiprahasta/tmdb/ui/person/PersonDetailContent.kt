@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,6 +79,7 @@ fun PersonScreen(
         onBackPressed: () -> Unit,
         onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
         onViewMoreClicked: () -> Unit,
+        onPersonImageClicked: (personId: Int, personName: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
@@ -162,10 +164,11 @@ fun PersonScreen(
 
                 PersonDetailContent(
                         personDomainModel = personDetail,
+                        onViewMoreClicked = onViewMoreClicked,
+                        onPersonImageClicked = onPersonImageClicked,
                         onCreditClicked = { creditId, mediaType ->
                             onCreditClicked(creditId, mediaType)
-                        },
-                        onViewMoreClicked = onViewMoreClicked
+                        }
                 )
             }
         }
@@ -177,6 +180,7 @@ private fun PersonDetailContent(
         personDomainModel: PersonDomainModel,
         onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
         onViewMoreClicked: () -> Unit,
+        onPersonImageClicked: (personId: Int, personName: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier
@@ -195,6 +199,12 @@ private fun PersonDetailContent(
                             .width(180.dp)
                             .height(250.dp)
                             .clip(RoundedCornerShape(6.dp))
+                            .clickable {
+                                onPersonImageClicked(
+                                        personDomainModel.id,
+                                        personDomainModel.name
+                                )
+                            }
             )
             Spacer(modifier = Modifier.size(16.dp))
             Text(
@@ -390,7 +400,8 @@ fun PersonDetailContentPreview() {
                     )
             ),
             onCreditClicked = { _, _ -> },
-            onViewMoreClicked = {}
+            onViewMoreClicked = {},
+            onPersonImageClicked = { _, _ -> }
     )
 }
 
