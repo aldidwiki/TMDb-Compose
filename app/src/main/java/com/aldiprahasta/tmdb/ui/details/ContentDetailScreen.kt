@@ -27,10 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,13 +38,11 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
@@ -54,12 +50,13 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
-import com.aldiprahasta.tmdb.utils.getImageBitmap
 import com.aldiprahasta.tmdb.utils.isColorLight
+import com.aldiprahasta.tmdb.utils.rememberPaletteColors
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,36 +79,15 @@ fun ContentDetailScreen(
 
     viewModel.updateFavoriteState(favoriteStatus)
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-
-    val context = LocalContext.current
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
     var posterPath by remember { mutableStateOf<String?>(null) }
-    var palette by remember { mutableStateOf<Palette?>(null) }
-    posterPath?.let { path ->
-        LaunchedEffect(path) {
-            val bitmap = context.getImageBitmap(path)
-            bitmap?.let {
-                Palette.from(it).generate { p ->
-                    palette = p
-                }
-            }
-        }
-    }
-
-    val rgbColor = palette?.vibrantSwatch?.rgb ?: palette?.dominantSwatch?.rgb
-    ?: 0
-    val titleTextColor = palette?.vibrantSwatch?.titleTextColor
-            ?: palette?.dominantSwatch?.titleTextColor
-            ?: MaterialTheme.colorScheme.onSurface.toArgb()
-    val bodyTextColor = palette?.vibrantSwatch?.bodyTextColor
-            ?: palette?.dominantSwatch?.bodyTextColor
-            ?: MaterialTheme.colorScheme.onSurface.toArgb()
+    val paletteColors = rememberPaletteColors(posterPath)
 
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val blurRadius = if (showBottomSheet) 6.dp else 0.dp
 
-    SetStatusBarColor(rgbColorPalette = rgbColor)
+    SetStatusBarColor(rgbColorPalette = paletteColors.rgbColor)
     Scaffold(
             modifier = modifier
                     .fillMaxSize()
@@ -120,9 +96,9 @@ fun ContentDetailScreen(
             topBar = {
                 TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(rgbColor),
-                                titleContentColor = Color(titleTextColor),
-                                scrolledContainerColor = Color(rgbColor)
+                                containerColor = Color(paletteColors.rgbColor),
+                                titleContentColor = Color(paletteColors.titleTextColor),
+                                scrolledContainerColor = Color(paletteColors.rgbColor)
                         ),
                         scrollBehavior = scrollBehavior,
                         title = {},
@@ -133,7 +109,7 @@ fun ContentDetailScreen(
                                 Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Back Button",
-                                        tint = Color(titleTextColor)
+                                        tint = Color(paletteColors.titleTextColor)
                                 )
                             }
                         },
@@ -151,13 +127,13 @@ fun ContentDetailScreen(
                                         Icon(
                                                 imageVector = Icons.Default.Favorite,
                                                 contentDescription = null,
-                                                tint = Color(titleTextColor)
+                                                tint = Color(paletteColors.titleTextColor)
                                         )
                                     } else {
                                         Icon(
                                                 imageVector = Icons.Default.FavoriteBorder,
                                                 contentDescription = null,
-                                                tint = Color(titleTextColor)
+                                                tint = Color(paletteColors.titleTextColor)
                                         )
                                     }
                                 }
@@ -168,7 +144,11 @@ fun ContentDetailScreen(
         ContentDetail(
                 contentDetail = contentDetail,
                 modifier = modifier.padding(innerPadding),
-                colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
+                colorPalette = Triple(
+                        Color(paletteColors.rgbColor),
+                        Color(paletteColors.titleTextColor),
+                        Color(paletteColors.bodyTextColor)
+                ),
                 onSuccessFetch = {
                     posterPath = it.posterPath
 
