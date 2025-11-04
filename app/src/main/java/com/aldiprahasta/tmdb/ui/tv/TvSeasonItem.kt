@@ -47,8 +47,7 @@ fun TvSeasonItem(
                 imagePath = tvSeasonDomainModel.seasonPosterPath,
                 imageType = ImageType.POSTER,
                 modifier = Modifier
-                        .width(100.dp)
-                        .height(150.dp)
+                        .width(120.dp)
                         .clip(RoundedCornerShape(6.dp))
         )
 

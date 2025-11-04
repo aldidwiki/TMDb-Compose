@@ -196,7 +196,6 @@ private fun PersonDetailContent(
                     imagePath = personDomainModel.profilePath,
                     imageType = ImageType.PROFILE,
                     modifier = Modifier
-                            .width(180.dp)
                             .height(250.dp)
                             .clip(RoundedCornerShape(6.dp))
                             .clickable {

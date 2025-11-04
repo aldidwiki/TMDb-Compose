@@ -1,12 +1,10 @@
 package com.aldiprahasta.tmdb.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +29,7 @@ fun ContentItem(
 ) {
     Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
                     .fillMaxWidth()
                     .clickable { onItemClicked() },
@@ -39,11 +38,9 @@ fun ContentItem(
                 imagePath = posterPath,
                 imageType = ImageType.POSTER,
                 modifier = Modifier
-                        .width(100.dp)
-                        .height(150.dp)
+                        .width(120.dp)
                         .clip(RoundedCornerShape(6.dp))
         )
-        Spacer(modifier = Modifier.size(16.dp))
         Column {
             Text(
                     text = title,

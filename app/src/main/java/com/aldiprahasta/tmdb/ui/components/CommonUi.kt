@@ -3,9 +3,9 @@ package com.aldiprahasta.tmdb.ui.components
 import android.graphics.Color
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,6 +49,7 @@ fun ImageLoader(
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = modifier
+                    .aspectRatio(imageType.aspectRatio)
     )
 }
 
@@ -65,7 +66,7 @@ fun ImageLoaderBackdrop(
             onError = { isError = true },
             modifier = modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .aspectRatio(ImageType.BACKDROP.aspectRatio)
     )
 }
 
@@ -132,11 +133,11 @@ fun PagingErrorFooter(
     }
 }
 
-enum class ImageType(val size: String) {
-    POSTER("w500"),
-    BACKDROP("w780"),
-    PROFILE("h632"),
-    ORIGINAL_SIZE("original"),
-    LOGO("w185"),
-    STILL("w780")
+enum class ImageType(val size: String, val aspectRatio: Float) {
+    POSTER("w500", (3f / 4f)),
+    BACKDROP("w780", (16f / 9f)),
+    PROFILE("h632", (3f / 4f)),
+    ORIGINAL_SIZE("original", (3f / 4f)),
+    LOGO("w185", (2f / 1f)),
+    STILL("w780", (16f / 9f))
 }

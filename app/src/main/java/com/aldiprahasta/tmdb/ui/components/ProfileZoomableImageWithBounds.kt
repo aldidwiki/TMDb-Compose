@@ -108,7 +108,7 @@ fun ProfileZoomableImageWithBounds(
             imageType = ImageType.ORIGINAL_SIZE,
             modifier = modifier
                     // Enforces a standard profile aspect ratio (e.g., for full-screen view)
-                    .aspectRatio(9f / 16f)
+                    .aspectRatio(ImageType.ORIGINAL_SIZE.aspectRatio)
                     // Updates imageDisplaySize state when the layout size changes
                     .onSizeChanged { imageDisplaySize = it.toSize() }
                     .clip(RoundedCornerShape(8.dp))

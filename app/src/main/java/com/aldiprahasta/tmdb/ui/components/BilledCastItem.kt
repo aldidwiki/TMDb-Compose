@@ -49,7 +49,6 @@ fun BilledCastItem(
             ImageLoader(
                     imagePath = profilePath,
                     imageType = ImageType.PROFILE,
-                    modifier = Modifier.height(120.dp)
             )
             Text(
                     text = name,

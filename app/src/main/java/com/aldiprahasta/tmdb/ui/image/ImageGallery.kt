@@ -153,7 +153,7 @@ fun ImageGalleryList(
                     imagePath = image.filePath,
                     imageType = ImageType.PROFILE,
                     modifier = Modifier
-                            .aspectRatio(9f / 16f)
+                            .aspectRatio(ImageType.PROFILE.aspectRatio)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable {
                                 isPreviewVisible = true
