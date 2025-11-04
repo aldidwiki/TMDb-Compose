@@ -28,11 +28,12 @@ fun MovieScreen(onMovieClicked: (movieId: Int) -> Unit, modifier: Modifier = Mod
             modifier = modifier,
             onItemClicked = { movieId ->
                 onMovieClicked(movieId)
-            })
+            }
+    )
 }
 
 @Composable
-fun MovieContent(
+private fun MovieContent(
         popularMoviePagingItems: LazyPagingItems<MovieDomainModel>,
         onItemClicked: (movieId: Int) -> Unit,
         modifier: Modifier = Modifier
@@ -68,7 +69,7 @@ fun MovieContent(
 
 @Preview(showBackground = true)
 @Composable
-fun MovieContentPreview() {
+private fun MovieContentPreview() {
     MovieContent(
             popularMoviePagingItems = flowOf(PagingData.from(listOf(
                     MovieDomainModel(
