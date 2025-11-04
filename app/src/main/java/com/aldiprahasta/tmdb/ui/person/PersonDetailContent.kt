@@ -112,7 +112,8 @@ fun PersonScreen(
                                     } else {
                                         Icon(
                                                 imageVector = Icons.Default.FavoriteBorder,
-                                                contentDescription = null
+                                                contentDescription = null,
+                                                tint = Color.White
                                         )
                                     }
                                 }
