@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,7 @@ import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
+import com.aldiprahasta.tmdb.utils.PaletteColors
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
@@ -136,11 +138,7 @@ fun ContentDetailScreen(
         ContentDetail(
                 contentDetail = contentDetail,
                 modifier = modifier.padding(innerPadding),
-                colorPalette = Triple(
-                        Color(paletteColors.rgbColor),
-                        Color(paletteColors.titleTextColor),
-                        Color(paletteColors.bodyTextColor)
-                ),
+                colorPalette = paletteColors,
                 onSuccessFetch = {
                     posterPath = it.posterPath
 
@@ -164,7 +162,7 @@ fun ContentDetailScreen(
 @Composable
 private fun ContentDetail(
         contentDetail: UiState<ContentDetailDomainModel>,
-        colorPalette: Triple<Color, Color, Color>,
+        colorPalette: PaletteColors,
         onSuccessFetch: (contentDetail: ContentDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
@@ -245,7 +243,7 @@ private fun ContentDetail(
 
 @Preview(showBackground = true, widthDp = 380)
 @Composable
-fun ContentDetailPreview() {
+private fun ContentDetailPreview() {
     ContentDetail(
             contentDetail = UiState.Success(data = ContentDetailDomainModel(
                     title = "Dune: Part Two",
@@ -315,7 +313,11 @@ fun ContentDetailPreview() {
                     type = null,
                     networks = null
             )),
-            colorPalette = Triple(Color.White, Color.Black, Color.Black),
+            colorPalette = PaletteColors(
+                    Color.White.toArgb(),
+                    Color.Black.toArgb(),
+                    Color.Black.toArgb()
+            ),
             onSuccessFetch = {},
             onCastClicked = {},
             onViewMoreClicked = {},
