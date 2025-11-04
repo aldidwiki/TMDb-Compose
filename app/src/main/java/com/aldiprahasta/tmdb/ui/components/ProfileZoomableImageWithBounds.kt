@@ -105,7 +105,7 @@ fun ProfileZoomableImageWithBounds(
     // Placeholder Composable for an Image Loader function (e.g., Coil/Glide/etc.)
     ImageLoader(
             imagePath = imagePath,
-            imageType = ImageType.PROFILE,
+            imageType = ImageType.PROFILE_ORIGINAL,
             modifier = modifier
                     // Enforces a standard profile aspect ratio (e.g., for full-screen view)
                     .aspectRatio(9f / 16f)

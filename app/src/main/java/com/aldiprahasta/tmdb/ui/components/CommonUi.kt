@@ -136,6 +136,7 @@ enum class ImageType(val size: String) {
     POSTER("w500"),
     BACKDROP("w780"),
     PROFILE("h632"),
+    PROFILE_ORIGINAL("original"),
     LOGO("w185"),
     STILL("w780")
 }
