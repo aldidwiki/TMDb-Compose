@@ -8,7 +8,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -159,7 +158,6 @@ fun ImageGalleryList(
                     imagePath = image.filePath,
                     imageType = ImageType.PROFILE,
                     modifier = Modifier
-                            .aspectRatio(ImageType.PROFILE.aspectRatio)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable {
                                 isPreviewVisible = true

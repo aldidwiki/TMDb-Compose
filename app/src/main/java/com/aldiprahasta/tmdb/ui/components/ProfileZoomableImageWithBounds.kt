@@ -2,7 +2,6 @@ package com.aldiprahasta.tmdb.ui.components
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -107,8 +106,6 @@ fun ProfileZoomableImageWithBounds(
             imagePath = imagePath,
             imageType = ImageType.ORIGINAL_SIZE,
             modifier = modifier
-                    // Enforces a standard profile aspect ratio (e.g., for full-screen view)
-                    .aspectRatio(ImageType.ORIGINAL_SIZE.aspectRatio)
                     // Updates imageDisplaySize state when the layout size changes
                     .onSizeChanged { imageDisplaySize = it.toSize() }
                     .clip(RoundedCornerShape(8.dp))
