@@ -107,7 +107,7 @@ private fun FavoriteContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun FavoriteContentPreview(modifier: Modifier = Modifier) {
+private fun FavoriteContentPreview() {
     FavoriteContent(
             listOf(
                     FavoriteDomainModel(
