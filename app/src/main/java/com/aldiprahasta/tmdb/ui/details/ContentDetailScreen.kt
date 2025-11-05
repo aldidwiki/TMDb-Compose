@@ -1,6 +1,5 @@
 package com.aldiprahasta.tmdb.ui.details
 
-import android.app.Activity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -23,14 +22,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,13 +35,9 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.palette.graphics.Palette
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
@@ -54,12 +45,14 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
+import com.aldiprahasta.tmdb.utils.DynamicSystemBarColor
+import com.aldiprahasta.tmdb.utils.PaletteColors
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
-import com.aldiprahasta.tmdb.utils.getImageBitmap
-import com.aldiprahasta.tmdb.utils.isColorLight
+import com.aldiprahasta.tmdb.utils.rememberPaletteColors
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,36 +75,15 @@ fun ContentDetailScreen(
 
     viewModel.updateFavoriteState(favoriteStatus)
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-
-    val context = LocalContext.current
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
     var posterPath by remember { mutableStateOf<String?>(null) }
-    var palette by remember { mutableStateOf<Palette?>(null) }
-    posterPath?.let { path ->
-        LaunchedEffect(path) {
-            val bitmap = context.getImageBitmap(path)
-            bitmap?.let {
-                Palette.from(it).generate { p ->
-                    palette = p
-                }
-            }
-        }
-    }
-
-    val rgbColor = palette?.vibrantSwatch?.rgb ?: palette?.dominantSwatch?.rgb
-    ?: 0
-    val titleTextColor = palette?.vibrantSwatch?.titleTextColor
-            ?: palette?.dominantSwatch?.titleTextColor
-            ?: MaterialTheme.colorScheme.onSurface.toArgb()
-    val bodyTextColor = palette?.vibrantSwatch?.bodyTextColor
-            ?: palette?.dominantSwatch?.bodyTextColor
-            ?: MaterialTheme.colorScheme.onSurface.toArgb()
+    val paletteColors = rememberPaletteColors(posterPath)
 
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val blurRadius = if (showBottomSheet) 6.dp else 0.dp
 
-    SetStatusBarColor(rgbColorPalette = rgbColor)
+    DynamicSystemBarColor(Color(paletteColors.rgbColor))
     Scaffold(
             modifier = modifier
                     .fillMaxSize()
@@ -120,9 +92,9 @@ fun ContentDetailScreen(
             topBar = {
                 TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(rgbColor),
-                                titleContentColor = Color(titleTextColor),
-                                scrolledContainerColor = Color(rgbColor)
+                                containerColor = Color(paletteColors.rgbColor),
+                                titleContentColor = Color(paletteColors.titleTextColor),
+                                scrolledContainerColor = Color(paletteColors.rgbColor)
                         ),
                         scrollBehavior = scrollBehavior,
                         title = {},
@@ -133,7 +105,7 @@ fun ContentDetailScreen(
                                 Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Back Button",
-                                        tint = Color(titleTextColor)
+                                        tint = Color(paletteColors.titleTextColor)
                                 )
                             }
                         },
@@ -151,13 +123,13 @@ fun ContentDetailScreen(
                                         Icon(
                                                 imageVector = Icons.Default.Favorite,
                                                 contentDescription = null,
-                                                tint = Color(titleTextColor)
+                                                tint = Color(paletteColors.titleTextColor)
                                         )
                                     } else {
                                         Icon(
                                                 imageVector = Icons.Default.FavoriteBorder,
                                                 contentDescription = null,
-                                                tint = Color(titleTextColor)
+                                                tint = Color(paletteColors.titleTextColor)
                                         )
                                     }
                                 }
@@ -168,7 +140,7 @@ fun ContentDetailScreen(
         ContentDetail(
                 contentDetail = contentDetail,
                 modifier = modifier.padding(innerPadding),
-                colorPalette = Triple(Color(rgbColor), Color(titleTextColor), Color(bodyTextColor)),
+                colorPalette = paletteColors,
                 onSuccessFetch = {
                     posterPath = it.posterPath
 
@@ -190,34 +162,9 @@ fun ContentDetailScreen(
 }
 
 @Composable
-private fun SetStatusBarColor(rgbColorPalette: Int) {
-    val primaryColorInt = MaterialTheme.colorScheme.primary.toArgb()
-    val view = LocalView.current
-
-    if (view.isInEditMode) return
-
-    val window = (view.context as Activity).window
-    // Determine the icon color preference for the new status bar color
-    val useDarkIconsForPalette = isColorLight(rgbColorPalette)
-
-    // Determine the icon color preference for the primary color (for cleanup)
-    val useDarkIconsForPrimary = isColorLight(primaryColorInt)
-
-    DisposableEffect(rgbColorPalette) {
-        window.statusBarColor = rgbColorPalette
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIconsForPalette
-
-        onDispose {
-            window.statusBarColor = primaryColorInt
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIconsForPrimary
-        }
-    }
-}
-
-@Composable
 private fun ContentDetail(
         contentDetail: UiState<ContentDetailDomainModel>,
-        colorPalette: Triple<Color, Color, Color>,
+        colorPalette: PaletteColors,
         onSuccessFetch: (contentDetail: ContentDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
         onViewMoreClicked: () -> Unit,
@@ -298,7 +245,7 @@ private fun ContentDetail(
 
 @Preview(showBackground = true, widthDp = 380)
 @Composable
-fun ContentDetailPreview() {
+private fun ContentDetailPreview() {
     ContentDetail(
             contentDetail = UiState.Success(data = ContentDetailDomainModel(
                     title = "Dune: Part Two",
@@ -368,7 +315,11 @@ fun ContentDetailPreview() {
                     type = null,
                     networks = null
             )),
-            colorPalette = Triple(Color.White, Color.Black, Color.Black),
+            colorPalette = PaletteColors(
+                    Color.White.toArgb(),
+                    Color.Black.toArgb(),
+                    Color.Black.toArgb()
+            ),
             onSuccessFetch = {},
             onCastClicked = {},
             onViewMoreClicked = {},

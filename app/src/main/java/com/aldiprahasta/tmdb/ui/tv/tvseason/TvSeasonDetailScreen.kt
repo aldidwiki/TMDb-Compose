@@ -1,4 +1,4 @@
-package com.aldiprahasta.tmdb.ui.tv
+package com.aldiprahasta.tmdb.ui.tv.tvseason
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -9,23 +9,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +26,10 @@ import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
+import com.aldiprahasta.tmdb.ui.tv.TvEpisodeItem
+import com.aldiprahasta.tmdb.ui.tv.TvViewModel
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -49,9 +45,10 @@ fun TvSeasonDetailScreen(
 ) {
     val viewModel: TvViewModel = koinViewModel()
     viewModel.setTvSeasonDetailParam(tvId, tvSeasonNumber)
+
     val tvSeasonDetail by viewModel.tvSeasonDetail.collectAsStateWithLifecycle()
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
 
     var tvSeasonName by remember { mutableStateOf("") }
     var tvSeasonYear by remember { mutableStateOf("") }
@@ -59,13 +56,8 @@ fun TvSeasonDetailScreen(
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                TopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                                titleContentColor = Color.White
-                        ),
-                        title = {
+                TMDbTopBar(
+                        topBarTitle = {
                             val titleText = if (tvSeasonYear.isEmpty() || tvSeasonName.isEmpty()) {
                                 "Episodes List"
                             } else {
@@ -74,15 +66,7 @@ fun TvSeasonDetailScreen(
                             Text(text = titleText)
                         },
                         scrollBehavior = scrollBehavior,
-                        navigationIcon = {
-                            IconButton(onClick = onBackPressed) {
-                                Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = null,
-                                        tint = Color.White
-                                )
-                            }
-                        }
+                        onBackPressed = onBackPressed
                 )
             }
     ) { innerPadding ->
@@ -112,7 +96,7 @@ fun TvSeasonDetailScreen(
 }
 
 @Composable
-fun TvSeasonDetailContent(
+private fun TvSeasonDetailContent(
         tvEpisodeList: List<TvEpisodeDomainModel>,
         modifier: Modifier = Modifier
 ) {

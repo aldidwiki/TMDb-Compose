@@ -37,7 +37,6 @@ fun TvEpisodeItem(
         ImageLoader(
                 imagePath = tvEpisodeDomainModel.stillPath,
                 imageType = ImageType.STILL,
-                modifier = Modifier.height(200.dp)
         )
 
         Column(modifier = Modifier

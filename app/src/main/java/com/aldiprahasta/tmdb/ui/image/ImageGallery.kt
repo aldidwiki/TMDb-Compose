@@ -8,23 +8,15 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,7 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +39,8 @@ import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.ProfileZoomableImageWithBounds
+import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
 import com.aldiprahasta.tmdb.utils.doIfSuccess
@@ -66,6 +60,8 @@ fun ImageGalleryScreen(
     viewModel.setContentId(contentId)
     val imageDomainModel by viewModel.images.collectAsStateWithLifecycle()
 
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
+
     var isPreviewDialogVisible by remember { mutableStateOf(false) }
     var imageCount by remember { mutableIntStateOf(0) }
     val imageTitle = pluralStringResource(R.plurals.image, imageCount)
@@ -74,27 +70,16 @@ fun ImageGalleryScreen(
 
     Scaffold(
             topBar = {
-                TopAppBar(
-                        title = {
+                TMDbTopBar(
+                        scrollBehavior = scrollBehavior,
+                        onBackPressed = onBackPressed,
+                        topBarTitle = {
                             Text(text = "${extractNameByWordCount(contentName)}'s $imageTitle")
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                                scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                titleContentColor = Color.White,
-                        ),
-                        navigationIcon = {
-                            IconButton(onClick = onBackPressed) {
-                                Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        tint = Color.White,
-                                        contentDescription = null
-                                )
-                            }
                         }
                 )
             },
             modifier = modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .blur(blurRadius)
     ) { innerPadding ->
         AnimatedContent(
@@ -124,7 +109,7 @@ fun ImageGalleryScreen(
 }
 
 @Composable
-fun ImageGalleryList(
+private fun ImageGalleryList(
         images: List<ImageDomainModel>,
         onPreviewDialogChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
@@ -153,7 +138,6 @@ fun ImageGalleryList(
                     imagePath = image.filePath,
                     imageType = ImageType.PROFILE,
                     modifier = Modifier
-                            .aspectRatio(9f / 16f)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable {
                                 isPreviewVisible = true
@@ -172,7 +156,7 @@ fun ImageGalleryList(
 }
 
 @Composable
-fun ImagePreviewDialog(
+private fun ImagePreviewDialog(
         imagePath: String?,
         onDismissRequest: () -> Unit,
         modifier: Modifier = Modifier

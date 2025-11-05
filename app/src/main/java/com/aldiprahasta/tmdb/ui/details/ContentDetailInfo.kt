@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -119,7 +118,7 @@ fun ContentDetailInfo(
 }
 
 @Composable
-fun NetworksItem(
+private fun NetworksItem(
         networks: List<NetworkDomainModel>,
         modifier: Modifier = Modifier
 ) {
@@ -133,7 +132,6 @@ fun NetworksItem(
                     imageType = ImageType.LOGO,
                     modifier = Modifier
                             .padding(vertical = 4.dp)
-                            .width(50.dp)
                             .height(20.dp)
             )
         }
@@ -142,7 +140,7 @@ fun NetworksItem(
 
 @Preview(showBackground = true)
 @Composable
-fun NetworksItemPreview() {
+private fun NetworksItemPreview() {
     NetworksItem(networks = listOf(
             NetworkDomainModel(
                     networkId = 49,
@@ -164,7 +162,7 @@ fun NetworksItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ContentDetailInfoPreview() {
+private fun ContentDetailInfoPreview() {
     ContentDetailInfo(
             status = "Released",
             originalLanguage = "English",

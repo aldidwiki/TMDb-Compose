@@ -99,7 +99,7 @@ fun ContentDetailExternal(
 
 @Preview
 @Composable
-fun ContentDetailExternalPreview() {
+private fun ContentDetailExternalPreview() {
     ContentDetailExternal(
             instagramId = "",
             facebookId = "",

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,12 +24,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +44,8 @@ import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.ModalSheetGenre
+import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.doIfError
@@ -84,10 +81,11 @@ fun CreditScreen(
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
     creditViewModel.setCreditParam(creditParam)
+
     val creditsWithGenresData by creditViewModel.creditsWithGenres.collectAsStateWithLifecycle()
     val contentType = creditParam.second
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
     var showModalSheet by remember { mutableStateOf(false) }
 
     val blurRadius = if (showModalSheet) 6.dp else 0.dp
@@ -97,23 +95,11 @@ fun CreditScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .blur(blurRadius),
             topBar = {
-                TopAppBar(
-                        title = {
+                TMDbTopBar(
+                        onBackPressed = onBackPressed,
+                        scrollBehavior = scrollBehavior,
+                        topBarTitle = {
                             Text(text = "Full Casts")
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                                scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                titleContentColor = Color.White,
-                        ),
-                        navigationIcon = {
-                            IconButton(onClick = onBackPressed) {
-                                Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        tint = Color.White,
-                                        contentDescription = null
-                                )
-                            }
                         },
                         actions = {
                             if (contentType == MediaType.PERSON_TYPE.name) {
@@ -127,8 +113,7 @@ fun CreditScreen(
                                     )
                                 }
                             }
-                        },
-                        scrollBehavior = scrollBehavior
+                        }
                 )
             }) { innerPadding ->
         AnimatedContent(

@@ -1,4 +1,4 @@
-package com.aldiprahasta.tmdb
+package com.aldiprahasta.tmdb.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
