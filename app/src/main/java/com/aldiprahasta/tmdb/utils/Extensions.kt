@@ -311,14 +311,14 @@ fun extractNameByWordCount(fullName: String): String {
     }
 }
 
+fun isColorLight(colorInt: Int): Boolean {
+    // Returns a value between 0.0 (darkest) and 1.0 (lightest)
+    // A common threshold is 0.5
+    return ColorUtils.calculateLuminance(colorInt) > 0.5
+}
+
 @Composable
 fun DynamicSystemBarColor(topBarColor: Color) {
-    fun isColorLight(colorInt: Int): Boolean {
-        // Returns a value between 0.0 (darkest) and 1.0 (lightest)
-        // A common threshold is 0.5
-        return ColorUtils.calculateLuminance(colorInt) > 0.5
-    }
-
     val view = LocalView.current
     // Check if we are in an editable preview (optional, good practice)
     if (view.isInEditMode) return

@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,6 +46,7 @@ import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.PaletteColors
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
+import com.aldiprahasta.tmdb.utils.isColorLight
 import com.aldiprahasta.tmdb.utils.openBrowser
 import com.aldiprahasta.tmdb.utils.windowHeightFraction
 
@@ -147,6 +149,10 @@ private fun ContentDetailUserScoreWithTrailer(
 
         if (showBottomSheet) {
             ModalBottomSheet(
+                    properties = ModalBottomSheetProperties(
+                            isAppearanceLightStatusBars = isColorLight(colorPalette.rgbColor),
+                            isAppearanceLightNavigationBars = true,
+                    ),
                     onDismissRequest = {
                         onShowBottomSheetChange(false)
                     },
