@@ -10,14 +10,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
+import androidx.core.view.WindowCompat
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.ImageLoader
@@ -257,12 +262,6 @@ fun <T> Flow<UiState<T>>.toStateFlow(
         UiState.Loading
 )
 
-fun isColorLight(colorInt: Int): Boolean {
-    // Returns a value between 0.0 (darkest) and 1.0 (lightest)
-    // A common threshold is 0.5
-    return ColorUtils.calculateLuminance(colorInt) > 0.5
-}
-
 /**
  * A composable function to calculate a fractional height based on the current
  * window's available space, following adaptive layout best practices.
@@ -308,6 +307,34 @@ fun extractNameByWordCount(fullName: String): String {
         else -> {
             // Join all words back into a single string
             nameWords.joinToString(" ")
+        }
+    }
+}
+
+@Composable
+fun DynamicSystemBarColor(topBarColor: Color) {
+    fun isColorLight(colorInt: Int): Boolean {
+        // Returns a value between 0.0 (darkest) and 1.0 (lightest)
+        // A common threshold is 0.5
+        return ColorUtils.calculateLuminance(colorInt) > 0.5
+    }
+
+    val view = LocalView.current
+    // Check if we are in an editable preview (optional, good practice)
+    if (view.isInEditMode) return
+
+    // Calculate the integer representation of the color for the luminance check
+    val colorInt = topBarColor.toArgb()
+    val isLight = isColorLight(colorInt)
+
+    DisposableEffect(isLight) {
+        val window = (view.context as android.app.Activity).window
+        val insetsController = WindowCompat.getInsetsController(window, view)
+
+        insetsController.isAppearanceLightStatusBars = isLight
+
+        onDispose {
+            insetsController.isAppearanceLightStatusBars = false
         }
     }
 }
