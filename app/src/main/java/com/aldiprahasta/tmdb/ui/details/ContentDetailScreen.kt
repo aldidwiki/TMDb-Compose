@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,14 +67,15 @@ fun ContentDetailScreen(
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
-    viewModel.setId(contentParam)
-
     val (contentId, contentType) = contentParam
 
-    val contentDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
-    val favoriteStatus by viewModel.getFavoriteStatus.collectAsStateWithLifecycle()
+    LaunchedEffect(contentId) {
+        viewModel.setId(contentParam)
+    }
 
-    viewModel.updateFavoriteState(favoriteStatus)
+    val contentDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.getFavoriteStatus.collectAsStateWithLifecycle()
+    val currentDetailData by viewModel.contentDetailDomainModel.collectAsStateWithLifecycle()
 
     val scrollBehavior = rememberTopAppBarScrollBehavior()
     var posterPath by remember { mutableStateOf<String?>(null) }
@@ -110,12 +112,15 @@ fun ContentDetailScreen(
                             }
                         },
                         actions = {
+                            val isActionEnabled = currentDetailData != null
+
                             IconToggleButton(
-                                    checked = viewModel.isFavorite,
-                                    onCheckedChange = { viewModel.updateFavoriteState(!viewModel.isFavorite) }
+                                    enabled = isActionEnabled,
+                                    checked = isFavorite,
+                                    onCheckedChange = { viewModel.toggleFavorite(contentType) }
                             ) {
                                 AnimatedContent(
-                                        targetState = viewModel.isFavorite,
+                                        targetState = isFavorite,
                                         transitionSpec = { scaleIn() togetherWith scaleOut() },
                                         label = "Animated Like Button"
                                 ) { targetState ->
@@ -143,12 +148,6 @@ fun ContentDetailScreen(
                 colorPalette = paletteColors,
                 onSuccessFetch = {
                     posterPath = it.posterPath
-
-                    if (viewModel.isFavorite) {
-                        viewModel.addToFavorite(it, contentType)
-                    } else {
-                        viewModel.deleteFavorite(contentId)
-                    }
                 },
                 onCastClicked = { personId ->
                     onCastClicked(personId)

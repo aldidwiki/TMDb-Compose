@@ -1,8 +1,5 @@
 package com.aldiprahasta.tmdb.ui.details
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
@@ -10,13 +7,16 @@ import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
 import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -25,13 +25,6 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
     private val contentParam: MutableStateFlow<Pair<Int, String>> = MutableStateFlow(Pair(0, ""))
     fun setId(contentParam: Pair<Int, String>) {
         this.contentParam.value = contentParam
-    }
-
-    var isFavorite by mutableStateOf(false)
-        private set
-
-    fun updateFavoriteState(isFavorite: Boolean) {
-        this.isFavorite = isFavorite
     }
 
     val getFavoriteStatus: StateFlow<Boolean> = contentParam.flatMapLatest { (contentId, _) ->
@@ -48,19 +41,30 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
         } else {
             detailWrapper.getTvDetail(contentId)
         }
-    }.delayAfterLoading(300L).toStateFlow(viewModelScope)
-
-    fun addToFavorite(contentDetailDomainModel: ContentDetailDomainModel, mediaType: String) {
-        viewModelScope.launch {
-            detailWrapper.insertFavorite(
-                    contentDetailDomainModel.mapDomainModelToEntity(mediaType),
-            )
-        }
     }
+            .onEach { state ->
+                state.doIfSuccess { detailModel ->
+                    _contentDetailDomainModel.value = detailModel
+                }
+            }
+            .delayAfterLoading(300L)
+            .toStateFlow(viewModelScope)
 
-    fun deleteFavorite(id: Int) {
+    private val _contentDetailDomainModel = MutableStateFlow<ContentDetailDomainModel?>(null)
+    val contentDetailDomainModel: StateFlow<ContentDetailDomainModel?> = _contentDetailDomainModel.asStateFlow()
+
+    fun toggleFavorite(mediaType: String) {
+        val currentStatus = getFavoriteStatus.value
+        val currentDetailData = _contentDetailDomainModel.value
+
         viewModelScope.launch {
-            detailWrapper.deleteFavorite(id)
+            currentDetailData?.let { detailModel ->
+                if (currentStatus) {
+                    detailWrapper.deleteFavorite(detailModel.id)
+                } else {
+                    detailWrapper.insertFavorite(detailModel.mapDomainModelToEntity(mediaType))
+                }
+            }
         }
     }
 }
