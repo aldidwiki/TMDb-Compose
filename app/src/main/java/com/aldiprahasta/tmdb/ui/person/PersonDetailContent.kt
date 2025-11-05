@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,13 +80,15 @@ fun PersonScreen(
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
-    personViewModel.setPersonId(personId)
-
-    val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
-    val favoriteStatus by personViewModel.getFavoriteStatus.collectAsStateWithLifecycle()
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
-    personViewModel.updateFavoriteState(favoriteStatus)
+    val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
+    val currentPersonModel by personViewModel.personDomainModel.collectAsStateWithLifecycle()
+    val isFavorite by personViewModel.getFavoriteStatus.collectAsStateWithLifecycle()
+
+    LaunchedEffect(personId) {
+        personViewModel.setPersonId(personId)
+    }
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -94,12 +97,15 @@ fun PersonScreen(
                         scrollBehavior = scrollBehavior,
                         topBarTitle = {},
                         actions = {
+                            val isActionEnabled = currentPersonModel != null
+
                             IconToggleButton(
-                                    checked = personViewModel.isFavorite,
-                                    onCheckedChange = { personViewModel.updateFavoriteState(!personViewModel.isFavorite) }
+                                    enabled = isActionEnabled,
+                                    checked = isFavorite,
+                                    onCheckedChange = { personViewModel.toggleFavorite() }
                             ) {
                                 AnimatedContent(
-                                        targetState = personViewModel.isFavorite,
+                                        targetState = isFavorite,
                                         label = "Animated Favorite Button",
                                         transitionSpec = { scaleIn() togetherWith scaleOut() }
                                 ) { targetState ->
@@ -140,12 +146,6 @@ fun PersonScreen(
             }
 
             targetState.doIfSuccess { personDetail ->
-                if (personViewModel.isFavorite) {
-                    personViewModel.addToFavorite(personDetail)
-                } else {
-                    personViewModel.deleteFavorite(personId)
-                }
-
                 PersonDetailContent(
                         personDomainModel = personDetail,
                         onViewMoreClicked = onViewMoreClicked,

@@ -1,21 +1,21 @@
 package com.aldiprahasta.tmdb.ui.person
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
 import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -24,13 +24,6 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
     private val personId = MutableStateFlow(0)
     fun setPersonId(personId: Int) {
         this.personId.value = personId
-    }
-
-    var isFavorite by mutableStateOf(false)
-        private set
-
-    fun updateFavoriteState(isFavorite: Boolean) {
-        this.isFavorite = isFavorite
     }
 
     val getFavoriteStatus: StateFlow<Boolean> = personId.flatMapLatest {
@@ -43,19 +36,30 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
 
     val personDetail: StateFlow<UiState<PersonDomainModel>> = personId.flatMapLatest { id ->
         personDetailWrapper.getPersonDetail(id)
-    }.delayAfterLoading(300L).toStateFlow(viewModelScope)
-
-    fun addToFavorite(personDomainModel: PersonDomainModel) {
-        viewModelScope.launch {
-            personDetailWrapper.insertFavorite(
-                    personDomainModel.mapDomainModelToEntity()
-            )
-        }
     }
+            .delayAfterLoading(300L)
+            .onEach { state ->
+                state.doIfSuccess {
+                    _personDomainModel.value = it
+                }
+            }
+            .toStateFlow(viewModelScope)
 
-    fun deleteFavorite(personId: Int) {
+    private val _personDomainModel = MutableStateFlow<PersonDomainModel?>(null)
+    val personDomainModel: StateFlow<PersonDomainModel?> = _personDomainModel.asStateFlow()
+
+    fun toggleFavorite() {
+        val currentStatus = getFavoriteStatus.value
+        val currentPersonModel = _personDomainModel.value
+
         viewModelScope.launch {
-            personDetailWrapper.deleteFavorite(personId)
+            currentPersonModel?.let { personModel ->
+                if (currentStatus) {
+                    personDetailWrapper.deleteFavorite(personModel.id)
+                } else {
+                    personDetailWrapper.insertFavorite(personModel.mapDomainModelToEntity())
+                }
+            }
         }
     }
 }
