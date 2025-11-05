@@ -46,6 +46,7 @@ import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
+import com.aldiprahasta.tmdb.utils.DynamicSystemBarColor
 import com.aldiprahasta.tmdb.utils.PaletteColors
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.doIfError
@@ -82,6 +83,7 @@ fun ContentDetailScreen(
 
     val blurRadius = if (showBottomSheet) 6.dp else 0.dp
 
+    DynamicSystemBarColor(Color(paletteColors.rgbColor))
     Scaffold(
             modifier = modifier
                     .fillMaxSize()
