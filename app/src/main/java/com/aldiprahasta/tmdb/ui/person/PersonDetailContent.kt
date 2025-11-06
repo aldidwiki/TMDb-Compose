@@ -64,9 +64,6 @@ import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
 import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.ui.details.ContentDetailExternal
 import com.aldiprahasta.tmdb.utils.convertDate
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,14 +77,12 @@ fun PersonScreen(
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
+    val uiState by personViewModel.uiState.collectAsStateWithLifecycle()
+
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
-    val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
-    val currentPersonModel by personViewModel.personDomainModel.collectAsStateWithLifecycle()
-    val isFavorite by personViewModel.getFavoriteStatus.collectAsStateWithLifecycle()
-
     LaunchedEffect(personId) {
-        personViewModel.setPersonId(personId)
+        personViewModel.onEvent(PersonDetailEvent.Initialize(personId))
     }
 
     Scaffold(
@@ -97,15 +92,20 @@ fun PersonScreen(
                         scrollBehavior = scrollBehavior,
                         topBarTitle = {},
                         actions = {
-                            val isActionEnabled = currentPersonModel != null
+                            val isActionEnabled = uiState.personDomainModel != null
 
                             IconToggleButton(
                                     enabled = isActionEnabled,
-                                    checked = isFavorite,
-                                    onCheckedChange = { personViewModel.toggleFavorite() }
+                                    checked = uiState.isFavorite,
+                                    onCheckedChange = {
+                                        personViewModel.onEvent(PersonDetailEvent.OnFavoriteClicked(
+                                                uiState.isFavorite,
+                                                uiState.personDomainModel
+                                        ))
+                                    }
                             ) {
                                 AnimatedContent(
-                                        targetState = isFavorite,
+                                        targetState = uiState.isFavorite,
                                         label = "Animated Favorite Button",
                                         transitionSpec = { scaleIn() togetherWith scaleOut() }
                                 ) { targetState ->
@@ -130,22 +130,22 @@ fun PersonScreen(
             }
     ) { innerPadding ->
         AnimatedContent(
-                targetState = personData,
+                targetState = uiState.personDomainModel,
                 label = "Animated Content",
                 transitionSpec = {
                     fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
                 },
                 modifier = Modifier.padding(innerPadding)
-        ) { targetState ->
-            targetState.doIfLoading {
+        ) { personDomainModel ->
+            if (uiState.isLoading) {
                 LoadingScreen()
             }
 
-            targetState.doIfError { throwable, _ ->
+            if (uiState.personError != null) {
                 ErrorScreen()
             }
 
-            targetState.doIfSuccess { personDetail ->
+            personDomainModel?.let { personDetail ->
                 PersonDetailContent(
                         personDomainModel = personDetail,
                         onViewMoreClicked = onViewMoreClicked,
