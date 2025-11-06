@@ -16,10 +16,12 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -39,12 +41,13 @@ fun SearchScreen(
 ) {
     val viewModel: SearchViewModel = koinViewModel()
     val searchResultsPagingItems = viewModel.searchResults.collectAsLazyPagingItems()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SearchContent(
-            searchQuery = viewModel.searchQuery,
+            searchQuery = uiState.query,
             searchResultsPagingItems = searchResultsPagingItems,
             onSearchQueryChanged = { newQuery ->
-                viewModel.onSearchQueryChange(newQuery)
+                viewModel.onEvent(SearchEvent.OnSearchQueryChanged(newQuery))
             },
             onItemClicked = { contentId, mediaType ->
                 onItemClicked(contentId, mediaType)
