@@ -23,6 +23,8 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
     private val _uiState = MutableStateFlow(PersonDetailState())
     val uiState: StateFlow<PersonDetailState> = _uiState.asStateFlow()
 
+    private var _isDataFetched = false
+
     fun onEvent(event: PersonDetailEvent) {
         when (event) {
             is PersonDetailEvent.Initialize -> init(event.personId)
@@ -35,6 +37,10 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
     }
 
     private fun init(personId: Int) {
+        if (_isDataFetched) return
+
+        _isDataFetched = true
+
         personDetailWrapper.getPersonDetail(personId)
                 .delayAfterLoading(300L)
                 .onEach { state ->
