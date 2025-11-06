@@ -27,6 +27,7 @@ import androidx.compose.material3.InputChip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -80,13 +81,16 @@ fun CreditScreen(
         modifier: Modifier = Modifier
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
-    creditViewModel.setCreditParam(creditParam)
 
     val creditsWithGenresData by creditViewModel.creditsWithGenres.collectAsStateWithLifecycle()
     val contentType = creditParam.second
 
     val scrollBehavior = rememberTopAppBarScrollBehavior()
     var showModalSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(creditParam) {
+        creditViewModel.setCreditParam(creditParam)
+    }
 
     val blurRadius = if (showModalSheet) 6.dp else 0.dp
 

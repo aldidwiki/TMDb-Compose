@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,15 +57,16 @@ fun ImageGalleryScreen(
         modifier: Modifier = Modifier
 ) {
     val viewModel: ImageViewModel = koinViewModel()
-
-    viewModel.setContentId(contentId)
     val imageDomainModel by viewModel.images.collectAsStateWithLifecycle()
-
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
     var isPreviewDialogVisible by remember { mutableStateOf(false) }
     var imageCount by remember { mutableIntStateOf(0) }
     val imageTitle = pluralStringResource(R.plurals.image, imageCount)
+
+    LaunchedEffect(contentId) {
+        viewModel.setContentId(contentId)
+    }
 
     val blurRadius = if (isPreviewDialogVisible) 6.dp else 0.dp
 
