@@ -71,8 +71,7 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
         personDetailWrapper.getFavoriteStatus(personId)
                 .onEach { isFavorite ->
                     _uiState.update { it.copy(isFavorite = isFavorite) }
-                }
-                .launchIn(viewModelScope)
+                }.launchIn(viewModelScope)
     }
 
     private fun toggleFavorite(isFavorite: Boolean, personDomainModel: PersonDomainModel?) {

@@ -49,10 +49,6 @@ import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.utils.DynamicSystemBarColor
 import com.aldiprahasta.tmdb.utils.PaletteColors
-import com.aldiprahasta.tmdb.utils.UiState
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.rememberPaletteColors
 import org.koin.androidx.compose.koinViewModel
 
@@ -67,15 +63,13 @@ fun ContentDetailScreen(
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val (contentId, contentType) = contentParam
 
     LaunchedEffect(contentId) {
-        viewModel.setId(contentParam)
+        viewModel.onEvent(ContentDetailEvent.Initialize(contentId, contentType))
     }
-
-    val contentDetail by viewModel.contentDetail.collectAsStateWithLifecycle()
-    val isFavorite by viewModel.getFavoriteStatus.collectAsStateWithLifecycle()
-    val currentDetailData by viewModel.contentDetailDomainModel.collectAsStateWithLifecycle()
 
     val scrollBehavior = rememberTopAppBarScrollBehavior()
     var posterPath by remember { mutableStateOf<String?>(null) }
@@ -112,15 +106,21 @@ fun ContentDetailScreen(
                             }
                         },
                         actions = {
-                            val isActionEnabled = currentDetailData != null
+                            val isActionEnabled = uiState.contentDetailDomainModel != null
 
                             IconToggleButton(
                                     enabled = isActionEnabled,
-                                    checked = isFavorite,
-                                    onCheckedChange = { viewModel.toggleFavorite(contentType) }
+                                    checked = uiState.isFavorite,
+                                    onCheckedChange = {
+                                        viewModel.onEvent(ContentDetailEvent.OnFavoriteClicked(
+                                                isFavorite = uiState.isFavorite,
+                                                contentType = contentType,
+                                                contentDetailDomainModel = uiState.contentDetailDomainModel
+                                        ))
+                                    }
                             ) {
                                 AnimatedContent(
-                                        targetState = isFavorite,
+                                        targetState = uiState.isFavorite,
                                         transitionSpec = { scaleIn() togetherWith scaleOut() },
                                         label = "Animated Like Button"
                                 ) { targetState ->
@@ -143,7 +143,7 @@ fun ContentDetailScreen(
                 )
             }) { innerPadding ->
         ContentDetail(
-                contentDetail = contentDetail,
+                contentDetail = uiState,
                 modifier = modifier.padding(innerPadding),
                 colorPalette = paletteColors,
                 onSuccessFetch = {
@@ -162,7 +162,7 @@ fun ContentDetailScreen(
 
 @Composable
 private fun ContentDetail(
-        contentDetail: UiState<ContentDetailDomainModel>,
+        contentDetail: ContentDetailState,
         colorPalette: PaletteColors,
         onSuccessFetch: (contentDetail: ContentDetailDomainModel) -> Unit,
         onCastClicked: (personId: Int) -> Unit,
@@ -173,22 +173,22 @@ private fun ContentDetail(
         modifier: Modifier = Modifier
 ) {
     AnimatedContent(
-            targetState = contentDetail,
+            targetState = contentDetail.contentDetailDomainModel,
             label = "Animated Content",
             transitionSpec = {
                 fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
             },
             modifier = modifier.fillMaxSize()
-    ) { targetState ->
-        targetState.doIfLoading {
+    ) { contentDetailModel ->
+        if (contentDetail.isLoading) {
             LoadingScreen()
         }
 
-        targetState.doIfError { throwable, _ ->
+        if (contentDetail.contentError != null) {
             ErrorScreen()
         }
 
-        targetState.doIfSuccess { contentDetailDomainModel ->
+        contentDetailModel?.let { contentDetailDomainModel ->
             Column(modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()))
@@ -246,7 +246,7 @@ private fun ContentDetail(
 @Composable
 private fun ContentDetailPreview() {
     ContentDetail(
-            contentDetail = UiState.Success(data = ContentDetailDomainModel(
+            contentDetail = ContentDetailState(contentDetailDomainModel = ContentDetailDomainModel(
                     title = "Dune: Part Two",
                     posterPath = null,
                     releaseDate = "27 February 2024",
