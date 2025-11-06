@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,14 +45,15 @@ fun TvSeasonDetailScreen(
         modifier: Modifier = Modifier
 ) {
     val viewModel: TvViewModel = koinViewModel()
-    viewModel.setTvSeasonDetailParam(tvId, tvSeasonNumber)
-
     val tvSeasonDetail by viewModel.tvSeasonDetail.collectAsStateWithLifecycle()
-
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
     var tvSeasonName by remember { mutableStateOf("") }
     var tvSeasonYear by remember { mutableStateOf("") }
+
+    LaunchedEffect(tvId) {
+        viewModel.setTvSeasonDetailParam(tvId, tvSeasonNumber)
+    }
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

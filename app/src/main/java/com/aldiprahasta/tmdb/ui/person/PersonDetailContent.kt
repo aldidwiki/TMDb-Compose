@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,9 +64,6 @@ import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
 import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.ui.details.ContentDetailExternal
 import com.aldiprahasta.tmdb.utils.convertDate
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,13 +77,13 @@ fun PersonScreen(
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
-    personViewModel.setPersonId(personId)
+    val uiState by personViewModel.uiState.collectAsStateWithLifecycle()
 
-    val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
-    val favoriteStatus by personViewModel.getFavoriteStatus.collectAsStateWithLifecycle()
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
-    personViewModel.updateFavoriteState(favoriteStatus)
+    LaunchedEffect(personId) {
+        personViewModel.onEvent(PersonDetailEvent.Initialize(personId))
+    }
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -94,12 +92,20 @@ fun PersonScreen(
                         scrollBehavior = scrollBehavior,
                         topBarTitle = {},
                         actions = {
+                            val isActionEnabled = uiState.personDomainModel != null
+
                             IconToggleButton(
-                                    checked = personViewModel.isFavorite,
-                                    onCheckedChange = { personViewModel.updateFavoriteState(!personViewModel.isFavorite) }
+                                    enabled = isActionEnabled,
+                                    checked = uiState.isFavorite,
+                                    onCheckedChange = {
+                                        personViewModel.onEvent(PersonDetailEvent.OnFavoriteClicked(
+                                                uiState.isFavorite,
+                                                uiState.personDomainModel
+                                        ))
+                                    }
                             ) {
                                 AnimatedContent(
-                                        targetState = personViewModel.isFavorite,
+                                        targetState = uiState.isFavorite,
                                         label = "Animated Favorite Button",
                                         transitionSpec = { scaleIn() togetherWith scaleOut() }
                                 ) { targetState ->
@@ -124,28 +130,22 @@ fun PersonScreen(
             }
     ) { innerPadding ->
         AnimatedContent(
-                targetState = personData,
+                targetState = uiState.personDomainModel,
                 label = "Animated Content",
                 transitionSpec = {
                     fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
                 },
                 modifier = Modifier.padding(innerPadding)
-        ) { targetState ->
-            targetState.doIfLoading {
+        ) { personDomainModel ->
+            if (uiState.isLoading) {
                 LoadingScreen()
             }
 
-            targetState.doIfError { throwable, _ ->
+            if (uiState.personError != null) {
                 ErrorScreen()
             }
 
-            targetState.doIfSuccess { personDetail ->
-                if (personViewModel.isFavorite) {
-                    personViewModel.addToFavorite(personDetail)
-                } else {
-                    personViewModel.deleteFavorite(personId)
-                }
-
+            personDomainModel?.let { personDetail ->
                 PersonDetailContent(
                         personDomainModel = personDetail,
                         onViewMoreClicked = onViewMoreClicked,

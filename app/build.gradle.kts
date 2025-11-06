@@ -2,15 +2,15 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.kotlinParcelize)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.google.service)
-    alias(libs.plugins.firebase.crashlytics)
-    alias(libs.plugins.firebase.appdistribution)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics.plugin)
+    alias(libs.plugins.firebase.appdistribution.plugin)
 }
 
 android {
@@ -22,7 +22,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0.6"
+        versionName = "1.0.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -107,45 +107,31 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-    implementation(libs.coil.compose)
-    implementation(libs.squareup.retrofit)
-    implementation(libs.squareup.retrofit.kotlinx)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.jackwharton.timber)
-    implementation(libs.lifecycle.viewmodel.compose)
-    implementation(libs.lifecycle.runtime.compose)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.palette)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.material.icons)
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
-    implementation(libs.androidx.core.splash)
-    implementation(libs.androidx.browser)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.airbnb.lottie.compose)
+
+    implementation(libs.bundles.compose.ui)
+    implementation(libs.bundles.compose.base)
+
+    implementation(libs.bundles.networking)
+
+    implementation(libs.bundles.room)
+    ksp(libs.room.compiler)
+
+    implementation(libs.bundles.utilities)
+
+    implementation(libs.bundles.paging)
+
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    testImplementation(libs.junit4)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.bundles.android.test)
+    androidTestImplementation(libs.bundles.compose.test)
+    implementation(libs.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
 }
