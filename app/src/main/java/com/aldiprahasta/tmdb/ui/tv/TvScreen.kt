@@ -34,7 +34,7 @@ fun TvScreen(
 }
 
 @Composable
-fun TvContent(
+private fun TvContent(
         popularTvPagingItems: LazyPagingItems<TvDomainModel>,
         onItemClicked: (tvId: Int) -> Unit,
         modifier: Modifier = Modifier
@@ -72,7 +72,7 @@ fun TvContent(
 
 @Preview(showBackground = true)
 @Composable
-fun TvContentPreview() {
+private fun TvContentPreview() {
     TvContent(
             popularTvPagingItems = flowOf(PagingData.from(listOf(
                     TvDomainModel(

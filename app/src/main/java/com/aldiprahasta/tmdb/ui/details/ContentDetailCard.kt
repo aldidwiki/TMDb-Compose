@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,20 +44,22 @@ import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageLoaderBackdrop
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.utils.Constant
+import com.aldiprahasta.tmdb.utils.PaletteColors
 import com.aldiprahasta.tmdb.utils.formatVoteAverage
+import com.aldiprahasta.tmdb.utils.isColorLight
 import com.aldiprahasta.tmdb.utils.openBrowser
 import com.aldiprahasta.tmdb.utils.windowHeightFraction
 
 @Composable
 fun ContentDetailCard(
         contentDetailDomainModel: ContentDetailDomainModel,
-        colorPalette: Triple<Color, Color, Color>,
+        colorPalette: PaletteColors,
         showBottomSheet: Boolean,
         onShowBottomSheetChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
     Surface(
-            color = colorPalette.first,
+            color = Color(colorPalette.rgbColor),
             shadowElevation = 6.dp,
             modifier = modifier.fillMaxWidth()
     ) {
@@ -100,21 +104,21 @@ fun ContentDetailCard(
 @Composable
 private fun ContentOverview(
         overview: String,
-        colorPalette: Triple<Color, Color, Color>,
+        colorPalette: PaletteColors,
         modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
                 text = "Overview",
                 style = MaterialTheme.typography.titleMedium,
-                color = colorPalette.second
+                color = Color(colorPalette.titleTextColor)
         )
         Spacer(modifier = Modifier.size(4.dp))
         Text(
                 text = overview,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Justify,
-                color = colorPalette.third
+                color = Color(colorPalette.bodyTextColor)
         )
     }
 }
@@ -123,7 +127,7 @@ private fun ContentOverview(
 @Composable
 private fun ContentDetailUserScoreWithTrailer(
         voteAverage: Double,
-        colorPalette: Triple<Color, Color, Color>,
+        colorPalette: PaletteColors,
         videos: List<VideoDomainModel>,
         showBottomSheet: Boolean,
         onShowBottomSheetChange: (Boolean) -> Unit,
@@ -145,6 +149,10 @@ private fun ContentDetailUserScoreWithTrailer(
 
         if (showBottomSheet) {
             ModalBottomSheet(
+                    properties = ModalBottomSheetProperties(
+                            isAppearanceLightStatusBars = isColorLight(colorPalette.rgbColor),
+                            isAppearanceLightNavigationBars = true,
+                    ),
                     onDismissRequest = {
                         onShowBottomSheetChange(false)
                     },
@@ -174,8 +182,8 @@ private fun ContentDetailUserScoreWithTrailer(
             CircularProgressIndicator(
                     modifier = Modifier.size(40.dp),
                     strokeWidth = 3.dp,
-                    trackColor = colorPalette.first,
-                    color = colorPalette.second,
+                    trackColor = Color(colorPalette.rgbColor),
+                    color = Color(colorPalette.titleTextColor),
                     progress = {
                         voteAverage.formatVoteAverage() / 100f
                     }
@@ -183,20 +191,20 @@ private fun ContentDetailUserScoreWithTrailer(
             Text(
                     text = "${voteAverage.formatVoteAverage()}%",
                     style = MaterialTheme.typography.labelSmall,
-                    color = colorPalette.third
+                    color = Color(colorPalette.bodyTextColor)
             )
         }
         Spacer(modifier = Modifier.size(10.dp))
         Text(
                 text = "User Score",
                 style = MaterialTheme.typography.labelMedium,
-                color = colorPalette.third
+                color = Color(colorPalette.bodyTextColor)
         )
         Spacer(modifier = Modifier.size(20.dp))
         Text(
                 text = "\u007C",
                 style = MaterialTheme.typography.labelMedium,
-                color = colorPalette.second
+                color = Color(colorPalette.titleTextColor)
         )
         TextButton(onClick = {
             when {
@@ -217,12 +225,12 @@ private fun ContentDetailUserScoreWithTrailer(
                 Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = null,
-                        tint = colorPalette.second
+                        tint = Color(colorPalette.titleTextColor)
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                         text = "Play Trailer",
-                        color = colorPalette.third
+                        color = Color(colorPalette.bodyTextColor)
                 )
             }
         }
@@ -238,7 +246,7 @@ private fun ContentDetailPosterWithInfo(
         tagline: String,
         genres: String,
         certification: String,
-        colorPalette: Triple<Color, Color, Color>,
+        colorPalette: PaletteColors,
         modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
@@ -261,31 +269,31 @@ private fun ContentDetailPosterWithInfo(
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = colorPalette.second
+                    color = Color(colorPalette.titleTextColor)
             )
             Text(
                     text = releaseDate,
                     style = MaterialTheme.typography.bodySmall,
-                    color = colorPalette.third
+                    color = Color(colorPalette.bodyTextColor)
             )
             Row {
                 if (runtime.isNotEmpty()) {
                     Text(
                             text = runtime,
                             style = MaterialTheme.typography.bodySmall,
-                            color = colorPalette.third
+                            color = Color(colorPalette.bodyTextColor)
                     )
                     Text(
                             text = "\u2022",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(horizontal = 4.dp),
-                            color = colorPalette.third
+                            color = Color(colorPalette.bodyTextColor)
                     )
                 }
                 Text(
                         text = certification,
                         style = MaterialTheme.typography.bodySmall,
-                        color = colorPalette.third
+                        color = Color(colorPalette.bodyTextColor)
                 )
             }
             Text(
@@ -294,7 +302,7 @@ private fun ContentDetailPosterWithInfo(
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = colorPalette.third
+                    color = Color(colorPalette.bodyTextColor)
             )
             Text(
                     text = tagline,
@@ -305,7 +313,7 @@ private fun ContentDetailPosterWithInfo(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 6.dp),
-                    color = colorPalette.third
+                    color = Color(colorPalette.bodyTextColor)
             )
         }
     }
@@ -313,7 +321,7 @@ private fun ContentDetailPosterWithInfo(
 
 @Preview(showBackground = true)
 @Composable
-fun ContentDetailCardPreview() {
+private fun ContentDetailCardPreview() {
     ContentDetailCard(
             contentDetailDomainModel = ContentDetailDomainModel(
                     title = "Dune: Part Two",
@@ -342,7 +350,11 @@ fun ContentDetailCardPreview() {
                     type = "",
                     networks = emptyList(),
             ),
-            colorPalette = Triple(Color.White, Color.Black, Color.Black),
+            colorPalette = PaletteColors(
+                    Color.White.toArgb(),
+                    Color.Black.toArgb(),
+                    Color.Black.toArgb()
+            ),
             showBottomSheet = false,
             onShowBottomSheetChange = {},
     )

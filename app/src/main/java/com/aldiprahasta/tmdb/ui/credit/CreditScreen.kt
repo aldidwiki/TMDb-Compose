@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,13 +24,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,11 +45,10 @@ import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.ModalSheetGenre
+import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.utils.MediaType
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
 import org.koin.androidx.compose.koinViewModel
 
 private val characterComparator = Comparator<CastDomainModel> { left, right ->
@@ -83,12 +78,15 @@ fun CreditScreen(
         modifier: Modifier = Modifier
 ) {
     val creditViewModel: CreditViewModel = koinViewModel()
-    creditViewModel.setCreditParam(creditParam)
-    val creditsWithGenresData by creditViewModel.creditsWithGenres.collectAsStateWithLifecycle()
-    val contentType = creditParam.second
+    val uiState by creditViewModel.uiState.collectAsStateWithLifecycle()
+    val (contentId, contentType) = creditParam
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
     var showModalSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(contentId) {
+        creditViewModel.onEvent(CreditEvent.Initialize(contentId, contentType))
+    }
 
     val blurRadius = if (showModalSheet) 6.dp else 0.dp
 
@@ -97,23 +95,11 @@ fun CreditScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .blur(blurRadius),
             topBar = {
-                TopAppBar(
-                        title = {
+                TMDbTopBar(
+                        onBackPressed = onBackPressed,
+                        scrollBehavior = scrollBehavior,
+                        topBarTitle = {
                             Text(text = "Full Casts")
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                                scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                titleContentColor = Color.White,
-                        ),
-                        navigationIcon = {
-                            IconButton(onClick = onBackPressed) {
-                                Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        tint = Color.White,
-                                        contentDescription = null
-                                )
-                            }
                         },
                         actions = {
                             if (contentType == MediaType.PERSON_TYPE.name) {
@@ -127,64 +113,67 @@ fun CreditScreen(
                                     )
                                 }
                             }
-                        },
-                        scrollBehavior = scrollBehavior
+                        }
                 )
             }) { innerPadding ->
         AnimatedContent(
-                targetState = creditsWithGenresData,
+                targetState = uiState.castDomainModels,
                 label = "Animated Content",
                 transitionSpec = {
                     fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
                 },
                 modifier = Modifier.padding(innerPadding),
-        ) { targetState ->
-            targetState.doIfLoading {
+        ) { castModel ->
+            if (uiState.isLoading) {
                 LoadingScreen()
             }
 
-            targetState.doIfError { throwable, _ ->
+            if (uiState.creditError != null) {
                 ErrorScreen()
             }
 
-            targetState.doIfSuccess { (casts, movieGenres, tvGenres) ->
-                val filteredCasts = if (creditViewModel.selectedGenreSet.isNotEmpty()) casts.filter { cast ->
-                    creditViewModel.selectedGenreSet.any { genre ->
-                        cast.genreIds?.contains(genre.id) ?: true
-                    }
-                } else casts
-
+            if (castModel.isNotEmpty()) {
                 ModalSheetGenre(
-                        movieGenreList = movieGenres,
-                        tvGenreList = tvGenres,
-                        selectedGenreSet = creditViewModel.selectedGenreSet,
+                        movieGenreList = uiState.movieGenreDomainModels,
+                        tvGenreList = uiState.tvGenreDomainModels,
+                        selectedGenreSet = uiState.selectedGenres,
                         showModalSheet = showModalSheet,
                         onDismissRequest = { showModalSheet = false },
-                        onFilterApplied = { selectedGenre ->
-                            creditViewModel.updateSelectedGenreSet(selectedGenre)
+                        onFilterApplied = { selectedGenres ->
+                            creditViewModel.onEvent(CreditEvent.OnGenreFilterApplied(
+                                    selectedGenres,
+                                    castModel
+                            ))
                         }
                 )
 
-                if (filteredCasts.isNotEmpty()) {
+                if (uiState.filteredCasts.isNotEmpty()) {
                     CreditContent(
-                            casts = filteredCasts,
-                            selectedGenres = creditViewModel.selectedGenreSet,
+                            casts = uiState.filteredCasts,
+                            selectedGenres = uiState.selectedGenres,
+                            selectedSortingChip = uiState.selectedSortingChip,
                             contentType = contentType,
                             onItemClicked = { contentId, mediaType ->
                                 onItemClicked(contentId, mediaType)
                             },
                             onGenreFilterChipClicked = { genre ->
-                                creditViewModel.updateSelectedGenreSet(
-                                        creditViewModel.selectedGenreSet.toMutableSet().apply {
-                                            remove(genre)
-                                        }
-                                )
+                                creditViewModel.onEvent(CreditEvent.OnGenreFilterChipClicked(
+                                        uiState.selectedGenres,
+                                        castModel,
+                                        genre
+                                ))
                             },
+                            onSortingChipClicked = { comparator, selectedChip ->
+                                creditViewModel.onEvent(CreditEvent.OnSortingChipClicked(
+                                        sortingComparator = comparator,
+                                        casts = castModel,
+                                        contentType = contentType,
+                                        selectedSortingChip = selectedChip
+                                ))
+                            }
                     )
                 } else {
-                    ErrorScreen(
-                            modifier = Modifier.padding(20.dp)
-                    )
+                    ErrorScreen(modifier = Modifier.padding(20.dp))
                 }
             }
         }
@@ -196,26 +185,22 @@ private fun CreditContent(
         casts: List<CastDomainModel>,
         selectedGenres: Set<GenreDomainModel>,
         contentType: String,
+        selectedSortingChip: String,
         onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
+        onSortingChipClicked: (Comparator<CastDomainModel>, selectedChip: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    var comparator by remember {
-        if (contentType == MediaType.TV_TYPE.name)
-            mutableStateOf(totalEpisodeComparator)
-        else
-            mutableStateOf(orderComparator)
-    }
-
     Column(modifier = modifier) {
         if (contentType != MediaType.PERSON_TYPE.name) {
             SortingChip(
+                    selectedSortingChip = selectedSortingChip,
                     defaultComparator = if (contentType == MediaType.TV_TYPE.name)
                         totalEpisodeComparator
                     else
                         orderComparator,
                     modifier = Modifier.padding(10.dp),
-                    onSortingChipClicked = { comparator = it }
+                    onSortingChipClicked = onSortingChipClicked
             )
         } else if (contentType == MediaType.PERSON_TYPE.name && selectedGenres.isNotEmpty()) {
             GenreFilterChip(
@@ -228,10 +213,7 @@ private fun CreditContent(
         LazyColumn(
                 contentPadding = PaddingValues(10.dp),
         ) {
-            itemsIndexed(
-                    if (contentType != MediaType.PERSON_TYPE.name) casts.sortedWith(comparator)
-                    else casts
-            ) { index, item ->
+            itemsIndexed(casts) { index, item ->
                 ContentItem(
                         title = item.name,
                         releaseDate = item.releaseDate,
@@ -254,14 +236,15 @@ private fun CreditContent(
 @Composable
 private fun SortingChip(
         defaultComparator: Comparator<CastDomainModel>,
-        onSortingChipClicked: (comparator: Comparator<CastDomainModel>) -> Unit,
+        selectedSortingChip: String,
+        onSortingChipClicked: (comparator: Comparator<CastDomainModel>, selectedChip: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val chips = mapOf(
             "character name" to characterComparator,
             "name" to nameComparator
     )
-    var selectedChip by remember { mutableStateOf("") }
+    var selectedChip by remember { mutableStateOf(selectedSortingChip) }
 
     Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -275,10 +258,11 @@ private fun SortingChip(
                     ),
                     selected = label == selectedChip,
                     onClick = {
-                        onSortingChipClicked(comparator)
-                        selectedChip = if (label != selectedChip) label
-                        else {
-                            onSortingChipClicked(defaultComparator)
+                        selectedChip = if (label != selectedChip) {
+                            onSortingChipClicked(comparator, label)
+                            label
+                        } else {
+                            onSortingChipClicked(defaultComparator, "")
                             ""
                         }
                     },
@@ -383,6 +367,7 @@ private fun CreditContentPreview() {
             ),
             onItemClicked = { _, _ -> },
             contentType = MediaType.PERSON_TYPE.name,
+            selectedSortingChip = "",
             selectedGenres = setOf(
                     GenreDomainModel(id = 7171, name = "Rena Flynn"),
                     GenreDomainModel(id = 7171, name = "Rena Flynn"),
@@ -392,5 +377,6 @@ private fun CreditContentPreview() {
                     GenreDomainModel(id = 7171, name = "Rena Flynn"),
             ),
             onGenreFilterChipClicked = {},
+            onSortingChipClicked = { _, _ -> }
     )
 }

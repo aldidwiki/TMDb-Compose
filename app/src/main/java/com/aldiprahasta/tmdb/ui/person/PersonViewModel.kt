@@ -1,61 +1,90 @@
 package com.aldiprahasta.tmdb.ui.person
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
-import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
+import com.aldiprahasta.tmdb.utils.doIfError
+import com.aldiprahasta.tmdb.utils.doIfLoading
+import com.aldiprahasta.tmdb.utils.doIfSuccess
 import com.aldiprahasta.tmdb.utils.mapDomainModelToEntity
-import com.aldiprahasta.tmdb.utils.toStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : ViewModel() {
-    private val personId = MutableStateFlow(0)
-    fun setPersonId(personId: Int) {
-        this.personId.value = personId
-    }
+    private val _uiState = MutableStateFlow(PersonDetailState())
+    val uiState: StateFlow<PersonDetailState> = _uiState.asStateFlow()
 
-    var isFavorite by mutableStateOf(false)
-        private set
+    private var _isDataFetched = false
 
-    fun updateFavoriteState(isFavorite: Boolean) {
-        this.isFavorite = isFavorite
-    }
+    fun onEvent(event: PersonDetailEvent) {
+        when (event) {
+            is PersonDetailEvent.Initialize -> init(event.personId)
 
-    val getFavoriteStatus: StateFlow<Boolean> = personId.flatMapLatest {
-        personDetailWrapper.getFavoriteStatus(it)
-    }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            false
-    )
-
-    val personDetail: StateFlow<UiState<PersonDomainModel>> = personId.flatMapLatest { id ->
-        personDetailWrapper.getPersonDetail(id)
-    }.delayAfterLoading(300L).toStateFlow(viewModelScope)
-
-    fun addToFavorite(personDomainModel: PersonDomainModel) {
-        viewModelScope.launch {
-            personDetailWrapper.insertFavorite(
-                    personDomainModel.mapDomainModelToEntity()
+            is PersonDetailEvent.OnFavoriteClicked -> toggleFavorite(
+                    event.isFavorite,
+                    event.personDomainModel
             )
         }
     }
 
-    fun deleteFavorite(personId: Int) {
+    private fun init(personId: Int) {
+        if (_isDataFetched) return
+
+        _isDataFetched = true
+
+        personDetailWrapper.getPersonDetail(personId)
+                .delayAfterLoading(300L)
+                .onEach { state ->
+                    state.doIfLoading {
+                        _uiState.update { it.copy(isLoading = true) }
+                    }
+
+                    state.doIfError { throwable, errorMessage ->
+                        _uiState.update {
+                            it.copy(
+                                    isLoading = false,
+                                    personError = throwable,
+                                    personErrorMsg = errorMessage
+                            )
+                        }
+                    }
+
+                    state.doIfSuccess { personDetail ->
+                        _uiState.update {
+                            it.copy(
+                                    isLoading = false,
+                                    personDomainModel = personDetail
+                            )
+                        }
+                    }
+                }.launchIn(viewModelScope)
+
+        personDetailWrapper.getFavoriteStatus(personId)
+                .onEach { isFavorite ->
+                    _uiState.update { it.copy(isFavorite = isFavorite) }
+                }.launchIn(viewModelScope)
+    }
+
+    private fun toggleFavorite(isFavorite: Boolean, personDomainModel: PersonDomainModel?) {
+        _uiState.update { it.copy(isFavorite = isFavorite) }
+
         viewModelScope.launch {
-            personDetailWrapper.deleteFavorite(personId)
+            personDomainModel?.let { personModel ->
+                if (isFavorite) {
+                    personDetailWrapper.deleteFavorite(personModel.id)
+                } else {
+                    personDetailWrapper.insertFavorite(personModel.mapDomainModelToEntity())
+                }
+            }
         }
     }
 }

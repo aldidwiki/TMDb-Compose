@@ -118,7 +118,7 @@ fun ContentDetailInfo(
 }
 
 @Composable
-fun NetworksItem(
+private fun NetworksItem(
         networks: List<NetworkDomainModel>,
         modifier: Modifier = Modifier
 ) {
@@ -140,7 +140,7 @@ fun NetworksItem(
 
 @Preview(showBackground = true)
 @Composable
-fun NetworksItemPreview() {
+private fun NetworksItemPreview() {
     NetworksItem(networks = listOf(
             NetworkDomainModel(
                     networkId = 49,
@@ -162,7 +162,7 @@ fun NetworksItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ContentDetailInfoPreview() {
+private fun ContentDetailInfoPreview() {
     ContentDetailInfo(
             status = "Released",
             originalLanguage = "English",

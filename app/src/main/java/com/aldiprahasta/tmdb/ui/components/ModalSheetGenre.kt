@@ -16,6 +16,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -58,7 +59,11 @@ fun ModalSheetGenre(
         ModalBottomSheet(
                 modifier = modifier,
                 sheetState = sheetState,
-                onDismissRequest = onDismissRequest
+                onDismissRequest = onDismissRequest,
+                properties = ModalBottomSheetProperties(
+                        isAppearanceLightStatusBars = false,
+                        isAppearanceLightNavigationBars = true
+                )
         ) {
             ModalSheetGenreContent(
                     genres = genres,

@@ -18,28 +18,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,11 +60,10 @@ import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
+import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
 import com.aldiprahasta.tmdb.ui.details.ContentDetailExternal
 import com.aldiprahasta.tmdb.utils.convertDate
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,33 +77,35 @@ fun PersonScreen(
         modifier: Modifier = Modifier
 ) {
     val personViewModel: PersonViewModel = koinViewModel()
-    personViewModel.setPersonId(personId)
+    val uiState by personViewModel.uiState.collectAsStateWithLifecycle()
 
-    val personData by personViewModel.personDetail.collectAsStateWithLifecycle()
-    val favoriteStatus by personViewModel.getFavoriteStatus.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = rememberTopAppBarScrollBehavior()
 
-    personViewModel.updateFavoriteState(favoriteStatus)
+    LaunchedEffect(personId) {
+        personViewModel.onEvent(PersonDetailEvent.Initialize(personId))
+    }
 
     Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                TopAppBar(
-                        title = {},
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                onBackPressed()
-                            }) {
-                                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                            }
-                        },
+                TMDbTopBar(
+                        scrollBehavior = scrollBehavior,
+                        topBarTitle = {},
                         actions = {
+                            val isActionEnabled = uiState.personDomainModel != null
+
                             IconToggleButton(
-                                    checked = personViewModel.isFavorite,
-                                    onCheckedChange = { personViewModel.updateFavoriteState(!personViewModel.isFavorite) }
+                                    enabled = isActionEnabled,
+                                    checked = uiState.isFavorite,
+                                    onCheckedChange = {
+                                        personViewModel.onEvent(PersonDetailEvent.OnFavoriteClicked(
+                                                uiState.isFavorite,
+                                                uiState.personDomainModel
+                                        ))
+                                    }
                             ) {
                                 AnimatedContent(
-                                        targetState = personViewModel.isFavorite,
+                                        targetState = uiState.isFavorite,
                                         label = "Animated Favorite Button",
                                         transitionSpec = { scaleIn() togetherWith scaleOut() }
                                 ) { targetState ->
@@ -122,46 +118,34 @@ fun PersonScreen(
                                     } else {
                                         Icon(
                                                 imageVector = Icons.Default.FavoriteBorder,
-                                                contentDescription = null
+                                                contentDescription = null,
+                                                tint = Color.White
                                         )
                                     }
                                 }
                             }
                         },
-                        scrollBehavior = scrollBehavior,
-                        colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                                actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                                scrolledContainerColor = MaterialTheme.colorScheme.primary
-                        )
+                        onBackPressed = onBackPressed,
                 )
             }
     ) { innerPadding ->
         AnimatedContent(
-                targetState = personData,
+                targetState = uiState.personDomainModel,
                 label = "Animated Content",
                 transitionSpec = {
                     fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
                 },
                 modifier = Modifier.padding(innerPadding)
-        ) { targetState ->
-            targetState.doIfLoading {
+        ) { personDomainModel ->
+            if (uiState.isLoading) {
                 LoadingScreen()
             }
 
-            targetState.doIfError { throwable, _ ->
+            if (uiState.personError != null) {
                 ErrorScreen()
             }
 
-            targetState.doIfSuccess { personDetail ->
-                if (personViewModel.isFavorite) {
-                    personViewModel.addToFavorite(personDetail)
-                } else {
-                    personViewModel.deleteFavorite(personId)
-                }
-
+            personDomainModel?.let { personDetail ->
                 PersonDetailContent(
                         personDomainModel = personDetail,
                         onViewMoreClicked = onViewMoreClicked,
@@ -366,7 +350,7 @@ private fun PersonBiography(
 
 @Preview(showBackground = true)
 @Composable
-fun PersonDetailContentPreview() {
+private fun PersonDetailContentPreview() {
     PersonDetailContent(
             personDomainModel = PersonDomainModel(
                     id = 12345,
@@ -406,7 +390,7 @@ fun PersonDetailContentPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun PersonPersonInfoPreview() {
+private fun PersonPersonInfoPreview() {
     PersonPersonalInfo(
             birthDay = "1995-12-27".convertDate(),
             deathDay = "",
@@ -419,6 +403,6 @@ fun PersonPersonInfoPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun PersonBiographyPreview() {
+private fun PersonBiographyPreview() {
     PersonBiography(biography = "Timothée Hal Chalamet (born December 27, 1995) is an American actor.\\n\\nHe began his career appearing in the drama series Homeland in 2012. Two years later, he made his film debut in the comedy-drama Men, Women & Children and appeared in Christopher Nolan's science fiction film Interstellar. He came into attention in Luca Guadagnino's coming-of-age film Call Me by Your Name (2017). Alongside supporting roles in Greta Gerwig's films Lady Bird (2017) and Little Women (2019), he took on starring roles in Beautiful Boy (2018) and Dune (2021)")
 }
