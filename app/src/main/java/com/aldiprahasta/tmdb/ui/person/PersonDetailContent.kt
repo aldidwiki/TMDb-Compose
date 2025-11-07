@@ -2,6 +2,8 @@ package com.aldiprahasta.tmdb.ui.person
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -25,7 +27,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
@@ -316,6 +318,11 @@ private fun PersonBiography(
     var isExpanded by remember { mutableStateOf(false) }
     var showMoreButton by remember { mutableStateOf(false) }
 
+    val rotation by animateFloatAsState(
+            targetValue = if (isExpanded) 180f else 0f,
+            animationSpec = tween(easing = LinearEasing)
+    )
+
     val maxLines = 5
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -348,11 +355,9 @@ private fun PersonBiography(
                     modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
-                        imageVector = if (isExpanded)
-                            Icons.Default.KeyboardArrowUp
-                        else
-                            Icons.Default.KeyboardArrowDown,
-                        contentDescription = null
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier.rotate(rotation)
                 )
                 Text(text = if (isExpanded) "Collapse" else "Expand")
             }
