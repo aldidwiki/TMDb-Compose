@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -43,6 +42,7 @@ import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.ui.components.LazyColumnWithScrollbar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.ModalSheetGenre
 import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
@@ -210,7 +210,7 @@ private fun CreditContent(
             )
         }
 
-        LazyColumn(
+        LazyColumnWithScrollbar(
                 contentPadding = PaddingValues(10.dp),
         ) {
             itemsIndexed(casts) { index, item ->

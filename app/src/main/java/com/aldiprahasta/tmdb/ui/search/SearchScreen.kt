@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -28,6 +27,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.ui.components.LazyColumnWithScrollbar
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 import kotlinx.coroutines.flow.flowOf
@@ -111,7 +111,7 @@ private fun SearchContent(
     ) {
         if (searchResultsPagingItems.itemCount < 1 && searchQuery.isNotEmpty()) {
             ErrorScreen(errorMessage = "No Data Found")
-        } else LazyColumn(
+        } else LazyColumnWithScrollbar(
                 contentPadding = PaddingValues(16.dp),
                 modifier = Modifier.fillMaxSize()
         ) {
