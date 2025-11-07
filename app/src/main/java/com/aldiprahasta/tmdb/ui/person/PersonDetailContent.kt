@@ -48,7 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -315,6 +314,9 @@ private fun PersonBiography(
         modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    var showMoreButton by remember { mutableStateOf(false) }
+
+    val maxLines = 5
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = "Biography", style = MaterialTheme.typography.titleLarge)
@@ -322,13 +324,23 @@ private fun PersonBiography(
         Text(
                 text = biography,
                 style = MaterialTheme.typography.bodySmall,
+                maxLines = if (isExpanded) Int.MAX_VALUE else maxLines,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                        .animateContentSize()
-                        .height(if (isExpanded) Dp.Unspecified else 70.dp)
+                modifier = Modifier.animateContentSize(),
+                onTextLayout = { textLayoutResult ->
+                    val mustShowCollapseButton = isExpanded
+
+                    val mustShowExpandButton = !isExpanded &&
+                            // Ensure the index is valid (i.e., lineCount reached maxLines)
+                            textLayoutResult.lineCount == maxLines &&
+                            // Check if that specific line was ellipsized
+                            textLayoutResult.isLineEllipsized(maxLines - 1)
+
+                    showMoreButton = mustShowExpandButton || mustShowCollapseButton
+                }
         )
 
-        if (biography.length > 200) {
+        if (showMoreButton) {
             TextButton(
                     onClick = {
                         isExpanded = !isExpanded
