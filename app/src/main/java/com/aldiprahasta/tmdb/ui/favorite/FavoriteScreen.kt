@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.domain.model.FavoriteDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.ui.components.LazyColumnWithScrollbar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.SwipeBox
 import com.aldiprahasta.tmdb.utils.doIfError
@@ -75,7 +75,7 @@ private fun FavoriteContent(
         onSwipeDelete: (contentId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    LazyColumnWithScrollbar(
             modifier = modifier,
             contentPadding = PaddingValues(vertical = 16.dp),
     ) {

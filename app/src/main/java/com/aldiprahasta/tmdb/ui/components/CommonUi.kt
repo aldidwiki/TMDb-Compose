@@ -1,6 +1,6 @@
 package com.aldiprahasta.tmdb.ui.components
 
-import android.graphics.Color
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -21,11 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toDrawable
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -39,17 +40,26 @@ fun ImageLoader(
         imageType: ImageType,
         modifier: Modifier = Modifier
 ) {
-    AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+    val context = LocalContext.current
+
+    SubcomposeAsyncImage(
+            model = ImageRequest.Builder(context)
                     .data("https://image.tmdb.org/t/p/${imageType.size}/$imagePath")
-                    .placeholder(Color.GRAY.toDrawable())
-                    .error(R.drawable.ic_broken_image)
                     .crossfade(true)
+                    .crossfade(300)
                     .build(),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
-            modifier = modifier
-                    .aspectRatio(imageType.aspectRatio)
+            modifier = modifier.aspectRatio(imageType.aspectRatio),
+            loading = {
+                ShimmerEffect(Modifier.fillMaxSize())
+            },
+            error = {
+                Image(
+                        painter = painterResource(R.drawable.ic_broken_image),
+                        contentDescription = null
+                )
+            }
     )
 }
 

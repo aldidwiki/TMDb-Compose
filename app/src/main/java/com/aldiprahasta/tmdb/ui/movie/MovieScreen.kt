@@ -2,7 +2,6 @@ package com.aldiprahasta.tmdb.ui.movie
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,6 +13,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.ui.components.LazyColumnWithScrollbar
 import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
@@ -38,7 +38,7 @@ private fun MovieContent(
         onItemClicked: (movieId: Int) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    LazyColumnWithScrollbar(
             contentPadding = PaddingValues(10.dp),
             modifier = modifier
     ) {
