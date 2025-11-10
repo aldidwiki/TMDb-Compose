@@ -82,39 +82,23 @@ fun NavHostController.currentDestination(): NavDestination? {
     return navBackStackEntry?.destination
 }
 
-private val fromDashboardEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
+private val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.(Boolean) -> EnterTransition = { isPop ->
     fadeIn(
             animationSpec = tween(delayMillis = 200, easing = LinearEasing)
     ) + slideIntoContainer(
             animationSpec = tween(delayMillis = 100, easing = EaseIn),
-            towards = AnimatedContentTransitionScope.SlideDirection.Start
+            towards = if (isPop) AnimatedContentTransitionScope.SlideDirection.End
+            else AnimatedContentTransitionScope.SlideDirection.Start
     )
 }
 
-private val fromDashboardExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
+private val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.(Boolean) -> ExitTransition = { isPop ->
     fadeOut(
             animationSpec = tween(delayMillis = 200, easing = LinearEasing)
     ) + slideOutOfContainer(
             animationSpec = tween(delayMillis = 100, easing = EaseOut),
-            towards = AnimatedContentTransitionScope.SlideDirection.End
-    )
-}
-
-private val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
-    fadeIn(
-            animationSpec = tween(easing = LinearEasing)
-    ) + slideIntoContainer(
-            animationSpec = tween(easing = EaseIn),
-            towards = AnimatedContentTransitionScope.SlideDirection.Start
-    )
-}
-
-private val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
-    fadeOut(
-            animationSpec = tween(easing = LinearEasing)
-    ) + slideOutOfContainer(
-            animationSpec = tween(easing = EaseOut),
-            towards = AnimatedContentTransitionScope.SlideDirection.End
+            towards = if (isPop) AnimatedContentTransitionScope.SlideDirection.Start
+            else AnimatedContentTransitionScope.SlideDirection.End
     )
 }
 
@@ -195,8 +179,10 @@ fun TMDbNavHostController(
         composable(
                 route = ImageGallery.routeWithArgs,
                 arguments = ImageGallery.arguments,
-                enterTransition = enterTransition,
-                exitTransition = exitTransition
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val contentId = getInt(ImageGallery.CONTENT_ID_ARG, 0)
@@ -215,8 +201,10 @@ fun TMDbNavHostController(
         composable(
                 route = ContentDetail.routeWithArgs,
                 arguments = ContentDetail.arguments,
-                enterTransition = fromDashboardEnterTransition,
-                exitTransition = fromDashboardExitTransition
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
         ) { navBackStateEntry ->
             navBackStateEntry.arguments?.apply {
                 val contentId = getInt(ContentDetail.CONTENT_ID_ARG, 0)
@@ -243,8 +231,10 @@ fun TMDbNavHostController(
         composable(
                 route = PersonDetail.routeWithArgs,
                 arguments = PersonDetail.arguments,
-                enterTransition = fromDashboardEnterTransition,
-                exitTransition = fromDashboardExitTransition
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val personId = getInt(PersonDetail.PERSON_ID_ARG, 0)
@@ -274,8 +264,10 @@ fun TMDbNavHostController(
         composable(
                 route = CreditDetail.routeWithArgs,
                 arguments = CreditDetail.arguments,
-                enterTransition = enterTransition,
-                exitTransition = exitTransition
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val contentId = getInt(CreditDetail.CONTENT_ID_ARG)
@@ -302,8 +294,10 @@ fun TMDbNavHostController(
         composable(
                 route = TvSeason.routeWithArgs,
                 arguments = TvSeason.arguments,
-                enterTransition = enterTransition,
-                exitTransition = exitTransition
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val tvTitle = getString(TvSeason.TV_TITLE_ARG, "")
@@ -327,8 +321,10 @@ fun TMDbNavHostController(
         composable(
                 route = TvSeasonDetail.routeWithArgs,
                 arguments = TvSeasonDetail.arguments,
-                enterTransition = enterTransition,
-                exitTransition = exitTransition
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val tvId = getInt(TvSeasonDetail.TV_ID_ARG, 0)

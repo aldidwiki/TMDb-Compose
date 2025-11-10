@@ -1,8 +1,6 @@
 package com.aldiprahasta.tmdb.utils
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.browser.customtabs.CustomTabsIntent
@@ -25,9 +23,6 @@ import androidx.core.os.BundleCompat
 import androidx.core.view.WindowCompat
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponseModel
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
@@ -140,17 +135,6 @@ fun Int?.formatGender(): String = when (this) {
     1 -> "Female"
     2 -> "Male"
     else -> "Not Sure"
-}
-
-suspend fun Context.getImageBitmap(imagePath: String): Bitmap? {
-    val loader = ImageLoader(this)
-    val request = ImageRequest.Builder(this)
-            .data("https://image.tmdb.org/t/p/w185/$imagePath")
-            .allowHardware(false)
-            .build()
-
-    val result = (loader.execute(request) as? SuccessResult)?.drawable
-    return (result as? BitmapDrawable)?.bitmap
 }
 
 fun <T> Flow<UiState<T>>.delayAfterLoading(timeMillis: Long): Flow<UiState<T>> = onEach { state ->

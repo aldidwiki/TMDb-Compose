@@ -34,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,7 +78,7 @@ fun ContentDetailScreen(
 
     val blurRadius = if (showBottomSheet) 6.dp else 0.dp
 
-    DynamicSystemBarColor(Color(paletteColors.rgbColor))
+    DynamicSystemBarColor(paletteColors.rgbColor)
     Scaffold(
             modifier = modifier
                     .fillMaxSize()
@@ -88,9 +87,9 @@ fun ContentDetailScreen(
             topBar = {
                 TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(paletteColors.rgbColor),
-                                titleContentColor = Color(paletteColors.titleTextColor),
-                                scrolledContainerColor = Color(paletteColors.rgbColor)
+                                containerColor = paletteColors.rgbColor,
+                                titleContentColor = paletteColors.titleTextColor,
+                                scrolledContainerColor = paletteColors.rgbColor
                         ),
                         scrollBehavior = scrollBehavior,
                         title = {},
@@ -101,7 +100,7 @@ fun ContentDetailScreen(
                                 Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Back Button",
-                                        tint = Color(paletteColors.titleTextColor)
+                                        tint = paletteColors.titleTextColor
                                 )
                             }
                         },
@@ -128,13 +127,13 @@ fun ContentDetailScreen(
                                         Icon(
                                                 imageVector = Icons.Default.Favorite,
                                                 contentDescription = null,
-                                                tint = Color(paletteColors.titleTextColor)
+                                                tint = paletteColors.titleTextColor
                                         )
                                     } else {
                                         Icon(
                                                 imageVector = Icons.Default.FavoriteBorder,
                                                 contentDescription = null,
-                                                tint = Color(paletteColors.titleTextColor)
+                                                tint = paletteColors.titleTextColor
                                         )
                                     }
                                 }
@@ -315,9 +314,9 @@ private fun ContentDetailPreview() {
                     networks = null
             )),
             colorPalette = PaletteColors(
-                    Color.White.toArgb(),
-                    Color.Black.toArgb(),
-                    Color.Black.toArgb()
+                    Color.White,
+                    Color.Black,
+                    Color.Black
             ),
             onSuccessFetch = {},
             onCastClicked = {},

@@ -59,7 +59,7 @@ fun ContentDetailCard(
         modifier: Modifier = Modifier
 ) {
     Surface(
-            color = Color(colorPalette.rgbColor),
+            color = colorPalette.rgbColor,
             shadowElevation = 6.dp,
             modifier = modifier.fillMaxWidth()
     ) {
@@ -111,14 +111,14 @@ private fun ContentOverview(
         Text(
                 text = "Overview",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(colorPalette.titleTextColor)
+                color = colorPalette.titleTextColor
         )
         Spacer(modifier = Modifier.size(4.dp))
         Text(
                 text = overview,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Justify,
-                color = Color(colorPalette.bodyTextColor)
+                color = colorPalette.bodyTextColor
         )
     }
 }
@@ -150,7 +150,7 @@ private fun ContentDetailUserScoreWithTrailer(
         if (showBottomSheet) {
             ModalBottomSheet(
                     properties = ModalBottomSheetProperties(
-                            isAppearanceLightStatusBars = isColorLight(colorPalette.rgbColor),
+                            isAppearanceLightStatusBars = isColorLight(colorPalette.rgbColor.toArgb()),
                             isAppearanceLightNavigationBars = true,
                     ),
                     onDismissRequest = {
@@ -182,8 +182,8 @@ private fun ContentDetailUserScoreWithTrailer(
             CircularProgressIndicator(
                     modifier = Modifier.size(40.dp),
                     strokeWidth = 3.dp,
-                    trackColor = Color(colorPalette.rgbColor),
-                    color = Color(colorPalette.titleTextColor),
+                    trackColor = colorPalette.rgbColor,
+                    color = colorPalette.titleTextColor,
                     progress = {
                         voteAverage.formatVoteAverage() / 100f
                     }
@@ -191,20 +191,20 @@ private fun ContentDetailUserScoreWithTrailer(
             Text(
                     text = "${voteAverage.formatVoteAverage()}%",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color(colorPalette.bodyTextColor)
+                    color = colorPalette.bodyTextColor
             )
         }
         Spacer(modifier = Modifier.size(10.dp))
         Text(
                 text = "User Score",
                 style = MaterialTheme.typography.labelMedium,
-                color = Color(colorPalette.bodyTextColor)
+                color = colorPalette.bodyTextColor
         )
         Spacer(modifier = Modifier.size(20.dp))
         Text(
                 text = "\u007C",
                 style = MaterialTheme.typography.labelMedium,
-                color = Color(colorPalette.titleTextColor)
+                color = colorPalette.titleTextColor
         )
         TextButton(onClick = {
             when {
@@ -225,12 +225,12 @@ private fun ContentDetailUserScoreWithTrailer(
                 Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = null,
-                        tint = Color(colorPalette.titleTextColor)
+                        tint = colorPalette.titleTextColor
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                         text = "Play Trailer",
-                        color = Color(colorPalette.bodyTextColor)
+                        color = colorPalette.bodyTextColor
                 )
             }
         }
@@ -269,31 +269,31 @@ private fun ContentDetailPosterWithInfo(
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = Color(colorPalette.titleTextColor)
+                    color = colorPalette.titleTextColor
             )
             Text(
                     text = releaseDate,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(colorPalette.bodyTextColor)
+                    color = colorPalette.bodyTextColor
             )
             Row {
                 if (runtime.isNotEmpty()) {
                     Text(
                             text = runtime,
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(colorPalette.bodyTextColor)
+                            color = colorPalette.bodyTextColor
                     )
                     Text(
                             text = "\u2022",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(horizontal = 4.dp),
-                            color = Color(colorPalette.bodyTextColor)
+                            color = colorPalette.bodyTextColor
                     )
                 }
                 Text(
                         text = certification,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color(colorPalette.bodyTextColor)
+                        color = colorPalette.bodyTextColor
                 )
             }
             Text(
@@ -302,7 +302,7 @@ private fun ContentDetailPosterWithInfo(
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = Color(colorPalette.bodyTextColor)
+                    color = colorPalette.bodyTextColor
             )
             Text(
                     text = tagline,
@@ -313,7 +313,7 @@ private fun ContentDetailPosterWithInfo(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 6.dp),
-                    color = Color(colorPalette.bodyTextColor)
+                    color = colorPalette.bodyTextColor
             )
         }
     }
@@ -351,9 +351,9 @@ private fun ContentDetailCardPreview() {
                     networks = emptyList(),
             ),
             colorPalette = PaletteColors(
-                    Color.White.toArgb(),
-                    Color.Black.toArgb(),
-                    Color.Black.toArgb()
+                    Color.White,
+                    Color.Black,
+                    Color.Black
             ),
             showBottomSheet = false,
             onShowBottomSheetChange = {},
