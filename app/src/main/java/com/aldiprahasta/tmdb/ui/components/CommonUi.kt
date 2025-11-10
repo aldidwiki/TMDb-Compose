@@ -25,9 +25,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -73,7 +74,9 @@ fun ImageLoaderBackdrop(
             model = "https://image.tmdb.org/t/p/${ImageType.BACKDROP.size}/$imagePath",
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            onError = { isError = true },
+            onError = {
+                isError = true
+            },
             modifier = modifier
                     .fillMaxWidth()
                     .aspectRatio(ImageType.BACKDROP.aspectRatio)

@@ -1,5 +1,7 @@
 package com.aldiprahasta.tmdb.utils
 
+import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +12,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.palette.graphics.Palette
+import coil3.BitmapImage
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.allowHardware
 import timber.log.Timber
 
 data class PaletteColors(
@@ -77,4 +84,28 @@ fun rememberPaletteColors(posterPath: String?): PaletteColors {
             titleTextColor = titleTextColor,
             bodyTextColor = bodyTextColor
     )
+}
+
+private suspend fun Context.getImageBitmap(imagePath: String): Bitmap? {
+    val loader = ImageLoader(this)
+    val request = ImageRequest.Builder(this)
+            .data("https://image.tmdb.org/t/p/w154/$imagePath")
+            .allowHardware(false) // Keep this if you need a software bitmap
+            .build()
+
+    // Execute the request
+    val result = loader.execute(request)
+
+    // Check for success and extract the Image
+    return if (result is SuccessResult) {
+        // The 'image' property holds the loaded image data
+        when (val image = result.image) {
+            // BitmapImage is the standard representation for a bitmap-backed image in Coil
+            is BitmapImage -> image.bitmap
+            // Handle other image types if necessary (e.g., GifImage)
+            else -> null
+        }
+    } else {
+        null
+    }
 }
