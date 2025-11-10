@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.details
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -122,18 +128,41 @@ private fun NetworksItem(
         networks: List<NetworkDomainModel>,
         modifier: Modifier = Modifier
 ) {
+    val maxItemCount = 3
+
     Column(
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        networks.forEach { network ->
-            ImageLoader(
-                    imagePath = network.networkLogoPath,
-                    imageType = ImageType.LOGO,
-                    modifier = Modifier
-                            .padding(vertical = 4.dp)
-                            .height(20.dp)
-            )
+        var visibleItemCount by remember { mutableIntStateOf(maxItemCount) }
+        var isExpanded by remember { mutableStateOf(false) }
+
+        Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.animateContentSize()
+        ) {
+            networks.take(visibleItemCount).forEach { network ->
+                ImageLoader(
+                        imagePath = network.networkLogoPath,
+                        imageType = ImageType.LOGO,
+                        modifier = Modifier
+                                .padding(vertical = 4.dp)
+                                .height(20.dp)
+                )
+            }
+        }
+
+        if (networks.size > maxItemCount) {
+            TextButton(onClick = {
+                visibleItemCount = if (isExpanded) {
+                    maxItemCount
+                } else {
+                    networks.size
+                }
+                isExpanded = !isExpanded
+            }) {
+                Text(if (isExpanded) "show less" else "show more")
+            }
         }
     }
 }
