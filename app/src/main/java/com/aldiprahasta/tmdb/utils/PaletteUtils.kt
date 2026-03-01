@@ -73,20 +73,17 @@ fun rememberPaletteColors(posterPath: String?): PaletteColors {
     // 2. Color Calculation: Determine the TARGET colors
 
     // Background/Container Color
-    val targetContainerColor = Color(palette?.vibrantSwatch?.rgb
-            ?: palette?.dominantSwatch?.rgb
+    val targetContainerColor = Color(palette?.dominantSwatch?.rgb
             ?: defaultSurfaceColor.toArgb()
     )
 
     // Title Text Color
-    val targetTitleColor = Color(palette?.vibrantSwatch?.titleTextColor
-            ?: palette?.dominantSwatch?.titleTextColor
+    val targetTitleColor = Color(palette?.dominantSwatch?.titleTextColor
             ?: defaultOnSurfaceColor.toArgb()
     )
 
     // Body Text Color
-    val targetBodyColor = Color(palette?.vibrantSwatch?.bodyTextColor
-            ?: palette?.dominantSwatch?.bodyTextColor
+    val targetBodyColor = Color(palette?.dominantSwatch?.bodyTextColor
             ?: defaultOnSurfaceColor.toArgb()
     )
 
