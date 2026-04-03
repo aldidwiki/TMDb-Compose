@@ -9,8 +9,6 @@ data class CreditState(
         val selectedGenres: Set<GenreDomainModel> = emptySet(),
         val selectedSortingChip: String = "",
 
-        val searchQuery: String = "",
-
         val movieGenreDomainModels: List<GenreDomainModel> = emptyList(),
         val tvGenreDomainModels: List<GenreDomainModel> = emptyList(),
 

@@ -13,12 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +23,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,9 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,7 +47,6 @@ import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.ModalSheetGenre
 import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
 import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
-import com.aldiprahasta.tmdb.ui.theme.TMDBPrimaryColor
 import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
 import com.aldiprahasta.tmdb.utils.MediaType
 import org.koin.androidx.compose.koinViewModel
@@ -181,18 +170,10 @@ fun CreditScreen(
                                         contentType = contentType,
                                         selectedSortingChip = selectedChip
                                 ))
-                            },
-                            onSearchQueryChanged = { query ->
-                                creditViewModel.onEvent(CreditEvent.OnSearchFilterApplied(
-                                        query = query,
-                                        casts = castModel
-                                ))
                             }
                     )
                 } else {
-                    if (uiState.searchQuery.isEmpty()) {
-                        ErrorScreen(modifier = Modifier.padding(20.dp))
-                    }
+                    ErrorScreen(modifier = Modifier.padding(20.dp))
                 }
             }
         }
@@ -208,46 +189,9 @@ private fun CreditContent(
         onItemClicked: (contentId: Int, mediaType: String?) -> Unit,
         onGenreFilterChipClicked: (GenreDomainModel) -> Unit,
         onSortingChipClicked: (Comparator<CastDomainModel>, selectedChip: String) -> Unit,
-        onSearchQueryChanged: (String) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    val fieldState = rememberTextFieldState()
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    onSearchQueryChanged(fieldState.text.toString())
-
     Column(modifier = modifier) {
-        OutlinedTextField(
-                state = fieldState,
-                keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Search
-                ),
-                onKeyboardAction = {
-                    keyboardController?.hide()
-                },
-                label = {
-                    Text("Find any credits")
-                },
-                lineLimits = TextFieldLineLimits.SingleLine,
-                colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = TMDBPrimaryColor
-                ),
-                trailingIcon = {
-                    if (fieldState.text.isNotEmpty()) {
-                        IconButton(onClick = {
-                            fieldState.clearText()
-                        }) {
-                            Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear text")
-                        }
-                    }
-                },
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(top = 10.dp)
-        )
-
         if (contentType != MediaType.PERSON_TYPE.name) {
             SortingChip(
                     selectedSortingChip = selectedSortingChip,
@@ -433,7 +377,6 @@ private fun CreditContentPreview() {
                     GenreDomainModel(id = 7171, name = "Rena Flynn"),
             ),
             onGenreFilterChipClicked = {},
-            onSortingChipClicked = { _, _ -> },
-            onSearchQueryChanged = {}
+            onSortingChipClicked = { _, _ -> }
     )
 }

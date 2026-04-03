@@ -23,9 +23,4 @@ sealed interface CreditEvent {
             val selectedGenres: Set<GenreDomainModel>,
             val casts: List<CastDomainModel>
     ) : CreditEvent
-
-    data class OnSearchFilterApplied(
-            val query: String,
-            val casts: List<CastDomainModel>
-    ) : CreditEvent
 }

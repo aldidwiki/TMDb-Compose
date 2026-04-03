@@ -51,25 +51,6 @@ class CreditViewModel(private val creditWrapper: CreditWrapper) : ViewModel() {
                     event.casts,
                     event.selectedGenre
             )
-
-            is CreditEvent.OnSearchFilterApplied -> onSearchFilterApplied(
-                    event.query,
-                    event.casts
-            )
-        }
-    }
-
-    private fun onSearchFilterApplied(
-            query: String,
-            casts: List<CastDomainModel>
-    ) {
-        val results = casts.filter { cast ->
-            cast.name.contains(query, ignoreCase = true) ||
-                    cast.characterName.contains(query, ignoreCase = true)
-        }
-
-        _uiState.update {
-            it.copy(filteredCasts = results)
         }
     }
 
