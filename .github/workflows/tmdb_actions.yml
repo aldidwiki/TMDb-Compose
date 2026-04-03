@@ -3,7 +3,7 @@ name: TMDbBuild
 on:
   push:
     tags:
-      - v[0-9].[0-9]+.[0-9]+
+      - v[0-9].[0-9]+.[0-9]+*
 
 jobs:
   build:
@@ -44,7 +44,7 @@ jobs:
           name: TMDb Release ${{ github.ref_name }}
           token: ${{ secrets.MY_TOKEN }}
           artifacts: "app/build/outputs/apk/release/TMDb.apk"
-          body: "UI/UX Improvements"
+          body: "UI Improvements"
 
       - name: Upload Build Artifact
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
