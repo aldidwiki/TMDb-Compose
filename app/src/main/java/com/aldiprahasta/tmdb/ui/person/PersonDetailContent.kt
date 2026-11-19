@@ -235,7 +235,8 @@ private fun PersonExternalLinks(person: PersonDomainModel) {
                         text = stringResource(label),
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.primary
                 )
             }
         }
