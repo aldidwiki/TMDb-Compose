@@ -13,36 +13,23 @@ import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
 class PersonRemoteDataSource(private val remoteService: RemoteService) {
-    fun getPersonDetail(personId: Int): Flow<UiState<PersonResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getPersonDetail(personId)
-        response?.let { personResponse ->
-            emit(UiState.Success(personResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        emit(UiState.Error(t))
-    }.flowOn(Dispatchers.IO)
+    fun getPersonDetail(personId: Int): Flow<UiState<PersonResponse>> = request {
+        remoteService.getPersonDetail(personId)
+    }
 
-    fun getPersonCredits(personId: Int): Flow<UiState<CreditResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getPersonCredits(personId)
-        response?.let { creditResponse ->
-            emit(UiState.Success(creditResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        emit(UiState.Error(t))
-    }.flowOn(Dispatchers.IO)
+    fun getPersonCredits(personId: Int): Flow<UiState<CreditResponse>> = request {
+        remoteService.getPersonCredits(personId)
+    }
 
-    fun getPersonImages(personId: Int): Flow<UiState<ImageResponse>> = flow {
+    fun getPersonImages(personId: Int): Flow<UiState<ImageResponse>> = request {
+        remoteService.getPersonImages(personId)
+    }
+
+    private fun <T : Any> request(call: suspend () -> T?): Flow<UiState<T>> = flow {
         emit(UiState.Loading)
-        val response = remoteService.getPersonImages(personId)
-        response?.let { imageResponse ->
-            emit(UiState.Success(imageResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        emit(UiState.Error(t))
+        emit(UiState.Success(checkNotNull(call()) { "TMDb returned an empty response" }))
+    }.catch { error ->
+        Timber.e(error)
+        emit(UiState.Error(error))
     }.flowOn(Dispatchers.IO)
 }

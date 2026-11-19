@@ -1,37 +1,28 @@
 package com.aldiprahasta.tmdb.ui.person
 
-import androidx.compose.animation.AnimatedContent
+import android.net.Uri
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,121 +30,76 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aldiprahasta.tmdb.domain.model.CastDomainModel
-import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
+import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
-import com.aldiprahasta.tmdb.ui.components.ContentBilledCast
-import com.aldiprahasta.tmdb.ui.components.ErrorScreen
-import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
-import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
-import com.aldiprahasta.tmdb.ui.details.ContentDetailExternal
-import com.aldiprahasta.tmdb.utils.convertDate
+import com.aldiprahasta.tmdb.ui.components.MovieArtwork
+import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
+import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
+import com.aldiprahasta.tmdb.utils.Constant
+import com.aldiprahasta.tmdb.utils.UiState
+import com.aldiprahasta.tmdb.utils.openBrowser
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonScreen(
         personId: Int,
         onBackPressed: () -> Unit,
         onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
-        onViewMoreClicked: () -> Unit,
+        onViewMoreClicked: (personName: String) -> Unit,
         onPersonImageClicked: (personId: Int, personName: String) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    val personViewModel: PersonViewModel = koinViewModel()
-    val uiState by personViewModel.uiState.collectAsStateWithLifecycle()
+    val viewModel: PersonViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val favoriteError = stringResource(R.string.favorite_write_error)
 
-    val scrollBehavior = rememberTopAppBarScrollBehavior()
-
-    LaunchedEffect(personId) {
-        personViewModel.onEvent(PersonDetailEvent.Initialize(personId))
+    LaunchedEffect(personId) { viewModel.onEvent(PersonDetailEvent.Initialize(personId)) }
+    LaunchedEffect(viewModel, favoriteError) {
+        viewModel.favoriteErrors.collect { snackbarHostState.showSnackbar(favoriteError) }
     }
 
-    Scaffold(
-            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TMDbTopBar(
-                        scrollBehavior = scrollBehavior,
-                        topBarTitle = {},
-                        actions = {
-                            val isActionEnabled = uiState.personDomainModel != null
+    DiscoverSystemBars()
+    DiscoverTheme {
+        Scaffold(
+                modifier = modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.background,
+                topBar = { PersonTopBar(stringResource(R.string.person_details_title), onBackPressed) },
+                snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { innerPadding ->
+            val contentModifier = Modifier.fillMaxSize().padding(innerPadding)
 
-                            IconToggleButton(
-                                    enabled = isActionEnabled,
-                                    checked = uiState.isFavorite,
-                                    onCheckedChange = {
-                                        personViewModel.onEvent(PersonDetailEvent.OnFavoriteClicked(
-                                                uiState.isFavorite,
-                                                uiState.personDomainModel
-                                        ))
-                                    }
-                            ) {
-                                AnimatedContent(
-                                        targetState = uiState.isFavorite,
-                                        label = "Animated Favorite Button",
-                                        transitionSpec = { scaleIn() togetherWith scaleOut() }
-                                ) { targetState ->
-                                    if (targetState) {
-                                        Icon(
-                                                imageVector = Icons.Default.Favorite,
-                                                contentDescription = null,
-                                                tint = Color.Red
-                                        )
-                                    } else {
-                                        Icon(
-                                                imageVector = Icons.Default.FavoriteBorder,
-                                                contentDescription = null,
-                                                tint = Color.White
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                        onBackPressed = onBackPressed,
+            when (val person = uiState.person) {
+                UiState.Loading -> LoadingScreen(contentModifier)
+                is UiState.Error -> PersonStatus(
+                        message = stringResource(R.string.person_details_error),
+                        onRetry = { viewModel.onEvent(PersonDetailEvent.Retry) },
+                        modifier = contentModifier
                 )
-            }
-    ) { innerPadding ->
-        AnimatedContent(
-                targetState = uiState.personDomainModel,
-                label = "Animated Content",
-                transitionSpec = {
-                    fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
-                },
-                modifier = Modifier.padding(innerPadding)
-        ) { personDomainModel ->
-            if (uiState.isLoading) {
-                LoadingScreen()
-            }
-
-            if (uiState.personError != null) {
-                ErrorScreen()
-            }
-
-            personDomainModel?.let { personDetail ->
-                PersonDetailContent(
-                        personDomainModel = personDetail,
-                        onViewMoreClicked = onViewMoreClicked,
-                        onPersonImageClicked = onPersonImageClicked,
-                        onCreditClicked = { creditId, mediaType ->
-                            onCreditClicked(creditId, mediaType)
-                        }
+                is UiState.Success -> PersonDetailContent(
+                        person = person.data,
+                        uiState = uiState,
+                        onFavoriteChanged = { viewModel.onEvent(PersonDetailEvent.OnFavoriteClicked(it)) },
+                        onPhotosClicked = { onPersonImageClicked(person.data.id, person.data.name) },
+                        onViewMoreClicked = { onViewMoreClicked(person.data.name) },
+                        onCreditClicked = onCreditClicked,
+                        modifier = contentModifier
                 )
             }
         }
@@ -162,264 +108,201 @@ fun PersonScreen(
 
 @Composable
 private fun PersonDetailContent(
-        personDomainModel: PersonDomainModel,
-        onCreditClicked: (creditId: Int, mediaType: String?) -> Unit,
+        person: PersonDomainModel,
+        uiState: PersonDetailState,
+        onFavoriteChanged: (Boolean) -> Unit,
+        onPhotosClicked: () -> Unit,
         onViewMoreClicked: () -> Unit,
-        onPersonImageClicked: (personId: Int, personName: String) -> Unit,
+        onCreditClicked: (Int, String?) -> Unit,
         modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(vertical = 16.dp)
+    Column(
+            modifier = modifier.verticalScroll(rememberScrollState()).padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Column(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            ImageLoader(
-                    imagePath = personDomainModel.profilePath,
-                    imageType = ImageType.PROFILE,
-                    modifier = Modifier
-                            .height(250.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .clickable {
-                                onPersonImageClicked(
-                                        personDomainModel.id,
-                                        personDomainModel.name
-                                )
-                            }
+            PersonHeader(
+                    person = person,
+                    favorite = uiState.isFavorite,
+                    favoriteEnabled = uiState.isFavoriteAvailable && !uiState.isSavingFavorite,
+                    onFavoriteChanged = onFavoriteChanged,
+                    onPhotosClicked = onPhotosClicked
             )
-            Spacer(modifier = Modifier.size(16.dp))
+            PersonExternalLinks(person)
+            PersonBiography(person.biography)
+            PersonPersonalInfo(person)
+        }
+
+        PersonKnownFor(
+                person = person,
+                onCreditClicked = onCreditClicked,
+                onViewMoreClicked = onViewMoreClicked
+        )
+    }
+}
+
+@Composable
+private fun PersonHeader(
+        person: PersonDomainModel,
+        favorite: Boolean,
+        favoriteEnabled: Boolean,
+        onFavoriteChanged: (Boolean) -> Unit,
+        onPhotosClicked: () -> Unit
+) {
+    val department = when (person.knownFor) {
+        "Acting" -> stringResource(R.string.person_actor)
+        "-" -> ""
+        else -> person.knownFor
+    }
+    val location = person.placeOfBirth.substringAfterLast(',').trim()
+    val subtitle = listOf(department, location).filter { it.isNotBlank() && it != "-" }.joinToString(" · ")
+    val photoLabel = stringResource(R.string.person_open_photos)
+
+    Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+    ) {
+        MovieArtwork(
+                imagePath = person.profilePath,
+                imageType = ImageType.PROFILE,
+                modifier = Modifier.width(120.dp)
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .semantics { contentDescription = photoLabel }
+                        .clickable(
+                                onClickLabel = photoLabel,
+                                role = Role.Button,
+                                onClick = onPhotosClicked
+                        )
+        )
+        Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Text(
-                    text = personDomainModel.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center
+                    text = person.name,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = 28.sp, lineHeight = 34.sp)
             )
-            Spacer(modifier = Modifier.size(4.dp))
-            ContentDetailExternal(
-                    instagramId = personDomainModel.externalIds.instragramId,
-                    facebookId = personDomainModel.externalIds.facebookId,
-                    twitterId = personDomainModel.externalIds.twitterId,
-                    imdbPair = Pair(false, personDomainModel.externalIds.imdbId),
-                    googleId = personDomainModel.name
-            )
-            Spacer(modifier = Modifier.size(20.dp))
-            PersonPersonalInfo(
-                    birthDay = personDomainModel.birthDay,
-                    deathDay = personDomainModel.deathDay,
-                    age = personDomainModel.age,
-                    placeOfBirth = personDomainModel.placeOfBirth,
-                    knownFor = personDomainModel.knownFor,
-                    gender = personDomainModel.gender
-            )
-            Spacer(modifier = Modifier.size(20.dp))
-            PersonBiography(biography = personDomainModel.biography)
-        }
-        Spacer(modifier = Modifier.size(20.dp))
-        ContentBilledCast(
-                sectionTitle = "Known For",
-                casts = personDomainModel.credits,
-                onCastClicked = { creditId, mediaType ->
-                    onCreditClicked(creditId, mediaType)
-                },
-                onViewMoreClicked = onViewMoreClicked,
-                characterAgeParams = Pair(personDomainModel.name, personDomainModel.birthDay)
-        )
-    }
-}
-
-@Composable
-private fun PersonPersonalInfo(
-        birthDay: String,
-        deathDay: String,
-        age: String,
-        placeOfBirth: String,
-        knownFor: String,
-        gender: String,
-        modifier: Modifier = Modifier
-) {
-    val birthDayText = if (deathDay.isEmpty() && birthDay.isNotEmpty()) {
-        "$birthDay ($age years old)"
-    } else {
-        birthDay.ifEmpty { "-" }
-    }
-
-    Column(modifier = modifier.fillMaxWidth()) {
-        Text(text = "Personal Info", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.size(10.dp))
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                            text = "Birthday",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = birthDayText,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                            text = "Known For",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = knownFor,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                            text = "Place of Birth",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = placeOfBirth,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                    if (deathDay.isNotEmpty()) {
-                        Spacer(modifier = Modifier.size(16.dp))
-                        Text(
-                                text = "Day of Death",
-                                style = MaterialTheme.typography.labelMedium
-                        )
-                        Text(
-                                text = "$deathDay ($age years old)",
-                                style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                            text = "Gender",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = gender,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun PersonBiography(
-        biography: String,
-        modifier: Modifier = Modifier
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var showMoreButton by remember { mutableStateOf(false) }
-
-    val rotation by animateFloatAsState(
-            targetValue = if (isExpanded) 180f else 0f,
-            animationSpec = tween(easing = LinearEasing)
-    )
-
-    val maxLines = 5
-
-    Column(modifier = modifier.fillMaxWidth()) {
-        Text(text = "Biography", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.size(10.dp))
-        Text(
-                text = biography,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = if (isExpanded) Int.MAX_VALUE else maxLines,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.animateContentSize(),
-                onTextLayout = { textLayoutResult ->
-                    val mustShowCollapseButton = isExpanded
-
-                    val mustShowExpandButton = !isExpanded &&
-                            // Ensure the index is valid (i.e., lineCount reached maxLines)
-                            textLayoutResult.lineCount == maxLines &&
-                            // Check if that specific line was ellipsized
-                            textLayoutResult.isLineEllipsized(maxLines - 1)
-
-                    showMoreButton = mustShowExpandButton || mustShowCollapseButton
-                }
-        )
-
-        if (showMoreButton) {
-            TextButton(
-                    onClick = {
-                        isExpanded = !isExpanded
-                    },
-                    modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.rotate(rotation)
+            if (subtitle.isNotEmpty()) {
+                Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Text(text = if (isExpanded) "Collapse" else "Expand")
+            }
+            PersonFavoriteButton(
+                    checked = favorite,
+                    enabled = favoriteEnabled,
+                    onCheckedChange = onFavoriteChanged
+            )
+        }
+    }
+}
+
+@Composable
+private fun PersonExternalLinks(person: PersonDomainModel) {
+    val context = LocalContext.current
+    val instagram = person.externalIds.instragramId?.takeIf { it.isNotBlank() }
+    val imdb = person.externalIds.imdbId?.takeIf { it.isNotBlank() }
+    val links = listOfNotNull(
+            instagram?.let { R.string.person_instagram to Constant.INSTAGRAM_BASE_URL + Uri.encode(it) },
+            imdb?.let { R.string.person_imdb to Constant.IMDB_PROFILE_URL + Uri.encode(it) },
+            person.name.takeIf { it.isNotBlank() }?.let {
+                R.string.person_google to Constant.GOOGLE_SEARCH_BASE_URL + Uri.encode(it)
+            }
+    )
+    if (links.isEmpty()) return
+
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        links.forEach { (label, url) ->
+            OutlinedButton(
+                    onClick = { context.openBrowser(url) },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    contentPadding = PaddingValues(horizontal = 6.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Text(
+                        text = stringResource(label),
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun PersonDetailContentPreview() {
-    PersonDetailContent(
-            personDomainModel = PersonDomainModel(
-                    id = 12345,
-                    profilePath = null,
-                    name = "Timothée Chalamet",
-                    birthDay = "1995-12-27".convertDate(),
-                    deathDay = "",
-                    gender = "Male",
-                    biography = "-",
-                    knownFor = "Acting",
-                    age = "28 years old",
-                    placeOfBirth = "Manhattan, New York City, New York, USA",
-                    externalIds = ExternalIdDomainModel(
-                            instragramId = "",
-                            facebookId = "",
-                            imdbId = "",
-                            twitterId = ""
-                    ),
-                    credits = listOf(
-                            CastDomainModel(
-                                    name = "Timothée Chalamet",
-                                    characterName = "Paul Atreides",
-                                    imagePath = null,
-                                    order = 0,
-                                    id = 12345,
-                                    mediaType = null,
-                                    releaseDate = "",
-                                    totalEpisodeCount = 10
-                            )
-                    )
-            ),
-            onCreditClicked = { _, _ -> },
-            onViewMoreClicked = {},
-            onPersonImageClicked = { _, _ -> }
-    )
+private fun PersonBiography(biography: String) {
+    var expanded by rememberSaveable(biography) { mutableStateOf(false) }
+    var overflowing by remember(biography) { mutableStateOf(false) }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(stringResource(R.string.person_biography), style = MaterialTheme.typography.titleMedium)
+        Text(
+                text = biography.takeUnless { it.isBlank() || it == "-" }
+                        ?: stringResource(R.string.person_biography_unavailable),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = if (expanded) Int.MAX_VALUE else 6,
+                overflow = TextOverflow.Ellipsis,
+                onTextLayout = { if (!expanded) overflowing = it.hasVisualOverflow },
+                modifier = Modifier.fillMaxWidth().animateContentSize()
+        )
+        if (overflowing || expanded) {
+            TextButton(onClick = { expanded = !expanded }) {
+                Text(stringResource(if (expanded) R.string.person_collapse else R.string.person_expand))
+            }
+        }
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun PersonPersonInfoPreview() {
-    PersonPersonalInfo(
-            birthDay = "1995-12-27".convertDate(),
-            deathDay = "",
-            placeOfBirth = "Manhattan, New York City, New York, USA",
-            knownFor = "Acting",
-            gender = "Male",
-            age = "28 years old"
-    )
+private fun PersonPersonalInfo(person: PersonDomainModel) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(stringResource(R.string.person_personal_info), style = MaterialTheme.typography.titleMedium)
+
+        Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surface,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        ) {
+            Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    PersonInfoField(R.string.person_known_for, person.knownFor, Modifier.weight(1f))
+                    PersonInfoField(R.string.person_birth_date, person.birthDay, Modifier.weight(1f))
+                }
+                PersonInfoField(R.string.person_birth_place, person.placeOfBirth)
+                if (person.deathDay.isNotBlank()) {
+                    PersonInfoField(R.string.person_death_date, person.deathDay)
+                }
+                PersonInfoField(R.string.person_also_known_as, person.alsoKnownAs.joinToString("\n"))
+            }
+        }
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun PersonBiographyPreview() {
-    PersonBiography(biography = "Timothée Hal Chalamet (born December 27, 1995) is an American actor.\\n\\nHe began his career appearing in the drama series Homeland in 2012. Two years later, he made his film debut in the comedy-drama Men, Women & Children and appeared in Christopher Nolan's science fiction film Interstellar. He came into attention in Luca Guadagnino's coming-of-age film Call Me by Your Name (2017). Alongside supporting roles in Greta Gerwig's films Lady Bird (2017) and Little Women (2019), he took on starring roles in Beautiful Boy (2018) and Dune (2021)")
+private fun PersonInfoField(label: Int, value: String, modifier: Modifier = Modifier) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+                text = stringResource(label),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+                text = value.takeUnless { it.isBlank() || it == "-" } ?: "—",
+                style = MaterialTheme.typography.bodySmall
+        )
+    }
 }

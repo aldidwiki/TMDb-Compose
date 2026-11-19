@@ -12,5 +12,6 @@ data class PersonDomainModel(
         val age: String,
         val placeOfBirth: String,
         val externalIds: ExternalIdDomainModel,
-        var credits: List<CastDomainModel>
+        val credits: List<CastDomainModel>,
+        val alsoKnownAs: List<String> = emptyList()
 )

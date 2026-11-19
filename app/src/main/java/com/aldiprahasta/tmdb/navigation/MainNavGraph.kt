@@ -30,6 +30,7 @@ import com.aldiprahasta.tmdb.ui.genre.GenreMovieScreen
 import com.aldiprahasta.tmdb.ui.image.ImageGalleryScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
+import com.aldiprahasta.tmdb.ui.person.credits.PersonCreditsScreen
 import com.aldiprahasta.tmdb.ui.search.SearchScreen
 import com.aldiprahasta.tmdb.ui.tv.TvScreen
 import com.aldiprahasta.tmdb.ui.tv.tvseason.TvSeasonDetailScreen
@@ -59,6 +60,13 @@ private fun NavHostController.navigateToPersonDetail(personId: Int) {
     navigate("${PersonDetail.route}/$personId")
 }
 
+private fun NavHostController.navigateToPersonCredit(contentId: Int, mediaType: String?) {
+    when (mediaType) {
+        Constant.MOVIE_MEDIA_TYPE -> navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
+        Constant.TV_MEDIA_TYPE -> navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
+    }
+}
+
 private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType: String) {
     navigate("${CreditDetail.route}/$contentId/$contentType")
 }
@@ -73,7 +81,7 @@ private fun NavHostController.navigateToTvSeasonDetailScreen(tvId: Int, tvSeason
 }
 
 private fun NavHostController.navigateToImageGalleryScreen(contentId: Int, contentName: String) {
-    navigate("${ImageGallery.route}/$contentId/$contentName")
+    navigate("${ImageGallery.route}/$contentId?name=${Uri.encode(contentName)}")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) = navigate(route) {
@@ -226,11 +234,9 @@ fun TMDbNavHostController(
                 popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
-                val contentId = getInt(ImageGallery.CONTENT_ID_ARG, 0)
                 val contentName = getString(ImageGallery.CONTENT_NAME_ARG, "")
 
                 ImageGalleryScreen(
-                        contentId = contentId,
                         contentName = contentName,
                         onBackPressed = {
                             navController.navigateUp()
@@ -285,21 +291,30 @@ fun TMDbNavHostController(
                         onBackPressed = {
                             navController.navigateUp()
                         },
-                        onCreditClicked = { contentId, mediaType ->
-                            if (mediaType == Constant.MOVIE_MEDIA_TYPE) {
-                                navController.navigateToContentDetail(contentId, MediaType.MOVIE_TYPE.name)
-                            } else if (mediaType == Constant.TV_MEDIA_TYPE) {
-                                navController.navigateToContentDetail(contentId, MediaType.TV_TYPE.name)
-                            }
-                        },
-                        onViewMoreClicked = {
-                            navController.navigateToCreditDetail(personId, MediaType.PERSON_TYPE.name)
+                        onCreditClicked = navController::navigateToPersonCredit,
+                        onViewMoreClicked = { name ->
+                            navController.navigate("${PersonCredits.route}/$personId?name=${Uri.encode(name)}")
                         },
                         onPersonImageClicked = { personId, personName ->
                             navController.navigateToImageGalleryScreen(personId, personName)
                         }
                 )
             }
+        }
+
+        composable(
+                route = PersonCredits.routeWithArgs,
+                arguments = PersonCredits.arguments,
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
+        ) { navBackStackEntry ->
+            PersonCreditsScreen(
+                    personName = navBackStackEntry.arguments?.getString(PersonCredits.PERSON_NAME_ARG).orEmpty(),
+                    onBackPressed = { navController.navigateUp() },
+                    onCreditClicked = navController::navigateToPersonCredit
+            )
         }
 
         composable(

@@ -8,6 +8,7 @@ import com.aldiprahasta.tmdb.ui.genre.GenreMovieViewModel
 import com.aldiprahasta.tmdb.ui.image.ImageViewModel
 import com.aldiprahasta.tmdb.ui.movie.MovieViewModel
 import com.aldiprahasta.tmdb.ui.person.PersonViewModel
+import com.aldiprahasta.tmdb.ui.person.credits.PersonCreditsViewModel
 import com.aldiprahasta.tmdb.ui.search.SearchViewModel
 import com.aldiprahasta.tmdb.ui.tv.TvViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -19,6 +20,7 @@ val viewModelModule = module {
     viewModelOf(::MovieViewModel)
     viewModelOf(::ContentDetailViewModel)
     viewModelOf(::PersonViewModel)
+    viewModelOf(::PersonCreditsViewModel)
     viewModelOf(::CreditViewModel)
     viewModelOf(::TvViewModel)
     viewModelOf(::SearchViewModel)

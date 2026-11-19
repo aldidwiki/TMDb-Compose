@@ -45,5 +45,8 @@ data class PersonResponse(
         val externalIds: ExternalIdResponse,
 
         @SerialName("combined_credits")
-        val combinedCredits: CreditResponse?
+        val combinedCredits: CreditResponse?,
+
+        @SerialName("also_known_as")
+        val alsoKnownAs: List<String>? = null
 )

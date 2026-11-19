@@ -64,13 +64,14 @@ object ImageGallery : TMDbDestinations {
     override val route: String = "image_preview"
     const val CONTENT_ID_ARG = "content_id"
     const val CONTENT_NAME_ARG = "content_name"
-    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_NAME_ARG}"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}?name={$CONTENT_NAME_ARG}"
     val arguments = listOf(
             navArgument(CONTENT_ID_ARG) {
                 type = NavType.IntType
             },
             navArgument(CONTENT_NAME_ARG) {
                 type = NavType.StringType
+                defaultValue = ""
             }
     )
 }
@@ -131,6 +132,20 @@ object PersonDetail : TMDbDestinations {
     val arguments = listOf(navArgument(PERSON_ID_ARG) {
         type = NavType.IntType
     })
+}
+
+object PersonCredits : TMDbDestinations {
+    override val route: String = "person_credits"
+    const val PERSON_ID_ARG = "person_id"
+    const val PERSON_NAME_ARG = "person_name"
+    val routeWithArgs = "$route/{$PERSON_ID_ARG}?name={$PERSON_NAME_ARG}"
+    val arguments = listOf(
+            navArgument(PERSON_ID_ARG) { type = NavType.IntType },
+            navArgument(PERSON_NAME_ARG) {
+                type = NavType.StringType
+                defaultValue = ""
+            }
+    )
 }
 
 object CreditDetail : TMDbDestinations {

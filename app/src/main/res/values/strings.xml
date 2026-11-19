@@ -1,6 +1,51 @@
 <resources>
     <string name="app_name">TMDb</string>
 
+    <string name="person_details_title">Person Details</string>
+    <string name="person_details_error">Couldn’t load person details.</string>
+    <string name="person_actor">Actor</string>
+    <string name="person_favorite">Favorite</string>
+    <string name="person_favorited">Favorited</string>
+    <string name="person_instagram">Instagram ↗</string>
+    <string name="person_imdb">IMDb ↗</string>
+    <string name="person_google">Google ↗</string>
+    <string name="person_biography">Biography</string>
+    <string name="person_biography_unavailable">Biography unavailable.</string>
+    <string name="person_expand">Expand</string>
+    <string name="person_collapse">Collapse</string>
+    <string name="person_personal_info">Personal info</string>
+    <string name="person_known_for">Known for</string>
+    <string name="person_birth_date">Date of birth</string>
+    <string name="person_death_date">Date of death</string>
+    <string name="person_birth_place">Place of birth</string>
+    <string name="person_also_known_as">Also known as</string>
+    <string name="person_see_all_credits">See All →</string>
+    <string name="person_known_for_subtitle">Top %1$d · Movies &amp; TV shows</string>
+    <string name="person_age_in_credit">%1$s was %2$s years old in this project</string>
+    <string name="person_all_credits">All credits</string>
+    <string name="person_credits_subtitle">Movies and TV shows</string>
+    <string name="person_credits_error">Couldn’t load credits.</string>
+    <string name="person_no_credits">No cast credits available.</string>
+    <string name="person_credit_with_year">%1$s (%2$s)</string>
+    <string name="person_credit_role">as %1$s</string>
+    <string name="person_open_photos">Open person photos</string>
+    <string name="person_photos_title">Photos</string>
+    <string name="person_photos_error">Couldn’t load photos.</string>
+    <string name="person_no_photos">No photos available.</string>
+    <string name="person_photo_open">Open photo %1$d</string>
+    <string name="person_photo_viewer_title">Photo viewer</string>
+    <string name="person_photo_viewer_image">Zoomable photo</string>
+    <string name="person_photo_zoom">Zoom %1$d%%</string>
+
+    <plurals name="person_photo_count">
+        <item quantity="one">%1$d photo</item>
+        <item quantity="other">%1$d photos</item>
+    </plurals>
+    <plurals name="person_credit_episodes">
+        <item quantity="one">%1$d episode</item>
+        <item quantity="other">%1$d episodes</item>
+    </plurals>
+
     <string name="dashboard_trending">Trending Now</string>
     <string name="dashboard_tab_home">Home</string>
     <string name="dashboard_tab_explore">Explore</string>

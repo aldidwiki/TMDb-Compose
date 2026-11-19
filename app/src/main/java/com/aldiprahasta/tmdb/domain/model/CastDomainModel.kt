@@ -9,5 +9,7 @@ data class CastDomainModel(
         val mediaType: String?,
         val releaseDate: String?,
         val totalEpisodeCount: Int?,
-        val genreIds: List<Int>? = null
+        val genreIds: List<Int>? = null,
+        val popularity: Double? = null,
+        val voteAverage: Double? = null
 )

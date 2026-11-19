@@ -90,7 +90,8 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             placeOfBirth = placeOfBirth ?: "-",
             externalIds = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
             credits = combinedCredits?.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
-                    ?: emptyList()
+                    ?: emptyList(),
+            alsoKnownAs = alsoKnownAs.orEmpty().filter { it.isNotBlank() }.distinct()
     )
 }
 
@@ -118,7 +119,9 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
                     releaseDate = castResponseModel.releaseDate?.convertDate()
                             ?: castResponseModel.firstAirDate?.convertDate() ?: "",
                     totalEpisodeCount = castResponseModel.episodeCount,
-                    genreIds = castResponseModel.genreIds
+                    genreIds = castResponseModel.genreIds,
+                    popularity = castResponseModel.popularity,
+                    voteAverage = castResponseModel.voteAverage?.takeUnless { castResponseModel.voteCount == 0 }
             )
 
             MediaType.TV_TYPE -> CastDomainModel(
@@ -280,7 +283,7 @@ fun ImageResponse.mapImageResponseToDomainList(imageType: ImageType): List<Image
         } ?: emptyList()
 
         ImageType.PROFILE -> profiles?.map { responseModel ->
-            ImageDomainModel(id, responseModel.filePath)
+            ImageDomainModel(id, responseModel.filePath, responseModel.aspectRatio?.toFloat())
         } ?: emptyList()
 
         else -> emptyList()
