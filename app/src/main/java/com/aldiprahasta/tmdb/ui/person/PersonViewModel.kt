@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.delayAfterLoading
 import com.aldiprahasta.tmdb.utils.doIfError
 import com.aldiprahasta.tmdb.utils.doIfLoading
@@ -68,7 +69,7 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
                     }
                 }.launchIn(viewModelScope)
 
-        personDetailWrapper.getFavoriteStatus(personId)
+        personDetailWrapper.getFavoriteStatus(personId, MediaType.PERSON_TYPE.name)
                 .onEach { isFavorite ->
                     _uiState.update { it.copy(isFavorite = isFavorite) }
                 }.launchIn(viewModelScope)
@@ -80,7 +81,7 @@ class PersonViewModel(private val personDetailWrapper: PersonDetailWrapper) : Vi
         viewModelScope.launch {
             personDomainModel?.let { personModel ->
                 if (isFavorite) {
-                    personDetailWrapper.deleteFavorite(personModel.id)
+                    personDetailWrapper.deleteFavorite(personModel.id, MediaType.PERSON_TYPE.name)
                 } else {
                     personDetailWrapper.insertFavorite(personModel.mapDomainModelToEntity())
                 }

@@ -185,13 +185,16 @@ fun TMDbNavHostController(
                 enterTransition = dashboardItemEnterTransition,
                 exitTransition = dashboardItemExitTransition
         ) {
-            FavoriteScreen(onItemClicked = { contentId, mediaType ->
-                if (mediaType == MediaType.PERSON_TYPE.name) {
-                    navController.navigateToPersonDetail(contentId)
-                } else {
-                    navController.navigateToContentDetail(contentId, mediaType)
-                }
-            })
+            FavoriteScreen(
+                    onBackPressed = { navController.navigateUp() },
+                    onItemClicked = { contentId, mediaType ->
+                        if (mediaType == MediaType.PERSON_TYPE.name) {
+                            navController.navigateToPersonDetail(contentId)
+                        } else {
+                            navController.navigateToContentDetail(contentId, mediaType)
+                        }
+                    }
+            )
         }
 
         composable(

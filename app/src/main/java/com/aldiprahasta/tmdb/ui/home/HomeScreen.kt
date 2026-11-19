@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.BuildConfig
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.navigation.Dashboard
+import com.aldiprahasta.tmdb.navigation.Favorite
 import com.aldiprahasta.tmdb.navigation.Search
 import com.aldiprahasta.tmdb.navigation.TMDbNavHostController
 import com.aldiprahasta.tmdb.navigation.currentDestination
@@ -45,10 +46,15 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val currentRoute = navController.currentDestination()?.route
     val isDashboard = currentRoute == Dashboard.route
     val isSearch = currentRoute == Search.route
-    val showTopBar = !isDashboard && !isSearch && navigationItem.any { it.route == currentRoute }
-    val showBottomBar = isDashboard || (isSearch && WindowInsets.ime.getBottom(LocalDensity.current) == 0)
+    val isFavorites = currentRoute == Favorite.route
+    val showTopBar = !isDashboard && !isSearch && !isFavorites && navigationItem.any { it.route == currentRoute }
+    val showBottomBar = isDashboard || isFavorites || (isSearch && WindowInsets.ime.getBottom(LocalDensity.current) == 0)
     var previewTab by rememberSaveable { mutableStateOf<DashboardTab?>(null) }
-    val activeTab = if (isSearch) DashboardTab.SEARCH else DashboardTab.HOME
+    val activeTab = when {
+        isSearch -> DashboardTab.SEARCH
+        isFavorites -> DashboardTab.FAVORITES
+        else -> DashboardTab.HOME
+    }
 
     LaunchedEffect(currentRoute) {
         previewTab = null
@@ -75,15 +81,19 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             selectedTab = previewTab ?: activeTab,
                             onTabSelected = { tab ->
                                 when (tab) {
-                                    DashboardTab.HOME, DashboardTab.SEARCH -> {
+                                    DashboardTab.HOME, DashboardTab.SEARCH, DashboardTab.FAVORITES -> {
                                         previewTab = null
                                         if (tab != activeTab) {
-                                            val route = if (tab == DashboardTab.SEARCH) Search.route else Dashboard.route
+                                            val route = when (tab) {
+                                                DashboardTab.SEARCH -> Search.route
+                                                DashboardTab.FAVORITES -> Favorite.route
+                                                else -> Dashboard.route
+                                            }
                                             navController.navigateSingleTopTo(route)
                                         }
                                     }
 
-                                    DashboardTab.EXPLORE, DashboardTab.FAVORITES -> previewTab = tab
+                                    DashboardTab.EXPLORE -> previewTab = tab
                                 }
                             }
                     )

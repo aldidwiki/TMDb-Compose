@@ -1,6 +1,5 @@
-package com.aldiprahasta.tmdb.ui.genre
+package com.aldiprahasta.tmdb.ui.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,22 +31,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.aldiprahasta.tmdb.R
-import com.aldiprahasta.tmdb.domain.model.MovieSortOrder
-import com.aldiprahasta.tmdb.ui.components.DiscoverBottomSheet
-
-@get:StringRes
-internal val MovieSortOrder.label: Int
-    get() = when (this) {
-        MovieSortOrder.POPULARITY -> R.string.genre_sort_popularity
-        MovieSortOrder.NEWEST -> R.string.genre_sort_newest
-        MovieSortOrder.HIGHEST_RATED -> R.string.genre_sort_highest_rated
-        MovieSortOrder.TITLE -> R.string.genre_sort_title
-        MovieSortOrder.MOST_VOTED -> R.string.genre_sort_most_voted
-    }
 
 @Composable
-internal fun <T> GenreFilterSheet(
+internal fun <T> DiscoverOptionsSheet(
         title: String,
         description: String,
         applyLabel: String,
@@ -69,7 +55,7 @@ internal fun <T> GenreFilterSheet(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             options.forEach { option ->
-                GenreFilterOption(
+                DiscoverOption(
                         label = optionLabel(option),
                         selected = selectedOption == option,
                         onClick = { selectedOption = option }
@@ -87,7 +73,7 @@ internal fun <T> GenreFilterSheet(
 }
 
 @Composable
-private fun GenreFilterOption(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun DiscoverOption(label: String, selected: Boolean, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(12.dp)
 

@@ -71,7 +71,10 @@ data class MovieDetailResponse(
         val externalIds: ExternalIdResponse,
 
         @SerialName("videos")
-        val video: VideoResponse?
+        val video: VideoResponse?,
+
+        @SerialName("vote_count")
+        val voteCount: Int? = null
 )
 
 @Serializable

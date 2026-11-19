@@ -1,13 +1,18 @@
 package com.aldiprahasta.tmdb.data.source.local.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "favorite_table")
+@Entity(tableName = "favorite_table", primaryKeys = ["id", "mediaType"])
 data class FavoriteEntity(
-        @PrimaryKey val id: Int,
+        val id: Int,
         val name: String,
         val releaseDate: String,
         val imagePath: String?,
-        val mediaType: String
+        val mediaType: String,
+        val addedAt: Long,
+        val voteAverage: Double? = null,
+        val voteCount: Int? = null,
+        val genres: String? = null,
+        val seasonCount: Int? = null,
+        val knownFor: String? = null
 )

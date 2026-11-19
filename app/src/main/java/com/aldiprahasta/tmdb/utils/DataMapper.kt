@@ -71,7 +71,8 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
             videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
             networks = null,
-            type = null
+            type = null,
+            voteCount = voteCount
     )
 }
 
@@ -168,7 +169,9 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 videos = videos?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
                 networks = networks?.mapNetworkItemsToNetworkDomainModel(),
                 type = type,
-                seasons = seasons?.mapTvSeasonItemResponseToDomainModelList()
+                seasons = seasons?.mapTvSeasonItemResponseToDomainModelList(),
+                voteCount = voteCount?.toInt(),
+                seasonCount = numberOfSeasons
         )
 
 fun TvSeasonResponse.mapTvSeasonResponseToDomainModel(): TvSeasonDetailDomainModel {
@@ -216,7 +219,27 @@ fun FavoriteEntity.mapEntityToDomainModel(): FavoriteDomainModel = FavoriteDomai
         title = name,
         releaseDate = releaseDate,
         imagePoster = imagePath,
-        mediaType = mediaType
+        mediaType = mediaType,
+        addedAt = addedAt,
+        voteAverage = voteAverage,
+        voteCount = voteCount,
+        genres = genres,
+        seasonCount = seasonCount,
+        knownFor = knownFor
+)
+
+fun FavoriteDomainModel.mapDomainModelToEntity(): FavoriteEntity = FavoriteEntity(
+        id = favoriteId,
+        name = title,
+        releaseDate = releaseDate,
+        imagePath = imagePoster,
+        mediaType = mediaType,
+        addedAt = addedAt,
+        voteAverage = voteAverage,
+        voteCount = voteCount,
+        genres = genres,
+        seasonCount = seasonCount,
+        knownFor = knownFor
 )
 
 fun ContentDetailDomainModel.mapDomainModelToEntity(mediaType: String): FavoriteEntity {
@@ -225,7 +248,12 @@ fun ContentDetailDomainModel.mapDomainModelToEntity(mediaType: String): Favorite
             name = title,
             releaseDate = releaseDate,
             imagePath = posterPath,
-            mediaType = mediaType
+            mediaType = mediaType,
+            addedAt = System.currentTimeMillis(),
+            voteAverage = voteAverage.takeUnless { voteCount == 0 },
+            voteCount = voteCount,
+            genres = genres,
+            seasonCount = seasonCount
     )
 }
 
@@ -235,7 +263,9 @@ fun PersonDomainModel.mapDomainModelToEntity(): FavoriteEntity {
             name = name,
             releaseDate = "",
             imagePath = profilePath,
-            mediaType = MediaType.PERSON_TYPE.name
+            mediaType = MediaType.PERSON_TYPE.name,
+            addedAt = System.currentTimeMillis(),
+            knownFor = knownFor.takeUnless { it.isBlank() || it == "-" }
     )
 }
 

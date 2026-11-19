@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.ui.genre
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +32,19 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.MovieSortOrder
+import com.aldiprahasta.tmdb.ui.components.DiscoverOptionsSheet
 import com.aldiprahasta.tmdb.utils.formatMovieRating
 import java.util.Calendar
+
+@get:StringRes
+private val MovieSortOrder.label: Int
+    get() = when (this) {
+        MovieSortOrder.POPULARITY -> R.string.genre_sort_popularity
+        MovieSortOrder.NEWEST -> R.string.genre_sort_newest
+        MovieSortOrder.HIGHEST_RATED -> R.string.genre_sort_highest_rated
+        MovieSortOrder.TITLE -> R.string.genre_sort_title
+        MovieSortOrder.MOST_VOTED -> R.string.genre_sort_most_voted
+    }
 
 private enum class MovieFilter {
     SORT,
@@ -81,7 +93,7 @@ internal fun GenreMovieFilterBar(
     }
 
     when (activeFilter) {
-        MovieFilter.SORT -> GenreFilterSheet(
+        MovieFilter.SORT -> DiscoverOptionsSheet(
                 title = stringResource(R.string.genre_sort_by),
                 description = stringResource(R.string.genre_sort_description, genreName),
                 applyLabel = stringResource(R.string.genre_apply_sort),
@@ -102,7 +114,7 @@ internal fun GenreMovieFilterBar(
                 years.distinct().sortedDescending() + listOf<Int?>(null)
             }
 
-            GenreFilterSheet(
+            DiscoverOptionsSheet(
                     title = stringResource(R.string.genre_release_year),
                     description = stringResource(R.string.genre_release_year_description),
                     applyLabel = stringResource(R.string.genre_apply_year),
@@ -117,7 +129,7 @@ internal fun GenreMovieFilterBar(
             )
         }
 
-        MovieFilter.MINIMUM_RATING -> GenreFilterSheet(
+        MovieFilter.MINIMUM_RATING -> DiscoverOptionsSheet(
                 title = stringResource(R.string.genre_minimum_rating),
                 description = stringResource(R.string.genre_minimum_rating_description),
                 applyLabel = stringResource(R.string.genre_apply_rating),

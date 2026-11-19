@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 interface FavoriteRepository {
     fun getAllFavorites(): Flow<List<FavoriteEntity>>
 
-    fun isContentFavorite(id: Int): Flow<Boolean>
+    fun isContentFavorite(id: Int, mediaType: String): Flow<Boolean>
 
     suspend fun insertFavorite(favoriteEntity: FavoriteEntity)
 
-    suspend fun deleteFavorite(favoriteId: Int)
+    suspend fun deleteFavorite(favoriteId: Int, mediaType: String): Boolean
 }

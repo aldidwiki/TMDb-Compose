@@ -77,7 +77,7 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
                     }
                 }.launchIn(viewModelScope)
 
-        detailWrapper.getFavoriteStatus(contentId)
+        detailWrapper.getFavoriteStatus(contentId, contentType)
                 .onEach { isFavorite ->
                     _uiState.update { it.copy(isFavorite = isFavorite) }
                 }.launchIn(viewModelScope)
@@ -89,7 +89,7 @@ class ContentDetailViewModel(private val detailWrapper: DetailWrapper) : ViewMod
         viewModelScope.launch {
             contentDetailDomainModel?.let { detailModel ->
                 if (isFavorite) {
-                    detailWrapper.deleteFavorite(detailModel.id)
+                    detailWrapper.deleteFavorite(detailModel.id, mediaType)
                 } else {
                     detailWrapper.insertFavorite(detailModel.mapDomainModelToEntity(mediaType))
                 }

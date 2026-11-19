@@ -12,15 +12,15 @@ class FavoriteRepositoryImpl(
         return favoriteDao.getAllFavorites()
     }
 
-    override fun isContentFavorite(id: Int): Flow<Boolean> {
-        return favoriteDao.isContentFavorite(id)
+    override fun isContentFavorite(id: Int, mediaType: String): Flow<Boolean> {
+        return favoriteDao.isContentFavorite(id, mediaType)
     }
 
     override suspend fun insertFavorite(favoriteEntity: FavoriteEntity) {
         favoriteDao.insertFavorite(favoriteEntity)
     }
 
-    override suspend fun deleteFavorite(favoriteId: Int) {
-        favoriteDao.deleteFavorite(favoriteId)
+    override suspend fun deleteFavorite(favoriteId: Int, mediaType: String): Boolean {
+        return favoriteDao.deleteFavorite(favoriteId, mediaType) != 0
     }
 }

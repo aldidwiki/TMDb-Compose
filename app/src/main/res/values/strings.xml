@@ -25,6 +25,29 @@
         <item quantity="other">%1$s matches</item>
     </plurals>
     <string name="dashboard_tab_favorites">Favorites</string>
+    <string name="favorite_empty">No favorites yet.</string>
+    <string name="favorite_load_error">Couldn’t load favorites.</string>
+    <string name="favorite_write_error">Couldn’t update favorites.</string>
+    <string name="favorite_removed">Removed from favorites</string>
+    <string name="favorite_undo">Undo</string>
+    <string name="favorite_remove_action">Remove %1$s from favorites</string>
+    <string name="favorite_sort">Sort favorites</string>
+    <string name="favorite_sort_description">Choose how your favorite titles are ordered.</string>
+    <string name="favorite_sort_recently_added">Recently added</string>
+    <string name="favorite_sort_oldest_added">Oldest added</string>
+    <string name="favorite_added_today">Added today</string>
+    <string name="favorite_added_yesterday">Added yesterday</string>
+    <string name="favorite_added_date">Added %1$s</string>
+    <string name="favorite_tv_series">Favorite TV series</string>
+
+    <plurals name="favorite_count">
+        <item quantity="one">%1$d favorite</item>
+        <item quantity="other">%1$d favorites</item>
+    </plurals>
+    <plurals name="favorite_seasons">
+        <item quantity="one">%1$d Season</item>
+        <item quantity="other">%1$d Seasons</item>
+    </plurals>
     <string name="dashboard_now_playing">Now Playing</string>
     <string name="dashboard_browse_genres">Browse by Genre</string>
     <string name="dashboard_watch_trailer">Watch Trailer</string>

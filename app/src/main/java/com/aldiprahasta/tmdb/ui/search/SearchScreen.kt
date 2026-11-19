@@ -25,7 +25,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -75,8 +74,7 @@ fun SearchScreen(
                 uiState = uiState,
                 onEvent = viewModel::onEvent,
                 onItemClicked = onItemClicked,
-                onBackPressed = onBackPressed,
-                modifier = modifier
+            modifier = modifier
         )
     }
 }
@@ -87,7 +85,6 @@ private fun SearchContent(
         uiState: SearchState,
         onEvent: (SearchEvent) -> Unit,
         onItemClicked: (Int, String) -> Unit,
-        onBackPressed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -109,17 +106,6 @@ private fun SearchContent(
                                         text = stringResource(R.string.search_subtitle),
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                focusManager.clearFocus()
-                                onBackPressed()
-                            }) {
-                                Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = stringResource(R.string.discover_back)
                                 )
                             }
                         },

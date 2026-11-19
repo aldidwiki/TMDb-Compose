@@ -8,7 +8,7 @@ import com.aldiprahasta.tmdb.data.source.local.entity.FavoriteEntity
         entities = [
             FavoriteEntity::class
         ],
-        version = 2,
+        version = 3,
         exportSchema = false
 )
 abstract class LocalDatabase : RoomDatabase() {
