@@ -1,5 +1,6 @@
 package com.aldiprahasta.tmdb.di
 
+import com.aldiprahasta.tmdb.domain.usecase.GetExploreContent
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieGenreList
@@ -32,6 +33,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 private val interactionModule = module {
+    factoryOf(::GetExploreContent)
     factoryOf(::GetPopularMovieList)
     factoryOf(::GetTrendingMovies)
     factoryOf(::GetNowPlayingMovies)

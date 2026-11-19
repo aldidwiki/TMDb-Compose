@@ -4,6 +4,7 @@ import com.aldiprahasta.tmdb.ui.credit.CreditViewModel
 import com.aldiprahasta.tmdb.ui.dashboard.DashboardViewModel
 import com.aldiprahasta.tmdb.ui.details.ContentDetailViewModel
 import com.aldiprahasta.tmdb.ui.details.similar.SimilarContentViewModel
+import com.aldiprahasta.tmdb.ui.explore.ExploreViewModel
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteViewModel
 import com.aldiprahasta.tmdb.ui.genre.GenreMovieViewModel
 import com.aldiprahasta.tmdb.ui.image.ImageViewModel
@@ -16,6 +17,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
+    viewModelOf(::ExploreViewModel)
     viewModelOf(::DashboardViewModel)
     viewModelOf(::GenreMovieViewModel)
     viewModelOf(::MovieViewModel)

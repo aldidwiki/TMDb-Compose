@@ -2,6 +2,7 @@ package com.aldiprahasta.tmdb.utils
 
 import com.aldiprahasta.tmdb.data.source.local.entity.FavoriteEntity
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ExploreResultResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
@@ -19,6 +20,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
+import com.aldiprahasta.tmdb.domain.model.ExploreItem
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.FavoriteDomainModel
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
@@ -35,6 +37,27 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageType
+
+fun ExploreResultResponse.mapToExploreItem(mediaType: MediaType): ExploreItem = ExploreItem(
+        id = id,
+        mediaType = mediaType,
+        title = (title ?: name ?: originalTitle ?: originalName).orEmpty(),
+        imagePath = if (mediaType == MediaType.PERSON_TYPE) profilePath else posterPath,
+        releaseDate = (releaseDate ?: firstAirDate)?.takeUnless(String::isBlank),
+        rating = voteAverage?.takeIf { it > 0 && voteCount != 0 },
+        voteCount = voteCount ?: 0,
+        popularity = popularity ?: 0.0,
+        genreIds = genreIds,
+        overview = overview.orEmpty(),
+        department = department,
+        knownFor = knownFor.mapNotNull {
+            when (it.mediaType) {
+                Constant.MOVIE_MEDIA_TYPE -> MediaType.MOVIE_TYPE
+                Constant.TV_MEDIA_TYPE -> MediaType.TV_TYPE
+                else -> null
+            }
+        }
+)
 
 fun MovieResponseModel.mapMovieResponseToMovieDomainModel(): MovieDomainModel {
     return MovieDomainModel(

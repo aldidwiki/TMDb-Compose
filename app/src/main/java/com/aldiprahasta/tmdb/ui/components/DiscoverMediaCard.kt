@@ -37,6 +37,7 @@ internal fun DiscoverMediaCard(
         description: String,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
+        titleBadge: (@Composable () -> Unit)? = null,
         trailingContent: (@Composable () -> Unit)? = null
 ) {
     Surface(
@@ -65,13 +66,16 @@ internal fun DiscoverMediaCard(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleSmall,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(end = if (trailingContent != null) 38.dp else 0.dp)
-                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                                text = title,
+                                style = MaterialTheme.typography.titleSmall,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f).padding(end = if (trailingContent != null) 38.dp else 0.dp)
+                        )
+                        titleBadge?.invoke()
+                    }
                     if (!subtitle.isNullOrBlank()) {
                         Text(
                                 text = subtitle,

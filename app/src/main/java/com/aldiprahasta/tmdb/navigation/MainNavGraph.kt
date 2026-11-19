@@ -26,6 +26,7 @@ import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.dashboard.DashboardScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.details.similar.SimilarContentScreen
+import com.aldiprahasta.tmdb.ui.explore.ExploreScreen
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteScreen
 import com.aldiprahasta.tmdb.ui.genre.GenreMovieScreen
 import com.aldiprahasta.tmdb.ui.image.ImageGalleryScreen
@@ -42,6 +43,7 @@ import com.aldiprahasta.tmdb.utils.parcelableArrayList
 
 val navigationItem = listOf(
         Dashboard,
+        Explore,
         Movie,
         Tv,
         Favorite,
@@ -148,6 +150,17 @@ fun TMDbNavHostController(
                     },
                     onGenreClicked = navController::navigateToGenreMovieListing
             )
+        }
+
+        composable(
+                route = Explore.route,
+                enterTransition = dashboardItemEnterTransition,
+                exitTransition = dashboardItemExitTransition
+        ) {
+            ExploreScreen(onItemClicked = { id, mediaType ->
+                if (mediaType == MediaType.PERSON_TYPE) navController.navigateToPersonDetail(id)
+                else navController.navigateToContentDetail(id, mediaType.name)
+            })
         }
 
         composable(

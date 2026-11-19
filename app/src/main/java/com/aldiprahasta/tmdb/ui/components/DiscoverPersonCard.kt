@@ -31,6 +31,7 @@ internal fun DiscoverPersonCard(
         subtitle: String,
         profilePath: String?,
         onClick: () -> Unit,
+        titleBadge: (@Composable () -> Unit)? = null,
         trailingContent: @Composable () -> Unit = {
             Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -63,12 +64,16 @@ internal fun DiscoverPersonCard(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
-                        text = name,
-                        style = MaterialTheme.typography.titleSmall,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                )
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                            text = name,
+                            style = MaterialTheme.typography.titleSmall,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                    )
+                    titleBadge?.invoke()
+                }
                 Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodySmall,

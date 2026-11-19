@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.data.source.remote.network
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ExploreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.SimilarResponse
@@ -15,8 +16,28 @@ import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface RemoteService {
+    @GET("discover/{kind}")
+    suspend fun discoverExploreContent(
+            @Path("kind") kind: String,
+            @Query("page") page: Int,
+            @QueryMap filters: Map<String, String>
+    ): ExploreResponse
+
+    @GET("{kind}/{list}")
+    suspend fun getExploreList(
+            @Path("kind") kind: String,
+            @Path("list") list: String,
+            @Query("page") page: Int,
+            @Query("region") region: String? = null,
+            @Query("timezone") timezone: String? = null
+    ): ExploreResponse
+
+    @GET("trending/person/week")
+    suspend fun getExploreTrendingPeople(@Query("page") page: Int): ExploreResponse
+
     @GET("movie/popular")
     suspend fun getPopularMovies(@Query("page") page: Int): MovieResponse?
 

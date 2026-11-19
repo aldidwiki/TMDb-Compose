@@ -21,6 +21,10 @@ object Dashboard : TMDbDestinations {
     override val route: String = "dashboard"
 }
 
+object Explore : TMDbDestinations {
+    override val route: String = "explore"
+}
+
 object GenreMovieListing : TMDbDestinations {
     override val route: String = "genre_movie_listing"
     const val GENRE_ID_ARG = "genre_id"

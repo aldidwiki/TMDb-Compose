@@ -16,11 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.BuildConfig
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.navigation.Dashboard
+import com.aldiprahasta.tmdb.navigation.Explore
 import com.aldiprahasta.tmdb.navigation.Favorite
 import com.aldiprahasta.tmdb.navigation.Search
 import com.aldiprahasta.tmdb.navigation.TMDbNavHostController
@@ -45,19 +41,16 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val currentRoute = navController.currentDestination()?.route
     val isDashboard = currentRoute == Dashboard.route
+    val isExplore = currentRoute == Explore.route
     val isSearch = currentRoute == Search.route
     val isFavorites = currentRoute == Favorite.route
-    val showTopBar = !isDashboard && !isSearch && !isFavorites && navigationItem.any { it.route == currentRoute }
-    val showBottomBar = isDashboard || isFavorites || (isSearch && WindowInsets.ime.getBottom(LocalDensity.current) == 0)
-    var previewTab by rememberSaveable { mutableStateOf<DashboardTab?>(null) }
+    val showTopBar = !isDashboard && !isExplore && !isSearch && !isFavorites && navigationItem.any { it.route == currentRoute }
+    val showBottomBar = isDashboard || isExplore || isFavorites || (isSearch && WindowInsets.ime.getBottom(LocalDensity.current) == 0)
     val activeTab = when {
+        isExplore -> DashboardTab.EXPLORE
         isSearch -> DashboardTab.SEARCH
         isFavorites -> DashboardTab.FAVORITES
         else -> DashboardTab.HOME
-    }
-
-    LaunchedEffect(currentRoute) {
-        previewTab = null
     }
 
     Scaffold(
@@ -78,22 +71,16 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         exit = shrinkVertically()
                 ) {
                     DashboardBottomNavigation(
-                            selectedTab = previewTab ?: activeTab,
+                            selectedTab = activeTab,
                             onTabSelected = { tab ->
-                                when (tab) {
-                                    DashboardTab.HOME, DashboardTab.SEARCH, DashboardTab.FAVORITES -> {
-                                        previewTab = null
-                                        if (tab != activeTab) {
-                                            val route = when (tab) {
-                                                DashboardTab.SEARCH -> Search.route
-                                                DashboardTab.FAVORITES -> Favorite.route
-                                                else -> Dashboard.route
-                                            }
-                                            navController.navigateSingleTopTo(route)
-                                        }
+                                if (tab != activeTab) {
+                                    val route = when (tab) {
+                                        DashboardTab.HOME -> Dashboard.route
+                                        DashboardTab.EXPLORE -> Explore.route
+                                        DashboardTab.SEARCH -> Search.route
+                                        DashboardTab.FAVORITES -> Favorite.route
                                     }
-
-                                    DashboardTab.EXPLORE -> previewTab = tab
+                                    navController.navigateSingleTopTo(route)
                                 }
                             }
                     )
