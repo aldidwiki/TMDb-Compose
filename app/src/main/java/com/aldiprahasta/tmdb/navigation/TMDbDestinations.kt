@@ -1,21 +1,11 @@
 package com.aldiprahasta.tmdb.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Tv
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.aldiprahasta.tmdb.utils.MediaType
-import com.aldiprahasta.tmdb.utils.TvSeasonType
 
 interface TMDbDestinations {
     val route: String
-    val icon: ImageVector get() = Icons.Filled.Home
-    val label: String get() = "Home"
 }
 
 object Dashboard : TMDbDestinations {
@@ -43,26 +33,18 @@ object GenreMovieListing : TMDbDestinations {
 
 object Movie : TMDbDestinations {
     override val route: String = "movie"
-    override val icon = Icons.Default.Movie
-    override val label = "Movie"
 }
 
 object Tv : TMDbDestinations {
     override val route: String = "tv_show"
-    override val icon = Icons.Default.Tv
-    override val label = "Tv Show"
 }
 
 object Search : TMDbDestinations {
     override val route: String = "search"
-    override val icon: ImageVector = Icons.Default.Search
-    override val label: String = "Search"
 }
 
 object Favorite : TMDbDestinations {
     override val route: String = "favorite"
-    override val icon: ImageVector = Icons.Default.Favorite
-    override val label: String = "Favorite"
 }
 
 object ImageGallery : TMDbDestinations {
@@ -97,25 +79,6 @@ object ContentDetail : TMDbDestinations {
             },
             navArgument(CONTENT_TYPE_ARG) {
                 type = NavType.StringType
-            }
-    )
-}
-
-object TvSeason : TMDbDestinations {
-    override val route: String = "tv_season"
-    const val TV_ID_ARG = "tv_id_arg"
-    const val TV_TITLE_ARG = "tv_title_arg"
-    const val TV_SEASON_ARG = "tv_season_list"
-    val routeWithArgs = "$route/{$TV_ID_ARG}/{$TV_TITLE_ARG}/{$TV_SEASON_ARG}"
-    val arguments = listOf(
-            navArgument(TV_ID_ARG) {
-                type = NavType.IntType
-            },
-            navArgument(TV_TITLE_ARG) {
-                type = NavType.StringType
-            },
-            navArgument(TV_SEASON_ARG) {
-                type = TvSeasonType()
             }
     )
 }

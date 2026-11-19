@@ -29,12 +29,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.formatMovieRating
 import com.aldiprahasta.tmdb.utils.getCharacterAge
@@ -165,3 +167,16 @@ private fun KnownForCard(
 
 internal val CastDomainModel.isScreenCredit: Boolean
     get() = mediaType == Constant.MOVIE_MEDIA_TYPE || mediaType == Constant.TV_MEDIA_TYPE
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun PersonKnownForPreview() {
+    DiscoverPreview {
+        PersonKnownFor(
+                person = personPreviewSample,
+                onCreditClicked = { _, _ -> },
+                onViewMoreClicked = {}
+        )
+    }
+}

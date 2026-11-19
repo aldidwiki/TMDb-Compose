@@ -22,9 +22,9 @@ import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
 import com.aldiprahasta.tmdb.ui.components.DiscoverMediaCard
 import com.aldiprahasta.tmdb.ui.components.DiscoverPersonCard
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.setupPagingLoadState
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.UiState
-import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 
 @Composable
 internal fun SearchResultList(

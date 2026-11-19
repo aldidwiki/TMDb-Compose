@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.ui.explore
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -34,15 +35,33 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ExploreYears
 import com.aldiprahasta.tmdb.ui.components.DiscoverBottomSheet
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import java.util.Calendar
 
 @Composable
 internal fun ExploreYearPicker(years: ExploreYears?, onDismiss: () -> Unit, onApply: (ExploreYears?) -> Unit) {
     val currentYear = remember { Calendar.getInstance().get(Calendar.YEAR) }
+    DiscoverBottomSheet(
+            title = stringResource(R.string.genre_release_year),
+            description = stringResource(R.string.explore_year_description),
+            onDismiss = onDismiss
+    ) {
+        ExploreYearPickerContent(years, currentYear, onDismiss, onApply)
+    }
+}
+
+@Composable
+private fun ColumnScope.ExploreYearPickerContent(
+        years: ExploreYears?,
+        currentYear: Int,
+        onDismiss: () -> Unit,
+        onApply: (ExploreYears?) -> Unit
+) {
     var rangeMode by rememberSaveable(years) { mutableStateOf(years != null && years.from != years.to) }
     var anyYear by rememberSaveable(years) { mutableStateOf(years == null) }
     var single by rememberSaveable(years) { mutableStateOf(years?.from?.asYearText().orEmpty()) }
@@ -55,101 +74,95 @@ internal fun ExploreYearPicker(years: ExploreYears?, onDismiss: () -> Unit, onAp
     val invertedRange = fromYear != null && toYear != null && fromYear > toYear
     val valid = if (rangeMode) fromYear != null && toYear != null && !invertedRange else anyYear || singleYear != null
 
-    DiscoverBottomSheet(
-            title = stringResource(R.string.genre_release_year),
-            description = stringResource(R.string.explore_year_description),
-            onDismiss = onDismiss
-    ) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ExploreChip(
-                    stringResource(R.string.explore_year_single),
-                    selected = !rangeMode,
-                    onClick = { rangeMode = false },
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        ExploreChip(
+                stringResource(R.string.explore_year_single),
+                selected = !rangeMode,
+                onClick = { rangeMode = false },
+                modifier = Modifier.weight(1f),
+                clickRole = Role.Tab
+        )
+        ExploreChip(
+                stringResource(R.string.explore_year_range),
+                selected = rangeMode,
+                onClick = { rangeMode = true },
+                modifier = Modifier.weight(1f),
+                clickRole = Role.Tab
+        )
+    }
+    if (rangeMode) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            YearField(
+                    value = from,
+                    label = stringResource(R.string.explore_year_from),
+                    onValueChange = { from = it },
                     modifier = Modifier.weight(1f),
-                    clickRole = Role.Tab
+                    isError = (from.isNotEmpty() && fromYear == null) || invertedRange
             )
-            ExploreChip(
-                    stringResource(R.string.explore_year_range),
-                    selected = rangeMode,
-                    onClick = { rangeMode = true },
+            YearField(
+                    value = to,
+                    label = stringResource(R.string.explore_year_to),
+                    onValueChange = { to = it },
                     modifier = Modifier.weight(1f),
-                    clickRole = Role.Tab
+                    isError = (to.isNotEmpty() && toYear == null) || invertedRange
             )
         }
-        if (rangeMode) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                YearField(
-                        value = from,
-                        label = stringResource(R.string.explore_year_from),
-                        onValueChange = { from = it },
-                        modifier = Modifier.weight(1f),
-                        isError = (from.isNotEmpty() && fromYear == null) || invertedRange
-                )
-                YearField(
-                        value = to,
-                        label = stringResource(R.string.explore_year_to),
-                        onValueChange = { to = it },
-                        modifier = Modifier.weight(1f),
-                        isError = (to.isNotEmpty() && toYear == null) || invertedRange
-                )
-            }
-            Text(
-                    text = stringResource(if (invertedRange) R.string.explore_year_order_error else R.string.explore_year_range_help),
-                    color = if (invertedRange) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodySmall
+        Text(
+                text = stringResource(if (invertedRange) R.string.explore_year_order_error else R.string.explore_year_range_help),
+                color = if (invertedRange) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall
+        )
+    } else {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            YearField(
+                    value = single,
+                    label = stringResource(R.string.explore_year_type),
+                    hint = stringResource(R.string.explore_year_placeholder, currentYear),
+                    onValueChange = {
+                        single = it
+                        anyYear = false
+                    },
+                    isError = !anyYear && single.isNotEmpty() && singleYear == null
             )
-        } else {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                YearField(
-                        value = single,
-                        label = stringResource(R.string.explore_year_type),
-                        hint = stringResource(R.string.explore_year_placeholder, currentYear),
-                        onValueChange = {
-                            single = it
-                            anyYear = false
-                        },
-                        isError = !anyYear && single.isNotEmpty() && singleYear == null
+            if (!anyYear && singleYear == null) {
+                Text(
+                        stringResource(R.string.explore_year_four_digits),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
                 )
-                if (!anyYear && singleYear == null) {
-                    Text(
-                            stringResource(R.string.explore_year_four_digits),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
             }
-            Text(stringResource(R.string.explore_year_recent), style = MaterialTheme.typography.labelLarge)
-            for (year in currentYear downTo (currentYear - 4)) {
-                YearOption(year.asYearText(), selected = !anyYear && year == singleYear, onClick = {
-                    single = year.asYearText()
-                    anyYear = false
-                })
-            }
-            YearOption(stringResource(R.string.explore_year_any), selected = anyYear, onClick = {
-                single = ""
-                anyYear = true
+        }
+        Text(stringResource(R.string.explore_year_recent), style = MaterialTheme.typography.labelLarge)
+        for (year in currentYear downTo (currentYear - 4)) {
+            YearOption(year.asYearText(), selected = !anyYear && year == singleYear, onClick = {
+                single = year.asYearText()
+                anyYear = false
             })
         }
-        Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            OutlinedButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
-            ) { Text(stringResource(R.string.explore_year_cancel)) }
-            Button(
-                    enabled = valid,
-                    onClick = {
-                        val selection = if (rangeMode) ExploreYears(checkNotNull(fromYear), checkNotNull(toYear))
-                        else singleYear?.let { ExploreYears(it) }
-                        onApply(selection)
-                    },
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
-            ) { Text(stringResource(R.string.explore_year_apply)) }
-        }
+        YearOption(stringResource(R.string.explore_year_any), selected = anyYear, onClick = {
+            single = ""
+            anyYear = true
+        })
+    }
+    Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        OutlinedButton(
+                onClick = onDismiss,
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp)
+        ) { Text(stringResource(R.string.explore_year_cancel)) }
+        Button(
+                enabled = valid,
+                onClick = {
+                    val selection = if (rangeMode) ExploreYears(checkNotNull(fromYear), checkNotNull(toYear))
+                    else singleYear?.let { ExploreYears(it) }
+                    onApply(selection)
+                },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp)
+        ) { Text(stringResource(R.string.explore_year_apply)) }
     }
 }
 
@@ -210,3 +223,24 @@ private fun YearOption(label: String, selected: Boolean, onClick: () -> Unit) {
 private fun String.validYear(): Int? =
         takeIf { it.length == 4 && it.all { character -> character in '0'..'9' } }
                 ?.toIntOrNull()?.takeIf { it > 0 }
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun ExploreSingleYearPickerPreview() {
+    DiscoverPreview {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ExploreYearPickerContent(ExploreYears(2024), currentYear = 2026, onDismiss = {}, onApply = {})
+        }
+    }
+}
+
+@Preview(widthDp = 390)
+@Composable
+private fun ExploreYearRangePickerPreview() {
+    DiscoverPreview {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ExploreYearPickerContent(ExploreYears(2019, 2024), currentYear = 2026, onDismiss = {}, onApply = {})
+        }
+    }
+}

@@ -6,7 +6,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TvResponse(
         @SerialName("results")
-        val tvList: List<TvResponseModel>
+        val tvList: List<TvResponseModel>,
+
+        @SerialName("total_pages")
+        val totalPages: Int = 1
 )
 
 @Serializable

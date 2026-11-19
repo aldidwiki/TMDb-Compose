@@ -3,7 +3,7 @@ package com.aldiprahasta.tmdb.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.aldiprahasta.tmdb.data.source.paging.PopularTvPagingSource
+import com.aldiprahasta.tmdb.data.source.paging.NumberedPagingSource
 import com.aldiprahasta.tmdb.data.source.remote.TvRemoteDataSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
@@ -24,7 +24,10 @@ class TvRepositoryImpl(
         return Pager(
                 config = PagingConfig(pageSize = 10),
                 pagingSourceFactory = {
-                    PopularTvPagingSource(remoteService)
+                    NumberedPagingSource { page ->
+                        val response = remoteService.getPopularTv(page)
+                        NumberedPagingSource.Page(response?.tvList.orEmpty(), response?.totalPages ?: 0)
+                    }
                 }
         ).flow
     }

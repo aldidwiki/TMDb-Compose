@@ -14,7 +14,7 @@ import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ContentItem
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LazyColumnWithScrollbar
-import com.aldiprahasta.tmdb.utils.setupPagingLoadState
+import com.aldiprahasta.tmdb.ui.components.setupPagingLoadState
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 

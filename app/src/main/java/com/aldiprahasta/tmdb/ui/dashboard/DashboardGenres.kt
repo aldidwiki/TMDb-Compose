@@ -26,10 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import com.aldiprahasta.tmdb.utils.UiState
 
 private const val GENRE_COLUMNS = 3
@@ -125,5 +127,18 @@ private fun GenreTile(genre: GenreDomainModel, onClick: () -> Unit, modifier: Mo
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold
         )
+    }
+}
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun GenreTilePreview() {
+    DiscoverPreview {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            GenreTile(GenreDomainModel(28, "Action"), onClick = {}, modifier = Modifier.weight(1f))
+            GenreTile(GenreDomainModel(878, "Science Fiction"), onClick = {}, modifier = Modifier.weight(1f))
+            GenreTile(GenreDomainModel(35, "Comedy"), onClick = {}, modifier = Modifier.weight(1f))
+        }
     }
 }

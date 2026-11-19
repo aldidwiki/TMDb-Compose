@@ -30,7 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 
 @Composable
 internal fun <T> DiscoverOptionsSheet(
@@ -43,13 +45,22 @@ internal fun <T> DiscoverOptionsSheet(
         onDismiss: () -> Unit,
         onApply: (T) -> Unit
 ) {
+    DiscoverBottomSheet(title = title, description = description, onDismiss = onDismiss) {
+        DiscoverOptionsContent(applyLabel, options, appliedOption, optionLabel, onApply)
+    }
+}
+
+@Composable
+private fun <T> DiscoverOptionsContent(
+        applyLabel: String,
+        options: List<T>,
+        appliedOption: T,
+        optionLabel: @Composable (T) -> String,
+        onApply: (T) -> Unit
+) {
     var selectedOption by rememberSaveable(appliedOption) { mutableStateOf(appliedOption) }
 
-    DiscoverBottomSheet(
-            title = title,
-            description = description,
-            onDismiss = onDismiss
-    ) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Column(
                 modifier = Modifier.selectableGroup(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -109,5 +120,20 @@ private fun DiscoverOption(label: String, selected: Boolean, onClick: () -> Unit
                             .border(1.dp, colors.onSurfaceVariant, CircleShape)
             )
         }
+    }
+}
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun DiscoverOptionsContentPreview() {
+    DiscoverPreview {
+        DiscoverOptionsContent(
+                applyLabel = "Apply sort",
+                options = listOf("Most popular", "Newest releases", "Highest rated"),
+                appliedOption = "Newest releases",
+                optionLabel = { it },
+                onApply = {}
+        )
     }
 }

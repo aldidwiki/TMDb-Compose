@@ -29,10 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.MovieSortOrder
 import com.aldiprahasta.tmdb.ui.components.DiscoverOptionsSheet
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import com.aldiprahasta.tmdb.utils.formatMovieRating
 import java.util.Calendar
 
@@ -189,5 +191,18 @@ private fun GenreFilterChip(
                 }
             }
         }
+    }
+}
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun GenreMovieFilterBarPreview() {
+    DiscoverPreview {
+        GenreMovieFilterBar(
+                genreName = "Science Fiction",
+                uiState = GenreMovieState(releaseYear = 2024, minimumRating = 7),
+                onEvent = {}
+        )
     }
 }

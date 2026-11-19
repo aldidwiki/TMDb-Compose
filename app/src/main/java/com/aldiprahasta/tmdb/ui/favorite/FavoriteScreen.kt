@@ -1,31 +1,11 @@
 package com.aldiprahasta.tmdb.ui.favorite
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.SwapVert
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -42,39 +22,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.R
-import com.aldiprahasta.tmdb.domain.model.FavoriteDomainModel
-import com.aldiprahasta.tmdb.ui.components.DiscoverMediaCard
 import com.aldiprahasta.tmdb.ui.components.DiscoverOptionsSheet
-import com.aldiprahasta.tmdb.ui.components.DiscoverPersonCard
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.components.SwipeBox
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
-import java.text.DateFormat
-import java.util.Calendar
-import java.util.Date
 import org.koin.androidx.compose.koinViewModel
-
-private const val FavoriteFadeDuration = 180
 
 @Composable
 fun FavoriteScreen(
         onItemClicked: (contentId: Int, mediaType: String) -> Unit,
-        onBackPressed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: FavoriteViewModel = koinViewModel()
@@ -110,7 +76,7 @@ fun FavoriteScreen(
                 snackbarHostState = snackbarHostState,
                 onEvent = viewModel::onEvent,
                 onItemClicked = onItemClicked,
-            modifier = modifier
+                modifier = modifier
         )
     }
 }
@@ -202,170 +168,12 @@ private fun FavoriteContent(
     }
 }
 
-@Composable
-internal fun FavoriteList(
-        favorites: List<FavoriteDomainModel>,
-        onRemove: (FavoriteDomainModel) -> Unit,
-        onItemClicked: (Int, String) -> Unit,
-        modifier: Modifier = Modifier
-) {
-    Box(modifier) {
-        LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(favorites, key = { "${it.mediaType}:${it.favoriteId}" }) { favorite ->
-                val remove = { onRemove(favorite) }
-                SwipeBox(
-                        modifier = Modifier.animateItem(
-                                fadeInSpec = tween(FavoriteFadeDuration),
-                                placementSpec = tween(durationMillis = 280),
-                                fadeOutSpec = tween(FavoriteFadeDuration)
-                        ).clip(RoundedCornerShape(16.dp)),
-                        onDelete = remove
-                ) {
-                    FavoriteCard(
-                            favorite = favorite,
-                            onRemove = remove,
-                            onClick = { onItemClicked(favorite.favoriteId, favorite.mediaType) }
-                    )
-                }
-            }
-        }
-        AnimatedVisibility(
-                visible = favorites.isEmpty(),
-                modifier = Modifier.align(Alignment.Center).padding(horizontal = 18.dp),
-                enter = fadeIn(tween(durationMillis = 150, delayMillis = FavoriteFadeDuration)),
-                exit = fadeOut(tween(durationMillis = 100))
-        ) {
-            Text(
-                    text = stringResource(R.string.favorite_empty),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Composable
-private fun FavoriteSortButton(order: FavoriteSortOrder, onClick: () -> Unit) {
-    OutlinedButton(
-            onClick = onClick,
-            modifier = Modifier.padding(end = 18.dp),
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-            colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.primary
-            ),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Icon(
-                imageVector = Icons.Filled.SwapVert,
-                contentDescription = null,
-                modifier = Modifier.size(14.dp)
-        )
-        Text(
-                text = stringResource(order.label),
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 4.dp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
-@Composable
-private fun FavoriteCard(favorite: FavoriteDomainModel, onRemove: () -> Unit, onClick: () -> Unit) {
-    val removeDescription = stringResource(R.string.favorite_remove_action, favorite.title)
-    val heartColor = Color(0xFFDC4561)
-
-    if (favorite.mediaType == MediaType.PERSON_TYPE.name) {
-        val person = stringResource(R.string.search_type_person)
-        DiscoverPersonCard(
-                name = favorite.title,
-                subtitle = favorite.knownFor?.let { stringResource(R.string.search_result_subtitle, person, it) } ?: person,
-                profilePath = favorite.imagePoster,
-                onClick = onClick,
-                trailingContent = {
-                    FilledIconButton(
-                            onClick = onRemove,
-                            colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    contentColor = heartColor
-                            )
-                    ) {
-                        Icon(Icons.Filled.Favorite, contentDescription = removeDescription, modifier = Modifier.size(18.dp))
-                    }
-                }
-        )
-    } else {
-        val isTv = favorite.mediaType == MediaType.TV_TYPE.name
-        val releaseYear = favorite.releaseDate.takeLast(4).takeIf { it.length == 4 && it.all(Char::isDigit) }
-        val metadata = if (isTv) {
-            favorite.seasonCount?.let { pluralStringResource(R.plurals.favorite_seasons, it, it) }
-        } else {
-            favorite.genres?.substringBefore(',')?.takeIf { it.isNotBlank() }
-        }
-        DiscoverMediaCard(
-                title = favorite.title,
-                subtitle = listOfNotNull(releaseYear, metadata).joinToString(" · "),
-                posterPath = favorite.imagePoster,
-                voteAverage = favorite.voteAverage,
-                description = if (isTv) stringResource(R.string.favorite_tv_series)
-                else addedDateLabel(favorite.addedAt),
-                onClick = onClick,
-                trailingContent = {
-                    IconButton(onClick = onRemove) {
-                        Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = removeDescription,
-                                tint = heartColor,
-                                modifier = Modifier.size(18.dp)
-                        )
-                    }
-                }
-        )
-    }
-}
-
-@Composable
-private fun addedDateLabel(timestamp: Long): String {
-    val savedDate = Calendar.getInstance().apply { timeInMillis = timestamp }
-    val today = Calendar.getInstance()
-    val yesterday = (today.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, -1) }
-
-    return when {
-        savedDate.isSameDay(today) -> stringResource(R.string.favorite_added_today)
-        savedDate.isSameDay(yesterday) -> stringResource(R.string.favorite_added_yesterday)
-        else -> stringResource(
-                R.string.favorite_added_date,
-                DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(timestamp))
-        )
-    }
-}
-
-private fun Calendar.isSameDay(other: Calendar): Boolean =
-        get(Calendar.YEAR) == other.get(Calendar.YEAR) && get(Calendar.DAY_OF_YEAR) == other.get(Calendar.DAY_OF_YEAR)
-
 @Preview(showBackground = true)
 @Composable
 private fun FavoriteContentPreview() {
     DiscoverTheme {
         FavoriteContent(
-                uiState = FavoriteState(favorites = UiState.Success(listOf(
-                        FavoriteDomainModel(
-                                favoriteId = 1,
-                                title = "Dune: Part Two",
-                                releaseDate = "March 1, 2024",
-                                imagePoster = null,
-                                mediaType = MediaType.MOVIE_TYPE.name,
-                                addedAt = System.currentTimeMillis(),
-                                voteAverage = 8.8,
-                                genres = "Science Fiction"
-                        )
-                ))),
+                uiState = FavoriteState(favorites = UiState.Success(listOf(favoritePreviewItem))),
                 snackbarHostState = remember { SnackbarHostState() },
                 onEvent = {},
                 onItemClicked = { _, _ -> }

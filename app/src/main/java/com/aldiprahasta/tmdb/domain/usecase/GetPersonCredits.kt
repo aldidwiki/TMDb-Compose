@@ -7,29 +7,21 @@ import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.convertDate
 import com.aldiprahasta.tmdb.utils.mapCreditResponseToCastDomainModelList
+import com.aldiprahasta.tmdb.utils.mapSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class GetPersonCredits(private val personRepository: PersonRepository) {
     operator fun invoke(personId: Int): Flow<UiState<List<CastDomainModel>>> = personRepository
             .getPersonCredit(personId).map { state ->
-                when (state) {
-                    is UiState.Loading -> UiState.Loading
-
-                    is UiState.Error -> UiState.Error(
-                            state.throwable,
-                            state.errorMessage
-                    )
-
-                    is UiState.Success -> UiState.Success(
-                            state.data.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
-                                    .sortedByDescending {
-                                        it.releaseDate?.convertDate(
-                                                inFormat = Constant.APP_DATE_FORMAT,
-                                                outFormat = "yyyyMMdd"
-                                        )
-                                    }
-                    )
+                state.mapSuccess { response ->
+                    response.mapCreditResponseToCastDomainModelList(MediaType.PERSON_TYPE)
+                            .sortedByDescending { credit ->
+                                credit.releaseDate?.convertDate(
+                                        inFormat = Constant.APP_DATE_FORMAT,
+                                        outFormat = Constant.SORTING_DATE_FORMAT
+                                )
+                            }
                 }
             }
 }

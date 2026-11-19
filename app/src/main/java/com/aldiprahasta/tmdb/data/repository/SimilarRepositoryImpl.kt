@@ -2,7 +2,7 @@ package com.aldiprahasta.tmdb.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.aldiprahasta.tmdb.data.source.paging.SimilarPagingSource
+import com.aldiprahasta.tmdb.data.source.paging.NumberedPagingSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.domain.model.SimilarPage
 import com.aldiprahasta.tmdb.domain.repository.SimilarRepository
@@ -15,7 +15,12 @@ class SimilarRepositoryImpl(private val remoteService: RemoteService) : SimilarR
 
     override fun getSimilarContent(contentId: Int, mediaType: MediaType, firstPage: SimilarPage) = Pager(
             config = PagingConfig(pageSize = 20, initialLoadSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { SimilarPagingSource(firstPage) { page -> getPage(contentId, mediaType, page) } }
+            pagingSourceFactory = {
+                NumberedPagingSource { page ->
+                    val response = if (page == 1) firstPage else getPage(contentId, mediaType, page)
+                    NumberedPagingSource.Page(response.items, response.totalPages)
+                }
+            }
     ).flow
 
     private suspend fun getPage(contentId: Int, mediaType: MediaType, page: Int): SimilarPage {

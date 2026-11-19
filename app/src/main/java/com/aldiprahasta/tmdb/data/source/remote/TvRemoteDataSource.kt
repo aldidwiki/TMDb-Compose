@@ -7,39 +7,26 @@ import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.utils.UiState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import timber.log.Timber
 
 class TvRemoteDataSource(private val remoteService: RemoteService) {
-    fun getTvDetail(tvId: Int): Flow<UiState<TvDetailResponse>> = request {
+    fun getTvDetail(tvId: Int): Flow<UiState<TvDetailResponse>> = remoteRequest {
         remoteService.getTvDetail(tvId)
     }
 
-    fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> = request {
+    fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> = remoteRequest {
         remoteService.getTvCredits(tvId)
     }
 
-    fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> = request {
+    fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> = remoteRequest {
         remoteService.getTvSeasonDetail(tvId, tvSeasonNumber)
     }
 
-    fun getTvGenres(): Flow<UiState<GenreResponse>> = request {
+    fun getTvGenres(): Flow<UiState<GenreResponse>> = remoteRequest {
         remoteService.getTvGenres()
     }
 
-    fun getTvImages(tvId: Int): Flow<UiState<ImageResponse>> = request {
+    fun getTvImages(tvId: Int): Flow<UiState<ImageResponse>> = remoteRequest {
         remoteService.getTvImages(tvId)
     }
-
-    private fun <T : Any> request(call: suspend () -> T?): Flow<UiState<T>> = flow {
-        emit(UiState.Loading)
-        emit(UiState.Success(checkNotNull(call()) { "TMDb returned an empty response" }))
-    }.catch { throwable ->
-        Timber.e(throwable)
-        emit(UiState.Error(throwable))
-    }.flowOn(Dispatchers.IO)
 }

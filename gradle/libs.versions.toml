@@ -16,7 +16,6 @@ activity-compose = "1.11.0"
 compose-bom = "2025.10.01"
 lifecycle-compose = "2.9.4"
 material-icons = "1.7.8"
-palette = "1.0.0"
 constraintlayout = "1.1.1"
 
 # === Navigation & Paging ===
@@ -63,7 +62,6 @@ ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 material-icons = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "material-icons" }
-palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
 constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
 coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
@@ -110,7 +108,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics-plugin = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
@@ -145,7 +142,6 @@ room = [
 
 utilities = [
     "timber",
-    "palette",
     "splash-screen",
     "browser",
     "coil",

@@ -36,9 +36,9 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.DiscoverMediaCard
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
+import com.aldiprahasta.tmdb.ui.components.setupPagingLoadState
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
-import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

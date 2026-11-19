@@ -186,11 +186,6 @@
     <string name="genre_rating_threshold">%1$s+</string>
     <string name="genre_apply_rating">Apply rating</string>
 
-    <plurals name="image">
-        <item quantity="zero">Image</item>
-        <item quantity="one">Image</item>
-        <item quantity="other">Images</item>
-    </plurals>
     <string name="explore_all">Explore all</string>
     <string name="explore_tab_all">All</string>
     <string name="explore_tab_movies">Movies</string>

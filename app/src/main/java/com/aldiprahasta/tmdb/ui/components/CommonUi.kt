@@ -14,9 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -25,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -46,7 +42,6 @@ fun ImageLoader(
     SubcomposeAsyncImage(
             model = ImageRequest.Builder(context)
                     .data("https://image.tmdb.org/t/p/${imageType.size}/$imagePath")
-                    .crossfade(true)
                     .crossfade(300)
                     .build(),
             contentDescription = null,
@@ -61,25 +56,6 @@ fun ImageLoader(
                         contentDescription = null
                 )
             }
-    )
-}
-
-@Composable
-fun ImageLoaderBackdrop(
-        imagePath: String,
-        modifier: Modifier = Modifier
-) {
-    var isError by remember { mutableStateOf(false) }
-    if (!isError) AsyncImage(
-            model = "https://image.tmdb.org/t/p/${ImageType.BACKDROP.size}/$imagePath",
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            onError = {
-                isError = true
-            },
-            modifier = modifier
-                    .fillMaxWidth()
-                    .aspectRatio(ImageType.BACKDROP.aspectRatio)
     )
 }
 
@@ -150,7 +126,5 @@ enum class ImageType(val size: String, val aspectRatio: Float) {
     POSTER("w500", (3f / 4f)),
     BACKDROP("w780", (16f / 9f)),
     PROFILE("h632", (3f / 4f)),
-    ORIGINAL_SIZE("original", (3f / 4f)),
-    LOGO("w185", (2f / 1f)),
     STILL("w780", (16f / 9f))
 }

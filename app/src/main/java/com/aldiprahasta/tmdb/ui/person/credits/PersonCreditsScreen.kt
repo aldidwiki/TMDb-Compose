@@ -27,16 +27,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.CastDomainModel
+import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
+import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
-import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
-import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.person.isScreenCredit
+import com.aldiprahasta.tmdb.ui.person.personPreviewSample
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.Constant
@@ -159,5 +162,14 @@ private fun PersonCreditCard(credit: CastDomainModel, onClick: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun PersonCreditCardPreview() {
+    DiscoverPreview {
+        PersonCreditCard(credit = personPreviewSample.credits.first(), onClick = {})
     }
 }

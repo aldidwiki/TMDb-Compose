@@ -3,7 +3,7 @@ package com.aldiprahasta.tmdb.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.aldiprahasta.tmdb.data.source.paging.SearchPagingSource
+import com.aldiprahasta.tmdb.data.source.paging.NumberedPagingSource
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.domain.model.SearchCategory
 import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
@@ -12,6 +12,7 @@ import com.aldiprahasta.tmdb.domain.repository.SearchRepository
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.mapSearchResponseToDomainModel
 import kotlinx.coroutines.flow.Flow
+import java.util.concurrent.atomic.AtomicReference
 
 class SearchRepositoryImpl(private val remoteService: RemoteService) : SearchRepository {
     override suspend fun getFirstPage(query: String, category: SearchCategory): SearchPage =
@@ -22,13 +23,16 @@ class SearchRepositoryImpl(private val remoteService: RemoteService) : SearchRep
             category: SearchCategory,
             firstPage: SearchPage
     ): Flow<PagingData<SearchDomainModel>> {
-        var initialPage: SearchPage? = firstPage
+        val initialPage = AtomicReference<SearchPage?>(firstPage)
         return Pager(
                 config = PagingConfig(pageSize = 20, enablePlaceholders = false),
                 pagingSourceFactory = {
-                    val cachedPage = initialPage
-                    initialPage = null
-                    SearchPagingSource(cachedPage) { page -> getPage(query, category, page) }
+                    val cachedPage = initialPage.getAndSet(null)
+                    NumberedPagingSource { page ->
+                        val response = if (page == 1 && cachedPage != null) cachedPage
+                        else getPage(query, category, page)
+                        NumberedPagingSource.Page(response.results, response.totalPages)
+                    }
                 }
         ).flow
     }

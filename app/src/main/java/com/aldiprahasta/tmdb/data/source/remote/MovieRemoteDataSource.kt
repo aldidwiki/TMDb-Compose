@@ -8,47 +8,34 @@ import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.utils.UiState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import timber.log.Timber
 
 class MovieRemoteDataSource(private val remoteService: RemoteService) {
-    fun getTrendingMovies(): Flow<UiState<MovieResponse>> = request {
+    fun getTrendingMovies(): Flow<UiState<MovieResponse>> = remoteRequest {
         remoteService.getTrendingMovies()
     }
 
-    fun getNowPlayingMovies(region: String): Flow<UiState<MovieResponse>> = request {
+    fun getNowPlayingMovies(region: String): Flow<UiState<MovieResponse>> = remoteRequest {
         remoteService.getNowPlayingMovies(region)
     }
 
-    fun getMovieVideos(movieId: Int): Flow<UiState<VideoResponse>> = request {
+    fun getMovieVideos(movieId: Int): Flow<UiState<VideoResponse>> = remoteRequest {
         remoteService.getMovieVideos(movieId)
     }
 
-    fun getMovieDetail(movieId: Int): Flow<UiState<MovieDetailResponse>> = request {
+    fun getMovieDetail(movieId: Int): Flow<UiState<MovieDetailResponse>> = remoteRequest {
         remoteService.getMovieDetail(movieId)
     }
 
-    fun getMovieCredits(movieId: Int): Flow<UiState<CreditResponse>> = request {
+    fun getMovieCredits(movieId: Int): Flow<UiState<CreditResponse>> = remoteRequest {
         remoteService.getMovieCredits(movieId)
     }
 
-    fun getMovieGenres(): Flow<UiState<GenreResponse>> = request {
+    fun getMovieGenres(): Flow<UiState<GenreResponse>> = remoteRequest {
         remoteService.getMovieGenres()
     }
 
-    fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> = request {
+    fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> = remoteRequest {
         remoteService.getMovieImages(movieId)
     }
-
-    private fun <T : Any> request(call: suspend () -> T?): Flow<UiState<T>> = flow {
-        emit(UiState.Loading)
-        emit(UiState.Success(checkNotNull(call()) { "TMDb returned an empty response" }))
-    }.catch { throwable ->
-        Timber.e(throwable)
-        emit(UiState.Error(throwable))
-    }.flowOn(Dispatchers.IO)
 }

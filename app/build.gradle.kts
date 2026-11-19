@@ -1,10 +1,11 @@
+import com.android.build.api.artifact.ArtifactTransformationRequest
+import com.android.build.api.artifact.SingleArtifact
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
@@ -50,18 +51,6 @@ android {
         }
     }
 
-    applicationVariants.all {
-        val variant = this
-        variant.outputs
-            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-            .forEach { output ->
-                val outputFileName = if (variant.name.contains("debug")) "TMDb-debug.apk"
-                else "TMDb.apk"
-
-                output.outputFileName = outputFileName
-            }
-    }
-
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -105,6 +94,42 @@ android {
         }
     }
     ndkVersion = "28.2.13676358"
+}
+
+abstract class RenameApk : DefaultTask() {
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val inputDirectory: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    @get:Input
+    abstract val apkName: Property<String>
+
+    @get:Internal
+    abstract val transformation: Property<ArtifactTransformationRequest<RenameApk>>
+
+    @TaskAction
+    fun renameApk() {
+        val output = outputDirectory.file(apkName).get().asFile
+        transformation.get().submit(this) { artifact ->
+            File(artifact.outputFile).copyTo(output, overwrite = true)
+        }
+    }
+}
+
+androidComponents.onVariants { variant ->
+    val variantName = variant.name.replaceFirstChar { it.uppercaseChar() }
+    val apkTask = tasks.register<RenameApk>("rename${variantName}Apk") {
+        apkName.set(if (variant.buildType == "debug") "TMDb-debug.apk" else "TMDb.apk")
+    }
+    val transformation = variant.artifacts.use(apkTask)
+        .wiredWithDirectories(RenameApk::inputDirectory, RenameApk::outputDirectory)
+        .toTransformMany(SingleArtifact.APK)
+    apkTask.configure {
+        this.transformation.set(transformation)
+    }
 }
 
 dependencies {

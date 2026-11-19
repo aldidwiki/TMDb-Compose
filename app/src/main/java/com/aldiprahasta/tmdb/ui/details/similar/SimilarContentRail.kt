@@ -13,12 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.domain.model.SimilarContent
 import com.aldiprahasta.tmdb.domain.model.SimilarPage
 import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.details.DetailSectionHeader
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import com.aldiprahasta.tmdb.utils.UiState
 
 @Composable
@@ -59,5 +62,21 @@ internal fun SimilarContentRail(
                 }
             }
         }
+    }
+}
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun SimilarContentRailPreview() {
+    DiscoverPreview {
+        val sample = SimilarContent(1, "Arrival", null, "2016", 7.9)
+        SimilarContentRail(
+                state = UiState.Success(SimilarPage(listOf(sample, sample.copy(id = 2, title = "Blade Runner 2049")), 1, 2)),
+                isTv = false,
+                onItemClicked = {},
+                onSeeAll = {},
+                onRetry = {}
+        )
     }
 }

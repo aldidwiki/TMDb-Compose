@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 
 @Composable
 internal fun ContentDetailInfo(detail: ContentDetailDomainModel, isTv: Boolean, modifier: Modifier = Modifier) {
@@ -78,3 +80,12 @@ internal fun ContentDetailInfo(detail: ContentDetailDomainModel, isTv: Boolean, 
 }
 
 private data class InfoField(@param:StringRes val label: Int, val value: String)
+
+
+@Preview(widthDp = 390)
+@Composable
+private fun ContentDetailInfoPreview() {
+    DiscoverPreview {
+        ContentDetailInfo(detailPreviewSample, isTv = false)
+    }
+}

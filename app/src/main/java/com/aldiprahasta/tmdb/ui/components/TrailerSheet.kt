@@ -43,10 +43,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
-import com.aldiprahasta.tmdb.utils.windowHeightFraction
+import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,9 +61,6 @@ internal fun TrailerSheet(
     val maxHeight = windowHeightFraction(0.5f)
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    val firstTrailer = trailers.firstOrNull()?.key
-    var selectedTrailer by rememberSaveable(firstTrailer) { mutableStateOf(firstTrailer) }
-
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
@@ -73,64 +71,82 @@ internal fun TrailerSheet(
         dragHandle = null,
         contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = maxHeight)
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
-                .padding(start = 20.dp, top = 14.dp, end = 20.dp, bottom = 20.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .width(48.dp)
-                    .height(4.dp)
-                    .background(colors.outline, RoundedCornerShape(2.dp))
-            )
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                        text = stringResource(R.string.trailer_sheet_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .weight(1f)
-                        .semantics { heading() }
-                )
-                IconButton(onClick = {
+        TrailerSheetContent(
+                trailers = trailers,
+                onClose = {
                     scope.launch {
                         sheetState.hide()
                         if (!sheetState.isVisible) onDismiss()
                     }
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(R.string.discover_close),
-                        tint = colors.onSurfaceVariant,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
+                },
+                onTrailerClicked = onTrailerClicked,
+                modifier = Modifier.heightIn(max = maxHeight)
+        )
+    }
+}
+
+@Composable
+private fun TrailerSheetContent(
+        trailers: List<VideoDomainModel>,
+        onClose: () -> Unit,
+        onTrailerClicked: (VideoDomainModel) -> Unit,
+        modifier: Modifier = Modifier
+) {
+    val colors = MaterialTheme.colorScheme
+    val firstTrailer = trailers.firstOrNull()?.key
+    var selectedTrailer by rememberSaveable(firstTrailer) { mutableStateOf(firstTrailer) }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
+            .padding(start = 20.dp, top = 14.dp, end = 20.dp, bottom = 20.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(48.dp)
+                .height(4.dp)
+                .background(colors.outline, RoundedCornerShape(2.dp))
+        )
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                    text = stringResource(R.string.trailer_sheet_description),
-                style = MaterialTheme.typography.bodySmall,
-                color = colors.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
-            LazyColumn(
+                    text = stringResource(R.string.trailer_sheet_title),
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f, fill = false),
-                verticalArrangement = Arrangement.spacedBy(9.dp)
-            ) {
-                items(trailers, key = { it.key }) { trailer ->
-                    TrailerOption(
-                        title = trailer.name.ifBlank { stringResource(R.string.watch_trailer) },
-                        isSelected = trailer.key == selectedTrailer,
-                        onClick = {
-                            selectedTrailer = trailer.key
-                            onTrailerClicked(trailer)
-                        }
-                    )
-                }
+                    .weight(1f)
+                    .semantics { heading() }
+            )
+            IconButton(onClick = onClose) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.discover_close),
+                    tint = colors.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        }
+        Text(
+                text = stringResource(R.string.trailer_sheet_description),
+            style = MaterialTheme.typography.bodySmall,
+            color = colors.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 10.dp)
+        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f, fill = false),
+            verticalArrangement = Arrangement.spacedBy(9.dp)
+        ) {
+            items(trailers, key = { it.key }) { trailer ->
+                TrailerOption(
+                    title = trailer.name.ifBlank { stringResource(R.string.watch_trailer) },
+                    isSelected = trailer.key == selectedTrailer,
+                    onClick = {
+                        selectedTrailer = trailer.key
+                        onTrailerClicked(trailer)
+                    }
+                )
             }
         }
     }
@@ -168,5 +184,21 @@ private fun TrailerOption(title: String, isSelected: Boolean, onClick: () -> Uni
                 modifier = Modifier.size(20.dp)
             )
         }
+    }
+}
+
+
+@Preview(widthDp = 390, heightDp = 240)
+@Composable
+private fun TrailerSheetContentPreview() {
+    DiscoverPreview {
+        TrailerSheetContent(
+                trailers = listOf(
+                        VideoDomainModel("1", "Official Trailer", "YouTube", "Trailer", "official", true),
+                        VideoDomainModel("2", "Final Trailer", "YouTube", "Trailer", "final", true)
+                ),
+                onClose = {},
+                onTrailerClicked = {}
+        )
     }
 }
