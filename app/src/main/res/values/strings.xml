@@ -5,6 +5,25 @@
     <string name="dashboard_tab_home">Home</string>
     <string name="dashboard_tab_explore">Explore</string>
     <string name="dashboard_tab_search">Search</string>
+    <string name="search_subtitle">Movies, shows, people</string>
+    <string name="search_hint">Search movies, shows, people</string>
+    <string name="search_clear">Clear search</string>
+    <string name="search_results">Results</string>
+    <string name="search_category_all">All</string>
+    <string name="search_category_movies">Movies</string>
+    <string name="search_category_tv">TV</string>
+    <string name="search_category_people">People</string>
+    <string name="search_type_movie">Movie</string>
+    <string name="search_type_person">Person</string>
+    <string name="search_result_subtitle">%1$s · %2$s</string>
+    <string name="search_chip_count">%1$s %2$s</string>
+    <string name="search_no_results">No matches found.</string>
+    <string name="search_load_error">Couldn’t load search results.</string>
+
+    <plurals name="search_matches">
+        <item quantity="one">%1$s match</item>
+        <item quantity="other">%1$s matches</item>
+    </plurals>
     <string name="dashboard_tab_favorites">Favorites</string>
     <string name="dashboard_now_playing">Now Playing</string>
     <string name="dashboard_browse_genres">Browse by Genre</string>

@@ -70,5 +70,8 @@ data class SearchResponseModel(
         val knownForDepartment: String?,
 
         @SerialName("profile_path")
-        val profilePath: String?
+        val profilePath: String?,
+
+        @SerialName("genre_ids")
+        val genreIds: List<Int> = emptyList()
 )

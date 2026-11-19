@@ -68,7 +68,25 @@ interface RemoteService {
     suspend fun getSearchResults(
             @Query("query") query: String,
             @Query("page") page: Int
-    ): SearchResponse?
+    ): SearchResponse
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+            @Query("query") query: String,
+            @Query("page") page: Int
+    ): SearchResponse
+
+    @GET("search/tv")
+    suspend fun searchTv(
+            @Query("query") query: String,
+            @Query("page") page: Int
+    ): SearchResponse
+
+    @GET("search/person")
+    suspend fun searchPeople(
+            @Query("query") query: String,
+            @Query("page") page: Int
+    ): SearchResponse
 
     @GET("genre/movie/list")
     suspend fun getMovieGenres(): GenreResponse?

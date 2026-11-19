@@ -186,15 +186,19 @@ fun TvSeasonResponse.mapTvSeasonResponseToDomainModel(): TvSeasonDetailDomainMod
     )
 }
 
-fun SearchResponseModel.mapSearchResponseToDomainModel(): SearchDomainModel {
+fun SearchResponseModel.mapSearchResponseToDomainModel(categoryMediaType: String?): SearchDomainModel {
     return SearchDomainModel(
             id = id,
             name = name ?: title ?: "",
             imagePath = posterPath ?: profilePath ?: "",
             releaseDate = releaseDate?.convertDate() ?: firstAirDate?.convertDate() ?: "",
-            mediaType = mediaType ?: "",
+            mediaType = categoryMediaType ?: mediaType.orEmpty(),
             knownFor = knownForDepartment ?: "",
-            popularity = popularity ?: 0.0
+            popularity = popularity ?: 0.0,
+            releaseYear = (releaseDate ?: firstAirDate)?.take(4)?.takeIf { it.length == 4 && it.all(Char::isDigit) },
+            voteAverage = voteAverage?.takeUnless { voteCount == 0 },
+            overview = overview.orEmpty(),
+            genreIds = genreIds
     )
 }
 

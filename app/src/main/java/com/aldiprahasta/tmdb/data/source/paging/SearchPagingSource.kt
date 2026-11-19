@@ -2,38 +2,43 @@ package com.aldiprahasta.tmdb.data.source.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
-import com.aldiprahasta.tmdb.data.source.remote.response.search.SearchResponseModel
+import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
+import com.aldiprahasta.tmdb.domain.model.SearchPage
+import kotlinx.coroutines.CancellationException
 import timber.log.Timber
 
 class SearchPagingSource(
-        private val remoteService: RemoteService,
-        private val query: String
-) : PagingSource<Int, SearchResponseModel>() {
-    override fun getRefreshKey(state: PagingState<Int, SearchResponseModel>): Int? {
+        private val firstPage: SearchPage?,
+        private val loadPage: suspend (Int) -> SearchPage
+) : PagingSource<Int, SearchDomainModel>() {
+    override fun getRefreshKey(state: PagingState<Int, SearchDomainModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResponseModel> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchDomainModel> {
         return try {
-            val page = params.key ?: INITIAL_PAGE_INDEX
-            val response = remoteService.getSearchResults(query, page)
+            val page = params.key ?: 1
+            val response = if (page == 1 && firstPage != null) firstPage else loadPage(page)
 
             LoadResult.Page(
-                    data = response?.results ?: emptyList(),
-                    prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
-                    nextKey = if (response?.results.isNullOrEmpty()) null else page + 1
+                    data = response.results,
+                    prevKey = (page - 1).takeIf { page > 1 },
+                    nextKey = (page + 1).takeIf {
+                        page < minOf(response.totalPages, MAX_PAGE) && response.results.isNotEmpty()
+                    }
             )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e)
             LoadResult.Error(e)
         }
     }
 
-    companion object {
-        private const val INITIAL_PAGE_INDEX = 1
+    private companion object {
+        const val MAX_PAGE = 500
     }
 }

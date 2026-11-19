@@ -22,10 +22,11 @@ import com.aldiprahasta.tmdb.R
 fun MovieArtwork(
         imagePath: String?,
         imageType: ImageType,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        placeholder: @Composable (Modifier) -> Unit = { ArtworkPlaceholder(it) }
 ) {
     if (imagePath.isNullOrBlank()) {
-        ArtworkPlaceholder(modifier)
+        placeholder(modifier)
         return
     }
 
@@ -37,7 +38,7 @@ fun MovieArtwork(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             loading = { ShimmerEffect(Modifier.fillMaxSize()) },
-            error = { ArtworkPlaceholder(Modifier.fillMaxSize()) },
+            error = { placeholder(Modifier.fillMaxSize()) },
             modifier = modifier
     )
 }

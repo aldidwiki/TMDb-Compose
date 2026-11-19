@@ -1,18 +1,19 @@
 package com.aldiprahasta.tmdb.domain.usecase
 
 import androidx.paging.PagingData
-import androidx.paging.map
+import com.aldiprahasta.tmdb.domain.model.SearchCategory
 import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
+import com.aldiprahasta.tmdb.domain.model.SearchPage
 import com.aldiprahasta.tmdb.domain.repository.SearchRepository
-import com.aldiprahasta.tmdb.utils.mapSearchResponseToDomainModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class GetSearchResult(private val searchRepository: SearchRepository) {
-    operator fun invoke(query: String): Flow<PagingData<SearchDomainModel>> = searchRepository
-            .getSearchResults(query).map { pagingData ->
-                pagingData.map { searchResponseModel ->
-                    searchResponseModel.mapSearchResponseToDomainModel()
-                }
-            }
+    suspend fun getFirstPage(query: String, category: SearchCategory): SearchPage =
+            searchRepository.getFirstPage(query, category)
+
+    operator fun invoke(
+            query: String,
+            category: SearchCategory,
+            firstPage: SearchPage
+    ): Flow<PagingData<SearchDomainModel>> = searchRepository.getSearchResults(query, category, firstPage)
 }

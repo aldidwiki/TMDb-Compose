@@ -1,29 +1,20 @@
 package com.aldiprahasta.tmdb.ui.genre
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -33,9 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,13 +34,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
-import com.aldiprahasta.tmdb.ui.components.ImageType
+import com.aldiprahasta.tmdb.ui.components.DiscoverMediaCard
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.components.MovieArtwork
-import com.aldiprahasta.tmdb.ui.theme.DiscoverRating
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
-import com.aldiprahasta.tmdb.utils.formatMovieRating
 import com.aldiprahasta.tmdb.utils.setupPagingLoadState
 import org.koin.androidx.compose.koinViewModel
 
@@ -171,81 +157,17 @@ private fun GenreMovieList(
         ) {
             items(count = movies.itemCount, key = movies.itemKey { it.movieId }) { index ->
                 movies[index]?.let { movie ->
-                    GenreMovieCard(movie = movie, onClick = { onMovieClicked(movie.movieId) })
+                    DiscoverMediaCard(
+                            title = movie.title,
+                            subtitle = movie.releaseYear,
+                            posterPath = movie.posterPath,
+                            voteAverage = movie.voteAverage,
+                            description = movie.overview,
+                            onClick = { onMovieClicked(movie.movieId) }
+                    )
                 }
             }
             setupPagingLoadState(movies)
-        }
-    }
-}
-
-@Composable
-private fun GenreMovieCard(movie: MovieDomainModel, onClick: () -> Unit) {
-    Surface(
-            onClick = onClick,
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface,
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-            modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-                modifier = Modifier.padding(10.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            MovieArtwork(
-                    imagePath = movie.posterPath,
-                    imageType = ImageType.POSTER,
-                    modifier = Modifier
-                            .width(86.dp)
-                            .height(134.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-            )
-
-            Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                Text(
-                        text = movie.title,
-                        style = MaterialTheme.typography.titleSmall,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                )
-                movie.releaseYear?.let { year ->
-                    Text(
-                            text = year,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                movie.voteAverage?.let { rating ->
-                    Text(
-                            text = stringResource(R.string.discover_rating_badge, formatMovieRating(rating)),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = DiscoverRating
-                    )
-                }
-                if (movie.overview.isNotBlank()) {
-                    Text(
-                            text = movie.overview,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                    )
-                }
-                Button(
-                        onClick = onClick,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(stringResource(R.string.genre_see_details), Modifier.fillMaxWidth())
-                }
-            }
         }
     }
 }

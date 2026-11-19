@@ -7,5 +7,9 @@ data class SearchDomainModel(
         val releaseDate: String,
         val mediaType: String,
         val knownFor: String,
-        val popularity: Double
+        val popularity: Double,
+        val releaseYear: String? = null,
+        val voteAverage: Double? = null,
+        val overview: String = "",
+        val genreIds: List<Int> = emptyList()
 )
