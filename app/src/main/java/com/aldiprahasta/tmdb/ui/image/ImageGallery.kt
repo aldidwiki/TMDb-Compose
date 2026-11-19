@@ -47,6 +47,7 @@ import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
 import org.koin.androidx.compose.koinViewModel
 
@@ -62,7 +63,8 @@ fun ImageGalleryScreen(
     DiscoverSystemBars()
     DiscoverTheme {
         PhotoGalleryContent(
-                personName = contentName,
+                contentName = contentName,
+                isBackdrop = viewModel.mediaType != MediaType.PERSON_TYPE,
                 images = images,
                 onBackPressed = onBackPressed,
                 onRetry = viewModel::retry,
@@ -73,7 +75,8 @@ fun ImageGalleryScreen(
 
 @Composable
 private fun PhotoGalleryContent(
-        personName: String,
+        contentName: String,
+        isBackdrop: Boolean,
         images: UiState<List<ImageDomainModel>>,
         onBackPressed: () -> Unit,
         onRetry: () -> Unit,
@@ -93,19 +96,23 @@ private fun PhotoGalleryContent(
                     if (selection != null) hideFromAccessibility()
                 },
                 containerColor = MaterialTheme.colorScheme.background,
-                topBar = { DiscoverTopBar(stringResource(R.string.person_photos_title), onBackPressed) }
+                topBar = { DiscoverTopBar(stringResource(R.string.gallery_title), onBackPressed) }
         ) { innerPadding ->
             Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 Column(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    if (personName.isNotBlank()) {
-                        Text(personName, style = MaterialTheme.typography.headlineSmall)
+                    if (contentName.isNotBlank()) {
+                        Text(contentName, style = MaterialTheme.typography.headlineSmall)
                     }
                     if (images is UiState.Success) {
                         Text(
-                                text = pluralStringResource(R.plurals.person_photo_count, photos.size, photos.size),
+                                text = pluralStringResource(
+                                        if (isBackdrop) R.plurals.gallery_backdrop_count else R.plurals.person_photo_count,
+                                        photos.size,
+                                        photos.size
+                                ),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -113,25 +120,28 @@ private fun PhotoGalleryContent(
                 }
 
                 when (images) {
-                    UiState.Loading -> PhotoGridLoading()
+                    UiState.Loading -> PhotoGridLoading(isBackdrop)
                     is UiState.Error -> DiscoverStatus(
-                            message = stringResource(R.string.person_photos_error),
+                            message = stringResource(R.string.gallery_load_error),
                             onRetry = onRetry,
                             modifier = Modifier.fillMaxSize()
                     )
                     is UiState.Success -> if (photos.isEmpty()) {
-                        DiscoverStatus(stringResource(R.string.person_no_photos), Modifier.fillMaxSize())
+                        val emptyMessage = if (isBackdrop) R.string.gallery_no_backdrops else R.string.person_no_photos
+                        DiscoverStatus(stringResource(emptyMessage), Modifier.fillMaxSize())
                     } else {
                         PhotoGrid(
                                 photos = photos,
+                                isBackdrop = isBackdrop,
                                 selectedPath = selection?.imagePath,
-                                onPhotoClicked = { photo, bounds ->
+                                onPhotoClicked = { photo, index, bounds ->
                                     val path = photo.filePath
                                     if (path != null && selection == null) {
                                         selection = SelectedPhoto(
                                                 imagePath = path,
                                                 aspectRatio = photo.aspectRatio,
-                                                thumbnail = bounds.translate(-origin)
+                                                thumbnail = bounds.translate(-origin),
+                                                index = index
                                         )
                                     }
                                 }
@@ -143,11 +153,17 @@ private fun PhotoGalleryContent(
 
         selection?.let { photo ->
             key(photo.imagePath) {
-                PersonPhotoViewer(
+                val caption = when {
+                    !isBackdrop -> contentName
+                    contentName.isBlank() -> stringResource(R.string.gallery_image_position, photo.index + 1, photos.size)
+                    else -> stringResource(R.string.gallery_backdrop_caption, contentName, photo.index + 1, photos.size)
+                }
+                PhotoViewer(
                         imagePath = photo.imagePath,
                         aspectRatio = photo.aspectRatio,
                         thumbnail = photo.thumbnail,
-                        personName = personName,
+                        caption = caption,
+                        isBackdrop = isBackdrop,
                         onClosed = { selection = null },
                         modifier = Modifier.matchParentSize()
                 )
@@ -159,11 +175,12 @@ private fun PhotoGalleryContent(
 @Composable
 private fun PhotoGrid(
         photos: List<ImageDomainModel>,
+        isBackdrop: Boolean,
         selectedPath: String?,
-        onPhotoClicked: (ImageDomainModel, Rect) -> Unit
+        onPhotoClicked: (ImageDomainModel, Int, Rect) -> Unit
 ) {
     LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Fixed(if (isBackdrop) 2 else 3),
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -172,12 +189,15 @@ private fun PhotoGrid(
     ) {
         itemsIndexed(photos, key = { _, photo -> photo.filePath!! }) { index, photo ->
             var bounds by remember { mutableStateOf(Rect.Zero) }
-            val description = stringResource(R.string.person_photo_open, index + 1)
+            val description = stringResource(
+                    if (isBackdrop) R.string.gallery_open_backdrop else R.string.person_photo_open,
+                    index + 1
+            )
 
             MovieArtwork(
                     imagePath = photo.filePath,
-                    imageType = ImageType.PROFILE,
-                    modifier = Modifier.aspectRatio(9f / 16f)
+                    imageType = if (isBackdrop) ImageType.BACKDROP else ImageType.PROFILE,
+                    modifier = Modifier.aspectRatio(thumbnailAspectRatio(isBackdrop))
                             .onGloballyPositioned { bounds = it.boundsInRoot() }
                             .alpha(if (photo.filePath == selectedPath) 0f else 1f)
                             .clip(RoundedCornerShape(10.dp))
@@ -186,7 +206,7 @@ private fun PhotoGrid(
                                     enabled = selectedPath == null,
                                     role = Role.Button,
                                     onClick = {
-                                        if (bounds.width > 0f && bounds.height > 0f) onPhotoClicked(photo, bounds)
+                                        if (bounds.width > 0f && bounds.height > 0f) onPhotoClicked(photo, index, bounds)
                                     }
                             )
             )
@@ -195,18 +215,20 @@ private fun PhotoGrid(
 }
 
 @Composable
-private fun PhotoGridLoading() {
+private fun PhotoGridLoading(isBackdrop: Boolean) {
     LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Fixed(if (isBackdrop) 2 else 3),
             contentPadding = PaddingValues(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             userScrollEnabled = false
     ) {
         items(6) {
-            ShimmerEffect(Modifier.aspectRatio(9f / 16f).clip(RoundedCornerShape(10.dp)))
+            ShimmerEffect(Modifier.aspectRatio(thumbnailAspectRatio(isBackdrop)).clip(RoundedCornerShape(10.dp)))
         }
     }
 }
 
-private data class SelectedPhoto(val imagePath: String, val aspectRatio: Float?, val thumbnail: Rect)
+private fun thumbnailAspectRatio(isBackdrop: Boolean): Float = if (isBackdrop) ImageType.BACKDROP.aspectRatio else 9f / 16f
+
+private data class SelectedPhoto(val imagePath: String, val aspectRatio: Float?, val thumbnail: Rect, val index: Int)

@@ -41,18 +41,19 @@ internal class PhotoZoomState {
 }
 
 @Composable
-internal fun ProfileZoomableImageWithBounds(
+internal fun ZoomablePhoto(
         imagePath: String,
+        thumbnailType: ImageType,
         zoomState: PhotoZoomState,
         zoomEnabled: Boolean,
         zoomFraction: Float,
         modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val original = remember(context, imagePath) {
+    val original = remember(context, imagePath, thumbnailType) {
         ImageRequest.Builder(context)
                 .data("https://image.tmdb.org/t/p/original/${imagePath.trimStart('/')}")
-                .size(Size.ORIGINAL)
+                .size(if (thumbnailType == ImageType.BACKDROP) Size(4096, 4096) else Size.ORIGINAL)
                 .crossfade(true)
                 .build()
     }
@@ -75,7 +76,7 @@ internal fun ProfileZoomableImageWithBounds(
                     translationY = zoomState.offset.y * zoomFraction
                 }
         ) {
-            MovieArtwork(imagePath, ImageType.PROFILE, Modifier.matchParentSize())
+            MovieArtwork(imagePath, thumbnailType, Modifier.matchParentSize())
             AsyncImage(
                     model = original,
                     contentDescription = null,

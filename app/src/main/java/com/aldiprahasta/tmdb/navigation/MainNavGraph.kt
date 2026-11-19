@@ -81,8 +81,8 @@ private fun NavHostController.navigateToTvSeasonDetailScreen(tvId: Int, tvSeason
     navigate("${TvSeasonDetail.route}/$tvId/$tvSeasonNumber")
 }
 
-private fun NavHostController.navigateToImageGalleryScreen(contentId: Int, contentName: String) {
-    navigate("${ImageGallery.route}/$contentId?name=${Uri.encode(contentName)}")
+private fun NavHostController.navigateToImageGalleryScreen(contentId: Int, contentName: String, mediaType: MediaType) {
+    navigate("${ImageGallery.route}/$contentId?name=${Uri.encode(contentName)}&type=${mediaType.name}")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) = navigate(route) {
@@ -280,7 +280,8 @@ fun TMDbNavHostController(
                         onAllSimilarClicked = { title, genres ->
                             navController.navigateToSimilarContent(contentId, mediaType, title, genres)
                         },
-                        onAllEpisodesClicked = { season -> navController.navigateToTvSeasonDetailScreen(contentId, season) }
+                        onAllEpisodesClicked = { season -> navController.navigateToTvSeasonDetailScreen(contentId, season) },
+                        onOpenPhotos = { title -> navController.navigateToImageGalleryScreen(contentId, title, mediaType) }
                 )
             }
         }
@@ -306,7 +307,7 @@ fun TMDbNavHostController(
                             navController.navigate("${PersonCredits.route}/$personId?name=${Uri.encode(name)}")
                         },
                         onPersonImageClicked = { personId, personName ->
-                            navController.navigateToImageGalleryScreen(personId, personName)
+                            navController.navigateToImageGalleryScreen(personId, personName, MediaType.PERSON_TYPE)
                         }
                 )
             }

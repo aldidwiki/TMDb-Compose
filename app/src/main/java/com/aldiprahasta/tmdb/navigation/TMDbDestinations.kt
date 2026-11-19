@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Tv
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.TvSeasonType
 
 interface TMDbDestinations {
@@ -68,7 +69,8 @@ object ImageGallery : TMDbDestinations {
     override val route: String = "image_preview"
     const val CONTENT_ID_ARG = "content_id"
     const val CONTENT_NAME_ARG = "content_name"
-    val routeWithArgs = "$route/{$CONTENT_ID_ARG}?name={$CONTENT_NAME_ARG}"
+    const val CONTENT_TYPE_ARG = "content_type"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}?name={$CONTENT_NAME_ARG}&type={$CONTENT_TYPE_ARG}"
     val arguments = listOf(
             navArgument(CONTENT_ID_ARG) {
                 type = NavType.IntType
@@ -76,6 +78,10 @@ object ImageGallery : TMDbDestinations {
             navArgument(CONTENT_NAME_ARG) {
                 type = NavType.StringType
                 defaultValue = ""
+            },
+            navArgument(CONTENT_TYPE_ARG) {
+                type = NavType.StringType
+                defaultValue = MediaType.PERSON_TYPE.name
             }
     )
 }

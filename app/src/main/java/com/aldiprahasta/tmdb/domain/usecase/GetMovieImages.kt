@@ -5,23 +5,13 @@ import com.aldiprahasta.tmdb.domain.repository.MovieRepository
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.mapImageResponseToDomainList
+import com.aldiprahasta.tmdb.utils.mapSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class GetMovieImages(private val movieRepository: MovieRepository) {
     operator fun invoke(movieId: Int): Flow<UiState<List<ImageDomainModel>>> = movieRepository
             .getMovieImages(movieId).map { state ->
-                when (state) {
-                    is UiState.Loading -> UiState.Loading
-
-                    is UiState.Error -> UiState.Error(
-                            state.throwable,
-                            state.errorMessage
-                    )
-
-                    is UiState.Success -> UiState.Success(
-                            state.data.mapImageResponseToDomainList(ImageType.POSTER)
-                    )
-                }
+                state.mapSuccess { it.mapImageResponseToDomainList(ImageType.BACKDROP) }
             }
 }

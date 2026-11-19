@@ -1,6 +1,7 @@
 package com.aldiprahasta.tmdb.ui.details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aldiprahasta.tmdb.R
@@ -44,7 +46,7 @@ import com.aldiprahasta.tmdb.utils.openBrowser
 import java.text.NumberFormat
 
 @Composable
-internal fun ContentDetailHero(detail: ContentDetailDomainModel, isTv: Boolean) {
+internal fun ContentDetailHero(detail: ContentDetailDomainModel, isTv: Boolean, onOpenPhotos: () -> Unit) {
     val scrim = MaterialTheme.colorScheme.scrim
     val genres = detail.genres.replace(", ", " / ").takeIf(String::isNotBlank)
     val seasons = detail.seasonCount?.takeIf { it > 0 }?.let {
@@ -53,7 +55,16 @@ internal fun ContentDetailHero(detail: ContentDetailDomainModel, isTv: Boolean) 
     val metadata = if (isTv) listOfNotNull(detail.releaseYear, genres, seasons)
     else listOfNotNull(detail.releaseYear, genres)
 
-    Box(Modifier.fillMaxWidth().heightIn(min = if (isTv) 286.dp else 300.dp).background(scrim)) {
+    Box(
+            modifier = Modifier.fillMaxWidth()
+                    .heightIn(min = if (isTv) 286.dp else 300.dp)
+                    .background(scrim)
+                    .clickable(
+                            onClickLabel = stringResource(R.string.gallery_open_backdrops),
+                            role = Role.Button,
+                            onClick = onOpenPhotos
+                    )
+    ) {
         if (!detail.backdropPath.isNullOrBlank()) {
             MovieArtwork(detail.backdropPath, ImageType.BACKDROP, Modifier.matchParentSize())
         }

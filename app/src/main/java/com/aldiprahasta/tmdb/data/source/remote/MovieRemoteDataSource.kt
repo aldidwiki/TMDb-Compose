@@ -40,16 +40,9 @@ class MovieRemoteDataSource(private val remoteService: RemoteService) {
         remoteService.getMovieGenres()
     }
 
-    fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getMovieImages(movieId)
-        response?.let { imageResponse ->
-            emit(UiState.Success(imageResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        emit(UiState.Error(t))
-    }.flowOn(Dispatchers.IO)
+    fun getMovieImages(movieId: Int): Flow<UiState<ImageResponse>> = request {
+        remoteService.getMovieImages(movieId)
+    }
 
     private fun <T : Any> request(call: suspend () -> T?): Flow<UiState<T>> = flow {
         emit(UiState.Loading)

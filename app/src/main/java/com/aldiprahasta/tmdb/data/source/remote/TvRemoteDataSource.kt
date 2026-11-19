@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.data.source.remote
 import com.aldiprahasta.tmdb.data.source.remote.network.RemoteService
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.utils.UiState
@@ -28,6 +29,10 @@ class TvRemoteDataSource(private val remoteService: RemoteService) {
 
     fun getTvGenres(): Flow<UiState<GenreResponse>> = request {
         remoteService.getTvGenres()
+    }
+
+    fun getTvImages(tvId: Int): Flow<UiState<ImageResponse>> = request {
+        remoteService.getTvImages(tvId)
     }
 
     private fun <T : Any> request(call: suspend () -> T?): Flow<UiState<T>> = flow {

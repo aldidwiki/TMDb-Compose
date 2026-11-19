@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,19 +48,22 @@ import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.PhotoZoomState
-import com.aldiprahasta.tmdb.ui.components.ProfileZoomableImageWithBounds
+import com.aldiprahasta.tmdb.ui.components.ZoomablePhoto
 import kotlin.math.roundToInt
 
 @Composable
-internal fun PersonPhotoViewer(
+internal fun PhotoViewer(
         imagePath: String,
         aspectRatio: Float?,
         thumbnail: Rect,
-        personName: String,
+        caption: String,
+        isBackdrop: Boolean,
         onClosed: () -> Unit,
         modifier: Modifier = Modifier
 ) {
@@ -68,10 +72,10 @@ internal fun PersonPhotoViewer(
     val zoomState = remember { PhotoZoomState() }
     var closing by remember { mutableStateOf(false) }
     val requestClose = { closing = true }
-    val title = stringResource(R.string.person_photo_viewer_title)
-    val imageDescription = stringResource(R.string.person_photo_viewer_image)
+    val title = stringResource(R.string.gallery_viewer_title)
+    val imageDescription = stringResource(R.string.gallery_viewer_image)
     val zoomPercentage = (100 * (1f + (zoomState.scale - 1f) * zoomFraction.value)).roundToInt()
-    val zoomDescription = stringResource(R.string.person_photo_zoom, zoomPercentage)
+    val zoomDescription = stringResource(R.string.gallery_zoom, zoomPercentage)
     val closeLabel = stringResource(R.string.discover_close)
     val zoomEnabled = !closing && progress.value == 1f
 
@@ -92,14 +96,19 @@ internal fun PersonPhotoViewer(
     BoxWithConstraints(modifier = modifier.semantics { paneTitle = title }) {
         val density = LocalDensity.current
         val safeDrawing = WindowInsets.safeDrawing
-        val aspect = aspectRatio?.takeIf { it.isFinite() && it > 0f } ?: (2f / 3f)
+        val imageType = if (isBackdrop) ImageType.BACKDROP else ImageType.PROFILE
+        val fallbackAspect = if (isBackdrop) imageType.aspectRatio else 2f / 3f
+        val aspect = aspectRatio?.takeIf { it.isFinite() && it > 0f } ?: fallbackAspect
+        val captionStyle = MaterialTheme.typography.labelLarge
+        val horizontalInset = if (isBackdrop) 20.dp else 28.dp
         val fit = with(density) {
             val rootWidth = maxWidth.toPx()
             val rootHeight = maxHeight.toPx()
             val top = safeDrawing.getTop(this) + 64.dp.toPx()
-            val bottom = rootHeight - safeDrawing.getBottom(this) - 48.dp.toPx()
+            val captionHeight = if (isBackdrop) 2 * captionStyle.lineHeight.toPx() + 8.dp.toPx() else 0f
+            val bottom = rootHeight - safeDrawing.getBottom(this) - maxOf(48.dp.toPx(), captionHeight)
             val availableHeight = (bottom - top).coerceAtLeast(1f)
-            val availableWidth = (rootWidth - 2 * 28.dp.toPx()).coerceAtLeast(1f)
+            val availableWidth = (rootWidth - 2 * horizontalInset.toPx()).coerceAtLeast(1f)
             val width = minOf(availableWidth, availableHeight * aspect)
             val height = width / aspect
             val left = (rootWidth - width) / 2
@@ -123,8 +132,9 @@ internal fun PersonPhotoViewer(
                         }
         )
 
-        ProfileZoomableImageWithBounds(
+        ZoomablePhoto(
                 imagePath = imagePath,
+                thumbnailType = imageType,
                 zoomState = zoomState,
                 zoomEnabled = zoomEnabled,
                 zoomFraction = zoomFraction.value,
@@ -152,17 +162,29 @@ internal fun PersonPhotoViewer(
             Icon(Icons.Filled.Close, contentDescription = closeLabel)
         }
 
-        if (personName.isNotBlank()) {
+        if (caption.isNotBlank()) {
+            val captionModifier = if (isBackdrop) {
+                Modifier.align(Alignment.TopCenter)
+                        .offset { IntOffset(0, fit.bottom.roundToInt()) }
+                        .width(with(density) { fit.width.toDp() })
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                        .alpha(((progress.value - 0.7f) / 0.3f).coerceIn(0f, 1f))
+            } else {
+                Modifier.align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
+                        .padding(horizontal = horizontalInset, vertical = 14.dp)
+                        .alpha(progress.value)
+            }
+
             Text(
-                    text = personName,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelLarge,
+                    text = caption,
+                    textAlign = if (isBackdrop) TextAlign.Start else TextAlign.Center,
+                    style = captionStyle,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
-                            .padding(horizontal = 28.dp, vertical = 14.dp)
-                            .alpha(progress.value)
+                    maxLines = if (isBackdrop) 2 else Int.MAX_VALUE,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = captionModifier
             )
         }
     }

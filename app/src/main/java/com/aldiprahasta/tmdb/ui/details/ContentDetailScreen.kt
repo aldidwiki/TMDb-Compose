@@ -40,6 +40,7 @@ fun ContentDetailScreen(
         onSimilarClicked: (Int) -> Unit,
         onAllSimilarClicked: (title: String, genres: String) -> Unit,
         onAllEpisodesClicked: (Int) -> Unit,
+        onOpenPhotos: (String) -> Unit,
         modifier: Modifier = Modifier
 ) {
     val viewModel: ContentDetailViewModel = koinViewModel()
@@ -82,7 +83,7 @@ fun ContentDetailScreen(
                             modifier = contentModifier.verticalScroll(rememberScrollState()).padding(bottom = 24.dp),
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                     ) {
-                        ContentDetailHero(detail, isTv)
+                        ContentDetailHero(detail, isTv, onOpenPhotos = { onOpenPhotos(detail.title) })
                         ContentDetailOverview(
                                 detail = detail,
                                 isTv = isTv,

@@ -125,6 +125,9 @@ interface RemoteService {
     @GET("movie/{movie_id}/images")
     suspend fun getMovieImages(@Path("movie_id") movieId: Int): ImageResponse?
 
+    @GET("tv/{tv_id}/images")
+    suspend fun getTvImages(@Path("tv_id") tvId: Int): ImageResponse?
+
     @GET("person/{person_id}/images")
     suspend fun getPersonImages(@Path("person_id") personId: Int): ImageResponse?
 }

@@ -341,9 +341,13 @@ fun ImageResponse.mapImageResponseToDomainList(imageType: ImageType): List<Image
             ImageDomainModel(id, responseModel.filePath)
         } ?: emptyList()
 
-        ImageType.BACKDROP -> backdrops?.map { responseModel ->
-            ImageDomainModel(id, responseModel.filePath)
-        } ?: emptyList()
+        ImageType.BACKDROP -> backdrops.orEmpty().map { responseModel ->
+            val width = responseModel.width?.takeIf { it > 0 }
+            val height = responseModel.height?.takeIf { it > 0 }
+            val ratio = responseModel.aspectRatio?.toFloat()?.takeIf { it.isFinite() && it > 0f }
+                    ?: if (width != null && height != null) width.toFloat() / height else null
+            ImageDomainModel(id, responseModel.filePath, ratio)
+        }
 
         ImageType.PROFILE -> profiles?.map { responseModel ->
             ImageDomainModel(id, responseModel.filePath, responseModel.aspectRatio?.toFloat())

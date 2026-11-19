@@ -78,17 +78,26 @@
     <string name="person_credit_with_year">%1$s (%2$s)</string>
     <string name="person_credit_role">as %1$s</string>
     <string name="person_open_photos">Open person photos</string>
-    <string name="person_photos_title">Photos</string>
-    <string name="person_photos_error">Couldn’t load photos.</string>
+    <string name="gallery_title">Photos</string>
+    <string name="gallery_load_error">Couldn’t load photos.</string>
+    <string name="gallery_no_backdrops">No backdrops available.</string>
+    <string name="gallery_open_backdrops">Open photo gallery</string>
+    <string name="gallery_open_backdrop">Open backdrop %1$d</string>
+    <string name="gallery_backdrop_caption">%1$s · %2$d/%3$d</string>
+    <string name="gallery_image_position">%1$d/%2$d</string>
     <string name="person_no_photos">No photos available.</string>
     <string name="person_photo_open">Open photo %1$d</string>
-    <string name="person_photo_viewer_title">Photo viewer</string>
-    <string name="person_photo_viewer_image">Zoomable photo</string>
-    <string name="person_photo_zoom">Zoom %1$d%%</string>
+    <string name="gallery_viewer_title">Photo viewer</string>
+    <string name="gallery_viewer_image">Zoomable photo</string>
+    <string name="gallery_zoom">Zoom %1$d%%</string>
 
     <plurals name="person_photo_count">
         <item quantity="one">%1$d photo</item>
         <item quantity="other">%1$d photos</item>
+    </plurals>
+    <plurals name="gallery_backdrop_count">
+        <item quantity="one">%d backdrop</item>
+        <item quantity="other">%d backdrops</item>
     </plurals>
     <plurals name="person_credit_episodes">
         <item quantity="one">%1$d episode</item>
