@@ -6,6 +6,12 @@ sealed class UiState<out T> {
     data object Loading : UiState<Nothing>()
 }
 
+inline fun <T, R> UiState<T>.mapSuccess(transform: (T) -> R): UiState<R> = when (this) {
+    is UiState.Success -> UiState.Success(transform(data))
+    is UiState.Error -> this
+    UiState.Loading -> UiState.Loading
+}
+
 inline fun <reified T> UiState<T>.doIfSuccess(callback: (data: T) -> Unit) {
     if (this is UiState.Success) callback(data)
 }

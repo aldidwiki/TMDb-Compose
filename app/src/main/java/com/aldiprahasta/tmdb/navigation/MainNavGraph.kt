@@ -20,10 +20,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
+import com.aldiprahasta.tmdb.ui.dashboard.DashboardScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteScreen
+import com.aldiprahasta.tmdb.ui.genre.GenreMovieScreen
 import com.aldiprahasta.tmdb.ui.image.ImageGalleryScreen
 import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
@@ -37,11 +40,16 @@ import com.aldiprahasta.tmdb.utils.parcelableArrayList
 import kotlinx.serialization.json.Json
 
 val navigationItem = listOf(
+        Dashboard,
         Movie,
         Tv,
         Favorite,
         Search
 )
+
+private fun NavHostController.navigateToGenreMovieListing(genre: GenreDomainModel) {
+    navigate("${GenreMovieListing.route}/${genre.id}/${Uri.encode(genre.name)}")
+}
 
 private fun NavHostController.navigateToContentDetail(contentId: Int, contentType: String) {
     navigate("${ContentDetail.route}/$contentId/$contentType")
@@ -117,11 +125,41 @@ fun TMDbNavHostController(
 ) {
     NavHost(
             navController = navController,
-            startDestination = Movie.route,
+            startDestination = Dashboard.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
             modifier = modifier
     ) {
+        composable(
+                route = Dashboard.route,
+                enterTransition = dashboardItemEnterTransition,
+                exitTransition = dashboardItemExitTransition
+        ) {
+            DashboardScreen(
+                    onMovieClicked = { movieId ->
+                        navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
+                    },
+                    onGenreClicked = navController::navigateToGenreMovieListing
+            )
+        }
+
+        composable(
+                route = GenreMovieListing.routeWithArgs,
+                arguments = GenreMovieListing.arguments,
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
+        ) { navBackStackEntry ->
+            GenreMovieScreen(
+                    genreName = navBackStackEntry.arguments?.getString(GenreMovieListing.GENRE_NAME_ARG).orEmpty(),
+                    onBackPressed = { navController.navigateUp() },
+                    onMovieClicked = { movieId ->
+                        navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
+                    }
+            )
+        }
+
         composable(
                 route = Movie.route,
                 enterTransition = dashboardItemEnterTransition,

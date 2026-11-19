@@ -55,6 +55,11 @@ fun String.convertDate(
     } ?: this
 }
 
+fun formatMovieRating(rating: Double): String = java.text.NumberFormat.getNumberInstance().apply {
+    minimumFractionDigits = 1
+    maximumFractionDigits = 1
+}.format(rating)
+
 fun Int?.runtimeFormat(): String {
     var runtimeText = ""
     this?.let {

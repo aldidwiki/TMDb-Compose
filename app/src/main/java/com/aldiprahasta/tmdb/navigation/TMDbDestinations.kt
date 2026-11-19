@@ -17,6 +17,25 @@ interface TMDbDestinations {
     val label: String get() = "Home"
 }
 
+object Dashboard : TMDbDestinations {
+    override val route: String = "dashboard"
+}
+
+object GenreMovieListing : TMDbDestinations {
+    override val route: String = "genre_movie_listing"
+    const val GENRE_ID_ARG = "genre_id"
+    const val GENRE_NAME_ARG = "genre_name"
+    val routeWithArgs = "$route/{$GENRE_ID_ARG}/{$GENRE_NAME_ARG}"
+    val arguments = listOf(
+            navArgument(GENRE_ID_ARG) {
+                type = NavType.IntType
+            },
+            navArgument(GENRE_NAME_ARG) {
+                type = NavType.StringType
+            }
+    )
+}
+
 object Movie : TMDbDestinations {
     override val route: String = "movie"
     override val icon = Icons.Default.Movie

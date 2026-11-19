@@ -38,7 +38,12 @@ fun MovieResponseModel.mapMovieResponseToMovieDomainModel(): MovieDomainModel {
             title = title ?: "",
             posterPath = posterPath,
             releaseDate = releaseDate?.convertDate() ?: "",
-            movieId = id
+            movieId = id,
+            backdropPath = backdropPath,
+            releaseYear = releaseDate?.take(4)?.takeIf { it.length == 4 && it.all(Char::isDigit) },
+            voteAverage = voteAverage?.takeUnless { voteCount == 0 },
+            genreIds = genreIds,
+            overview = overview.orEmpty()
     )
 }
 
@@ -267,7 +272,7 @@ private fun ExternalIdResponse.mapExternalIdResponseToExternalIdDomainModel(): E
     )
 }
 
-private fun VideoResponse.mapVideoResponseToVideoDomainModelList(): List<VideoDomainModel> {
+fun VideoResponse.mapVideoResponseToVideoDomainModelList(): List<VideoDomainModel> {
     return results?.map { model ->
         VideoDomainModel(
                 id = model.id,

@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.data.source.remote.network
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
@@ -17,6 +18,24 @@ import retrofit2.http.Query
 interface RemoteService {
     @GET("movie/popular")
     suspend fun getPopularMovies(@Query("page") page: Int): MovieResponse?
+
+    @GET("trending/movie/day")
+    suspend fun getTrendingMovies(): MovieResponse?
+
+    @GET("movie/now_playing")
+    suspend fun getNowPlayingMovies(@Query("region") region: String): MovieResponse?
+
+    @GET("discover/movie")
+    suspend fun getMoviesByGenre(
+            @Query("with_genres") genreId: Int,
+            @Query("sort_by") sort: String,
+            @Query("page") page: Int,
+            @Query("primary_release_year") releaseYear: Int?,
+            @Query("vote_average.gte") minimumRating: Int?
+    ): MovieResponse
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(@Path("movie_id") movieId: Int): VideoResponse?
 
     @GET("movie/{movie_id}?append_to_response=release_dates,credits,external_ids,videos")
     suspend fun getMovieDetail(@Path("movie_id") movieId: Int): MovieDetailResponse?

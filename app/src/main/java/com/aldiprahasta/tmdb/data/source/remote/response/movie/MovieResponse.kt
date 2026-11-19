@@ -6,7 +6,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MovieResponse(
         @SerialName("results")
-        val movieResponseModelList: List<MovieResponseModel>
+        val movieResponseModelList: List<MovieResponseModel>,
+
+        @SerialName("total_pages")
+        val totalPages: Int = 1
 )
 
 @Serializable
@@ -34,5 +37,17 @@ data class MovieResponseModel(
         val title: String?,
 
         @SerialName("poster_path")
-        val posterPath: String?
+        val posterPath: String?,
+
+        @SerialName("backdrop_path")
+        val backdropPath: String? = null,
+
+        @SerialName("vote_average")
+        val voteAverage: Double? = null,
+
+        @SerialName("genre_ids")
+        val genreIds: List<Int> = emptyList(),
+
+        @SerialName("vote_count")
+        val voteCount: Int? = null
 )

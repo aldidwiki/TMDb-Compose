@@ -9,49 +9,43 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.BuildConfig
 import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.navigation.Dashboard
 import com.aldiprahasta.tmdb.navigation.TMDbNavHostController
 import com.aldiprahasta.tmdb.navigation.currentDestination
-import com.aldiprahasta.tmdb.navigation.navigateSingleTopTo
 import com.aldiprahasta.tmdb.navigation.navigationItem
-import com.aldiprahasta.tmdb.ui.theme.TMDBSecondaryColor
+import com.aldiprahasta.tmdb.ui.dashboard.DashboardBottomNavigation
+import com.aldiprahasta.tmdb.ui.dashboard.DashboardTab
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    var isVisibleBar by remember { mutableStateOf(true) }
-
-    isVisibleBar = navigationItem.find {
-        it.route == navController.currentDestination()?.route
-    } != null
+    val currentRoute = navController.currentDestination()?.route
+    val isDashboard = currentRoute == Dashboard.route
+    val showTopBar = !isDashboard && navigationItem.any { it.route == currentRoute }
+    var selectedDashboardTab by rememberSaveable { mutableStateOf(DashboardTab.HOME) }
 
     Scaffold(
             modifier = modifier,
             topBar = {
                 AnimatedVisibility(
-                        visible = isVisibleBar,
+                        visible = showTopBar,
                         enter = expandVertically(),
                         exit = shrinkVertically()
                 ) {
@@ -60,19 +54,22 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             },
             bottomBar = {
                 AnimatedVisibility(
-                        visible = isVisibleBar,
+                        visible = isDashboard,
                         enter = expandVertically(),
                         exit = shrinkVertically()
                 ) {
-                    TMDbBottomNavigation(navController)
+                    DashboardBottomNavigation(
+                            selectedTab = selectedDashboardTab,
+                            onTabSelected = { selectedDashboardTab = it }
+                    )
                 }
             }
     ) { innerPadding ->
         TMDbNavHostController(
                 navController = navController,
                 modifier = Modifier.padding(
-                        top = if (isVisibleBar) innerPadding.calculateTopPadding() else 0.dp,
-                        bottom = if (isVisibleBar) innerPadding.calculateBottomPadding() else 0.dp
+                        top = if (showTopBar) innerPadding.calculateTopPadding() else 0.dp,
+                        bottom = if (isDashboard) innerPadding.calculateBottomPadding() else 0.dp
                 )
         )
     }
@@ -105,28 +102,4 @@ fun TMDbMainTopBar(modifier: Modifier = Modifier) {
                 )
             }
     )
-}
-
-@Composable
-private fun TMDbBottomNavigation(
-        navController: NavHostController,
-        modifier: Modifier = Modifier
-) {
-    NavigationBar(modifier = modifier) {
-        navigationItem.forEach { tmDbDestinations ->
-            NavigationBarItem(
-                    colors = NavigationBarItemDefaults.colors(indicatorColor = TMDBSecondaryColor),
-                    selected = tmDbDestinations.route == navController.currentDestination()?.route,
-                    onClick = {
-                        navController.navigateSingleTopTo(tmDbDestinations.route)
-                    },
-                    icon = {
-                        Icon(imageVector = tmDbDestinations.icon, contentDescription = null)
-                    },
-                    label = {
-                        Text(text = tmDbDestinations.label)
-                    }
-            )
-        }
-    }
 }

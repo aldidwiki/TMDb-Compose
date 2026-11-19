@@ -1,6 +1,46 @@
 <resources>
     <string name="app_name">TMDb</string>
 
+    <string name="dashboard_trending">Trending Now</string>
+    <string name="dashboard_tab_home">Home</string>
+    <string name="dashboard_tab_explore">Explore</string>
+    <string name="dashboard_tab_search">Search</string>
+    <string name="dashboard_tab_favorites">Favorites</string>
+    <string name="dashboard_now_playing">Now Playing</string>
+    <string name="dashboard_browse_genres">Browse by Genre</string>
+    <string name="dashboard_watch_trailer">Watch Trailer</string>
+    <string name="dashboard_trailers">Trailers</string>
+    <string name="dashboard_choose_trailer">Choose a video to play.</string>
+    <string name="dashboard_trailer_error">Couldn’t load trailers. Try again.</string>
+    <string name="dashboard_trailer_unavailable">No trailer available.</string>
+    <string name="discover_rating_badge">★ %1$s</string>
+    <string name="discover_no_results">No titles found.</string>
+    <string name="discover_load_error">Couldn’t load this section.</string>
+    <string name="discover_retry">Retry</string>
+    <string name="discover_close">Close</string>
+    <string name="discover_back">Back</string>
+    <string name="genre_movies_title">%1$s Movies</string>
+    <string name="genre_see_details">See Details</string>
+    <string name="genre_sort_by">Sort by</string>
+    <string name="genre_sort_description">Choose how %1$s movies are ordered.</string>
+    <string name="genre_sort_popularity">Popularity</string>
+    <string name="genre_sort_newest">Newest first</string>
+    <string name="genre_sort_highest_rated">Highest rated</string>
+    <string name="genre_sort_title">Title A–Z</string>
+    <string name="genre_sort_most_voted">Most voted</string>
+    <string name="genre_apply_sort">Apply sort</string>
+    <string name="genre_release_year">Release year</string>
+    <string name="genre_release_year_description">Filter the list by release year.</string>
+    <string name="genre_release_selection">Release: %1$d</string>
+    <string name="genre_all_years">All years</string>
+    <string name="genre_apply_year">Apply year</string>
+    <string name="genre_minimum_rating">Minimum rating</string>
+    <string name="genre_minimum_rating_description">Show titles at or above this rating.</string>
+    <string name="genre_any_rating">Any rating</string>
+    <string name="genre_rating_selection">★ %1$s</string>
+    <string name="genre_rating_threshold">%1$s+</string>
+    <string name="genre_apply_rating">Apply rating</string>
+
     <plurals name="image">
         <item quantity="zero">Image</item>
         <item quantity="one">Image</item>
