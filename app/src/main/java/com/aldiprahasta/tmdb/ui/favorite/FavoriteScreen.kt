@@ -1,5 +1,9 @@
 package com.aldiprahasta.tmdb.ui.favorite
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,6 +68,8 @@ import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import org.koin.androidx.compose.koinViewModel
+
+private const val FavoriteFadeDuration = 180
 
 @Composable
 fun FavoriteScreen(
@@ -166,35 +172,14 @@ private fun FavoriteContent(
                     errorMessage = stringResource(R.string.favorite_load_error)
             )
 
-            is UiState.Success -> if (favorites.data.isEmpty()) {
-                Box(modifier = contentModifier.padding(18.dp), contentAlignment = Alignment.Center) {
-                    Text(
-                            text = stringResource(R.string.favorite_empty),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else {
+            is UiState.Success -> {
                 key(uiState.sortOrder) {
-                    LazyColumn(
+                    FavoriteList(
+                            favorites = favorites.data,
+                            onRemove = { onEvent(FavoriteEvent.Remove(it)) },
+                            onItemClicked = onItemClicked,
                             modifier = contentModifier,
-                            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(favorites.data, key = { "${it.mediaType}:${it.favoriteId}" }) { favorite ->
-                            val remove = { onEvent(FavoriteEvent.Remove(favorite)) }
-                            SwipeBox(
-                                    modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                    onDelete = remove
-                            ) {
-                                FavoriteCard(
-                                        favorite = favorite,
-                                        onRemove = remove,
-                                        onClick = { onItemClicked(favorite.favoriteId, favorite.mediaType) }
-                                )
-                            }
-                        }
-                    }
+                    )
                 }
             }
         }
@@ -214,6 +199,52 @@ private fun FavoriteContent(
                     onEvent(FavoriteEvent.ApplySort(it))
                 }
         )
+    }
+}
+
+@Composable
+internal fun FavoriteList(
+        favorites: List<FavoriteDomainModel>,
+        onRemove: (FavoriteDomainModel) -> Unit,
+        onItemClicked: (Int, String) -> Unit,
+        modifier: Modifier = Modifier
+) {
+    Box(modifier) {
+        LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(favorites, key = { "${it.mediaType}:${it.favoriteId}" }) { favorite ->
+                val remove = { onRemove(favorite) }
+                SwipeBox(
+                        modifier = Modifier.animateItem(
+                                fadeInSpec = tween(FavoriteFadeDuration),
+                                placementSpec = tween(durationMillis = 280),
+                                fadeOutSpec = tween(FavoriteFadeDuration)
+                        ).clip(RoundedCornerShape(16.dp)),
+                        onDelete = remove
+                ) {
+                    FavoriteCard(
+                            favorite = favorite,
+                            onRemove = remove,
+                            onClick = { onItemClicked(favorite.favoriteId, favorite.mediaType) }
+                    )
+                }
+            }
+        }
+        AnimatedVisibility(
+                visible = favorites.isEmpty(),
+                modifier = Modifier.align(Alignment.Center).padding(horizontal = 18.dp),
+                enter = fadeIn(tween(durationMillis = 150, delayMillis = FavoriteFadeDuration)),
+                exit = fadeOut(tween(durationMillis = 100))
+        ) {
+            Text(
+                    text = stringResource(R.string.favorite_empty),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
