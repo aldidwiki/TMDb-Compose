@@ -6,8 +6,19 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreditResponse(
         @SerialName("cast")
-        val casts: List<CastResponseModel>?
+        val casts: List<CastResponseModel>?,
+        val crew: List<CrewResponseModel> = emptyList()
 )
+
+@Serializable
+data class CrewResponseModel(
+        val name: String? = null,
+        val job: String? = null,
+        val jobs: List<CrewJobResponseModel> = emptyList()
+)
+
+@Serializable
+data class CrewJobResponseModel(val job: String? = null)
 
 @Serializable
 data class CastResponseModel(

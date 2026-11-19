@@ -5,6 +5,7 @@ import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.SimilarResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
@@ -26,6 +27,8 @@ import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
 import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
+import com.aldiprahasta.tmdb.domain.model.SimilarContent
+import com.aldiprahasta.tmdb.domain.model.SimilarPage
 import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
@@ -48,6 +51,10 @@ fun MovieResponseModel.mapMovieResponseToMovieDomainModel(): MovieDomainModel {
 }
 
 fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): ContentDetailDomainModel {
+    val usReleases = releaseDates?.results.orEmpty().firstOrNull { it.iso31661 == "US" }?.releaseDates.orEmpty()
+    val theatricalRelease = usReleases.filter { it.type == 3 }.mapNotNull { it.releaseDate }.minOrNull()
+            ?: usReleases.filter { it.type == 2 }.mapNotNull { it.releaseDate }.minOrNull()
+            ?: usReleases.mapNotNull { it.releaseDate }.minOrNull()
     return ContentDetailDomainModel(
             id = id,
             title = title ?: "",
@@ -61,9 +68,7 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             backdropPath = backdropPath,
             casts = credits?.mapCreditResponseToCastDomainModelList(MediaType.MOVIE_TYPE)
                     ?: emptyList(),
-            certification = (releaseDates?.results?.firstOrNull { item ->
-                item.iso31661 == "US"
-            }?.releaseDates?.firstOrNull()?.certification ?: "NR").ifEmpty { "NR" },
+            certification = usReleases.firstNotNullOfOrNull { it.certification?.takeIf(String::isNotBlank) } ?: "NR",
             budget = (budget ?: 0L).formatCurrency(),
             revenue = (revenue ?: 0L).formatCurrency(),
             originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
@@ -72,7 +77,12 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
             networks = null,
             type = null,
-            voteCount = voteCount
+            voteCount = voteCount,
+            releaseYear = releaseDate.releaseYear(),
+            runtimeMinutes = runtime?.takeIf { it > 0 },
+            usReleaseDate = theatricalRelease?.take(10)?.convertDate(),
+            directors = credits.namesForJob("Director"),
+            composers = credits.namesForJob("Original Music Composer")
     )
 }
 
@@ -96,7 +106,9 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
 }
 
 fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType): List<CastDomainModel> {
-    return casts?.map { castResponseModel ->
+    val cast = casts.orEmpty()
+    val orderedCast = if (mediaType == MediaType.PERSON_TYPE) cast else cast.sortedBy { it.order ?: Int.MAX_VALUE }
+    return orderedCast.map { castResponseModel ->
         when (mediaType) {
             MediaType.MOVIE_TYPE -> CastDomainModel(
                     name = castResponseModel.name ?: "",
@@ -126,7 +138,9 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
 
             MediaType.TV_TYPE -> CastDomainModel(
                     name = castResponseModel.name ?: "",
-                    characterName = castResponseModel.roles?.firstOrNull()?.character ?: "",
+                    characterName = castResponseModel.roles.orEmpty()
+                            .firstNotNullOfOrNull { it.character?.takeIf(String::isNotBlank) }
+                            ?: castResponseModel.character.orEmpty(),
                     imagePath = castResponseModel.profilePath ?: "",
                     order = castResponseModel.order ?: 0,
                     id = castResponseModel.id,
@@ -135,8 +149,29 @@ fun CreditResponse.mapCreditResponseToCastDomainModelList(mediaType: MediaType):
                     totalEpisodeCount = castResponseModel.totalEpisodeCount
             )
         }
-    } ?: emptyList()
+    }
 }
+
+private fun CreditResponse?.namesForJob(job: String): List<String> = this?.crew.orEmpty()
+        .filter { member -> member.job == job || member.jobs.any { it.job == job } }
+        .mapNotNull { it.name?.takeIf(String::isNotBlank) }
+        .distinct()
+
+private fun String?.releaseYear(): String? = this?.take(4)?.takeIf { it.length == 4 && it.all(Char::isDigit) }
+
+fun SimilarResponse.mapSimilarResponseToPage(): SimilarPage = SimilarPage(
+        items = results.map { item ->
+            SimilarContent(
+                    id = item.id,
+                    title = item.title ?: item.name.orEmpty(),
+                    posterPath = item.posterPath,
+                    releaseYear = (item.releaseDate ?: item.firstAirDate).releaseYear(),
+                    voteAverage = item.voteAverage?.takeIf { it > 0 && item.voteCount != 0 }
+            )
+        },
+        totalPages = totalPages,
+        totalResults = totalResults
+)
 
 fun TvResponseModel.mapTvResponseToTvDomainModel(): TvDomainModel {
     return TvDomainModel(
@@ -174,7 +209,11 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 type = type,
                 seasons = seasons?.mapTvSeasonItemResponseToDomainModelList(),
                 voteCount = voteCount?.toInt(),
-                seasonCount = numberOfSeasons
+                seasonCount = numberOfSeasons,
+                releaseYear = firstAirDate.releaseYear(),
+                creators = createdBy.mapNotNull { it.name?.takeIf(String::isNotBlank) }.distinct(),
+                directors = credits.namesForJob("Director"),
+                executiveProducers = credits.namesForJob("Executive Producer")
         )
 
 fun TvSeasonResponse.mapTvSeasonResponseToDomainModel(): TvSeasonDetailDomainModel {
@@ -185,10 +224,11 @@ fun TvSeasonResponse.mapTvSeasonResponseToDomainModel(): TvSeasonDetailDomainMod
                     seasonPosterPath = posterPath,
                     seasonAirDate = airDate?.convertDate() ?: "",
                     seasonVoteAverage = voteAverage ?: 0.0,
-                    totalEpisodes = 0,
-                    seasonNumber = seasonNumber ?: 0
+                    totalEpisodes = episodes.size,
+                    seasonNumber = seasonNumber ?: 0,
+                    airDateIso = airDate
             ),
-            tvEpisodeList = episodes.mapTvEpisodeItemResponseToDomainModelList()
+            tvEpisodeList = episodes.mapTvEpisodeItemResponseToDomainModelList().sortedBy { it.episodeNumber }
     )
 }
 
@@ -323,7 +363,7 @@ fun VideoResponse.mapVideoResponseToVideoDomainModelList(): List<VideoDomainMode
 }
 
 private fun List<TvSeasonItemResponse>.mapTvSeasonItemResponseToDomainModelList(): List<TvSeasonDomainModel> {
-    return this.map { item ->
+    return this.filter { it.seasonNumber != null }.map { item ->
         TvSeasonDomainModel(
                 seasonId = item.id,
                 seasonName = item.name ?: "",
@@ -331,7 +371,8 @@ private fun List<TvSeasonItemResponse>.mapTvSeasonItemResponseToDomainModelList(
                 seasonAirDate = item.airDate?.convertDate() ?: "",
                 seasonVoteAverage = item.voteAverage ?: 0.0,
                 totalEpisodes = item.episodeCount ?: 0,
-                seasonNumber = item.seasonNumber ?: 0
+                seasonNumber = checkNotNull(item.seasonNumber),
+                airDateIso = item.airDate
         )
     }
 }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -16,7 +15,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,7 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
-import com.aldiprahasta.tmdb.ui.components.DiscoverBottomSheet
+import com.aldiprahasta.tmdb.ui.components.TrailerSheet
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.Constant
@@ -161,34 +159,17 @@ private fun DashboardTrailers(
                 onDismiss()
                 snackbarScope.launch { snackbarHostState.showSnackbar(unavailable) }
             }
-
-            trailers?.size == 1 -> {
-                onDismiss()
-                context.openBrowser(Constant.YOUTUBE_BASE_URL + trailers.single().key)
-            }
         }
     }
 
-    if (trailers != null && trailers.size > 1) {
-        DiscoverBottomSheet(
-                title = stringResource(R.string.dashboard_trailers),
-                description = stringResource(R.string.dashboard_choose_trailer),
-                onDismiss = onDismiss
-        ) {
-            trailers.forEach { trailer ->
-                TextButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            onDismiss()
-                            context.openBrowser(Constant.YOUTUBE_BASE_URL + trailer.key)
-                        }
-                ) {
-                    Text(
-                            text = trailer.name.ifBlank { stringResource(R.string.dashboard_watch_trailer) },
-                            style = MaterialTheme.typography.labelLarge
-                    )
+    if (!trailers.isNullOrEmpty()) {
+        TrailerSheet(
+                trailers = trailers,
+                onDismiss = onDismiss,
+                onTrailerClicked = { trailer ->
+                    onDismiss()
+                    context.openBrowser(Constant.YOUTUBE_BASE_URL + trailer.key)
                 }
-            }
-        }
+        )
     }
 }

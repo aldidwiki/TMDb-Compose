@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.data.source.remote.network
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ImageResponse
+import com.aldiprahasta.tmdb.data.source.remote.response.SimilarResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
@@ -46,6 +47,9 @@ interface RemoteService {
     @GET("movie/{movie_id}/credits")
     suspend fun getMovieCredits(@Path("movie_id") movieId: Int): CreditResponse?
 
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(@Path("movie_id") movieId: Int, @Query("page") page: Int): SimilarResponse
+
     @GET("person/{person_id}/combined_credits")
     suspend fun getPersonCredits(@Path("person_id") personId: Int): CreditResponse?
 
@@ -57,6 +61,9 @@ interface RemoteService {
 
     @GET("tv/{tv_id}/aggregate_credits")
     suspend fun getTvCredits(@Path("tv_id") tvId: Int): CreditResponse?
+
+    @GET("tv/{tv_id}/similar")
+    suspend fun getSimilarShows(@Path("tv_id") tvId: Int, @Query("page") page: Int): SimilarResponse
 
     @GET("tv/{tv_id}/season/{season_number}")
     suspend fun getTvSeasonDetail(

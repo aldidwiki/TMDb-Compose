@@ -17,11 +17,18 @@ data class ContentDetailDomainModel(
         val originalLanguage: String,
         val status: String,
         val externalId: ExternalIdDomainModel,
-        var casts: List<CastDomainModel>,
+        val casts: List<CastDomainModel>,
         val videos: List<VideoDomainModel>,
         val type: String?,
         val networks: List<NetworkDomainModel>?,
         val seasons: List<TvSeasonDomainModel>? = null,
         val voteCount: Int? = null,
-        val seasonCount: Int? = null
+        val seasonCount: Int? = null,
+        val releaseYear: String? = null,
+        val runtimeMinutes: Int? = null,
+        val usReleaseDate: String? = null,
+        val directors: List<String> = emptyList(),
+        val composers: List<String> = emptyList(),
+        val creators: List<String> = emptyList(),
+        val executiveProducers: List<String> = emptyList()
 )

@@ -1,204 +1,80 @@
 package com.aldiprahasta.tmdb.ui.details
 
-import androidx.compose.animation.animateContentSize
+import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
-import com.aldiprahasta.tmdb.ui.components.ImageLoader
-import com.aldiprahasta.tmdb.ui.components.ImageType
+import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 
 @Composable
-fun ContentDetailInfo(
-        status: String,
-        originalLanguage: String,
-        budget: String?,
-        revenue: String?,
-        networks: List<NetworkDomainModel>?, // null means its from movie
-        tvType: String?,
-        onAllSeasonClicked: () -> Unit,
-        modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                    text = "Details",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f)
-            )
-            networks?.let {
-                TextButton(onClick = onAllSeasonClicked) {
-                    Text(text = "SEE ALL SEASONS")
-                }
-            }
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        Row {
-            Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                        text = "Status",
-                        style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                        text = status,
-                        style = MaterialTheme.typography.bodySmall
-                )
+internal fun ContentDetailInfo(detail: ContentDetailDomainModel, isTv: Boolean, modifier: Modifier = Modifier) {
+    val runtime = detail.runtimeMinutes?.let { stringResource(R.string.detail_runtime_minutes, it) }
+    val director = detail.directors.joinToString(", ")
+    val fields = (if (isTv) {
+        val productionCredit = if (detail.executiveProducers.isNotEmpty()) {
+            InfoField(R.string.detail_executive_producer, detail.executiveProducers.joinToString(", "))
+        } else InfoField(R.string.detail_director, director)
 
-                Spacer(modifier = Modifier.size(16.dp))
-                budget?.let {
-                    Text(
-                            text = "Budget",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = budget,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                networks?.let { itemList ->
-                    Text(
-                            text = "Networks",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    NetworksItem(networks = itemList)
-                }
-            }
+        listOf(
+                InfoField(R.string.detail_creator, detail.creators.joinToString(", ")),
+                InfoField(R.string.detail_first_aired, detail.releaseDate),
+                productionCredit,
+                InfoField(R.string.detail_status, detail.status)
+        )
+    } else {
+        val release = if (!detail.usReleaseDate.isNullOrBlank()) InfoField(R.string.detail_us_release, detail.usReleaseDate)
+        else InfoField(R.string.detail_release, detail.releaseDate)
+        listOf(
+                InfoField(R.string.detail_director, director),
+                release,
+                InfoField(R.string.detail_runtime, runtime.orEmpty()),
+                InfoField(R.string.detail_music, detail.composers.joinToString(", "))
+        )
+    }).filter { it.value.isNotBlank() }
 
-            Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                        text = "Original Language",
-                        style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                        text = originalLanguage,
-                        style = MaterialTheme.typography.bodySmall
-                )
+    if (fields.isEmpty()) return
 
-                Spacer(modifier = Modifier.size(16.dp))
-                revenue?.let {
-                    Text(
-                            text = "Revenue",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = revenue,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                tvType?.let {
-                    Text(
-                            text = "Type",
-                            style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                            text = tvType,
-                            style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun NetworksItem(
-        networks: List<NetworkDomainModel>,
-        modifier: Modifier = Modifier
-) {
-    val maxItemCount = 3
-
-    Column(
-            modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        var visibleItemCount by remember { mutableIntStateOf(maxItemCount) }
-        var isExpanded by remember { mutableStateOf(false) }
-
-        Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.animateContentSize()
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+                text = stringResource(if (isTv) R.string.detail_series_info else R.string.detail_movie_info),
+                style = MaterialTheme.typography.titleMedium
+        )
+        Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
         ) {
-            networks.take(visibleItemCount).forEach { network ->
-                ImageLoader(
-                        imagePath = network.networkLogoPath,
-                        imageType = ImageType.LOGO,
-                        modifier = Modifier
-                                .padding(vertical = 4.dp)
-                                .height(20.dp)
-                )
-            }
-        }
-
-        if (networks.size > maxItemCount) {
-            TextButton(onClick = {
-                visibleItemCount = if (isExpanded) {
-                    maxItemCount
-                } else {
-                    networks.size
+            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                fields.chunked(2).forEach { row ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        row.forEach { field ->
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(
+                                        text = stringResource(field.label),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(field.value, style = MaterialTheme.typography.labelLarge)
+                            }
+                        }
+                    }
                 }
-                isExpanded = !isExpanded
-            }) {
-                Text(if (isExpanded) "show less" else "show more")
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun NetworksItemPreview() {
-    NetworksItem(networks = listOf(
-            NetworkDomainModel(
-                    networkId = 49,
-                    networkLogoPath = "/tuomPhY2UtuPTqqFnKMVHvSb724.png",
-                    networkName = "HBO"
-            ),
-            NetworkDomainModel(
-                    networkId = 49,
-                    networkLogoPath = "/tuomPhY2UtuPTqqFnKMVHvSb724.png",
-                    networkName = "HBO"
-            ),
-            NetworkDomainModel(
-                    networkId = 49,
-                    networkLogoPath = "/tuomPhY2UtuPTqqFnKMVHvSb724.png",
-                    networkName = "HBO"
-            )
-    ))
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ContentDetailInfoPreview() {
-    ContentDetailInfo(
-            status = "Released",
-            originalLanguage = "English",
-            budget = "$1,000,000.00",
-            revenue = "2,000,000.00",
-            networks = null,
-            tvType = null,
-            onAllSeasonClicked = { }
-    )
-}
+private data class InfoField(@param:StringRes val label: Int, val value: String)

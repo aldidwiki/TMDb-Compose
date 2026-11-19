@@ -14,47 +14,27 @@ import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
 class TvRemoteDataSource(private val remoteService: RemoteService) {
-    fun getTvDetail(tvId: Int): Flow<UiState<TvDetailResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getTvDetail(tvId)
-        response?.let { tvDetailResponse ->
-            emit(UiState.Success(tvDetailResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        emit(UiState.Error(t))
-    }.flowOn(Dispatchers.IO)
+    fun getTvDetail(tvId: Int): Flow<UiState<TvDetailResponse>> = request {
+        remoteService.getTvDetail(tvId)
+    }
 
-    fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getTvCredits(tvId)
-        response?.let { creditResponse ->
-            emit(UiState.Success(creditResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        UiState.Error(t)
-    }.flowOn(Dispatchers.IO)
+    fun getTvCredits(tvId: Int): Flow<UiState<CreditResponse>> = request {
+        remoteService.getTvCredits(tvId)
+    }
 
-    fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> = flow {
-        emit(UiState.Loading)
-        val response = remoteService.getTvSeasonDetail(tvId, tvSeasonNumber)
-        response?.let { tvSeasonResponse ->
-            emit(UiState.Success(tvSeasonResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        UiState.Error(t)
-    }.flowOn(Dispatchers.IO)
+    fun getTvSeasonDetail(tvId: Int, tvSeasonNumber: Int): Flow<UiState<TvSeasonResponse>> = request {
+        remoteService.getTvSeasonDetail(tvId, tvSeasonNumber)
+    }
 
-    fun getTvGenres(): Flow<UiState<GenreResponse>> = flow {
+    fun getTvGenres(): Flow<UiState<GenreResponse>> = request {
+        remoteService.getTvGenres()
+    }
+
+    private fun <T : Any> request(call: suspend () -> T?): Flow<UiState<T>> = flow {
         emit(UiState.Loading)
-        val response = remoteService.getTvGenres()
-        response?.let { genreResponse ->
-            emit(UiState.Success(genreResponse))
-        }
-    }.catch { t ->
-        Timber.e(t)
-        UiState.Error(t)
+        emit(UiState.Success(checkNotNull(call()) { "TMDb returned an empty response" }))
+    }.catch { throwable ->
+        Timber.e(throwable)
+        emit(UiState.Error(throwable))
     }.flowOn(Dispatchers.IO)
 }

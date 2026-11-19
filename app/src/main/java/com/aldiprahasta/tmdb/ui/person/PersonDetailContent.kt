@@ -46,6 +46,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.PersonDomainModel
+import com.aldiprahasta.tmdb.ui.components.AnimatedFavoriteButton
+import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
+import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
@@ -80,14 +83,14 @@ fun PersonScreen(
         Scaffold(
                 modifier = modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.background,
-                topBar = { PersonTopBar(stringResource(R.string.person_details_title), onBackPressed) },
+                topBar = { DiscoverTopBar(stringResource(R.string.person_details_title), onBackPressed) },
                 snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { innerPadding ->
             val contentModifier = Modifier.fillMaxSize().padding(innerPadding)
 
             when (val person = uiState.person) {
                 UiState.Loading -> LoadingScreen(contentModifier)
-                is UiState.Error -> PersonStatus(
+                is UiState.Error -> DiscoverStatus(
                         message = stringResource(R.string.person_details_error),
                         onRetry = { viewModel.onEvent(PersonDetailEvent.Retry) },
                         modifier = contentModifier
@@ -194,10 +197,11 @@ private fun PersonHeader(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            PersonFavoriteButton(
+            AnimatedFavoriteButton(
                     checked = favorite,
                     enabled = favoriteEnabled,
-                    onCheckedChange = onFavoriteChanged
+                    onCheckedChange = onFavoriteChanged,
+                    modifier = Modifier.width(171.dp)
             )
         }
     }

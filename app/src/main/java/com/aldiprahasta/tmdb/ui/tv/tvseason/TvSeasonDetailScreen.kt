@@ -1,42 +1,36 @@
 package com.aldiprahasta.tmdb.ui.tv.tvseason
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
-import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
-import com.aldiprahasta.tmdb.ui.components.ErrorScreen
+import com.aldiprahasta.tmdb.R
+import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
+import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
+import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.components.TMDbTopBar
-import com.aldiprahasta.tmdb.ui.components.rememberTopAppBarScrollBehavior
+import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
+import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.ui.tv.TvEpisodeItem
 import com.aldiprahasta.tmdb.ui.tv.TvViewModel
-import com.aldiprahasta.tmdb.utils.doIfError
-import com.aldiprahasta.tmdb.utils.doIfLoading
-import com.aldiprahasta.tmdb.utils.doIfSuccess
+import com.aldiprahasta.tmdb.utils.UiState
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TvSeasonDetailScreen(
         tvId: Int,
@@ -45,124 +39,67 @@ fun TvSeasonDetailScreen(
         modifier: Modifier = Modifier
 ) {
     val viewModel: TvViewModel = koinViewModel()
-    val tvSeasonDetail by viewModel.tvSeasonDetail.collectAsStateWithLifecycle()
-    val scrollBehavior = rememberTopAppBarScrollBehavior()
+    val season by viewModel.tvSeasonDetail.collectAsStateWithLifecycle()
 
-    var tvSeasonName by remember { mutableStateOf("") }
-    var tvSeasonYear by remember { mutableStateOf("") }
+    LaunchedEffect(tvId, tvSeasonNumber) { viewModel.setTvSeasonDetailParam(tvId, tvSeasonNumber) }
 
-    LaunchedEffect(tvId) {
-        viewModel.setTvSeasonDetailParam(tvId, tvSeasonNumber)
-    }
-
-    Scaffold(
-            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TMDbTopBar(
-                        topBarTitle = {
-                            val titleText = if (tvSeasonYear.isEmpty() || tvSeasonName.isEmpty()) {
-                                "Episodes List"
-                            } else {
-                                "$tvSeasonName ($tvSeasonYear)"
-                            }
-                            Text(text = titleText)
-                        },
-                        scrollBehavior = scrollBehavior,
-                        onBackPressed = onBackPressed
+    DiscoverSystemBars()
+    DiscoverTheme {
+        Scaffold(
+                modifier = modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.background,
+                topBar = { DiscoverTopBar(stringResource(R.string.detail_episodes), onBackPressed) }
+        ) { innerPadding ->
+            val content = Modifier.fillMaxSize().padding(innerPadding)
+            when (val state = season) {
+                UiState.Loading -> LoadingScreen(content)
+                is UiState.Error -> DiscoverStatus(
+                        message = stringResource(R.string.discover_load_error),
+                        modifier = content,
+                        onRetry = viewModel::retrySeason
                 )
-            }
-    ) { innerPadding ->
-        AnimatedContent(
-                targetState = tvSeasonDetail,
-                label = "Animated Content",
-                transitionSpec = {
-                    fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(tween(500))
-                },
-                modifier = Modifier.padding(innerPadding)
-        ) { targetState ->
-            targetState.doIfLoading {
-                LoadingScreen()
-            }
-
-            targetState.doIfError { throwable, _ ->
-                ErrorScreen()
-            }
-
-            targetState.doIfSuccess { data: TvSeasonDetailDomainModel ->
-                tvSeasonName = data.tvSeasonDomainModel.seasonName
-                tvSeasonYear = data.tvSeasonDomainModel.seasonAirDate.takeLast(4)
-                TvSeasonDetailContent(tvEpisodeList = data.tvEpisodeList)
+                is UiState.Success -> {
+                    val episodes = state.data.tvEpisodeList
+                    LazyColumn(
+                            modifier = content,
+                            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 14.dp, bottom = 20.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        item {
+                            Column(Modifier.fillMaxWidth().padding(bottom = 6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(seasonLabel(state.data.tvSeasonDomainModel), style = MaterialTheme.typography.headlineSmall)
+                                Text(
+                                        text = seasonMetadata(state.data.tvSeasonDomainModel),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        if (episodes.isEmpty()) {
+                            item {
+                                DiscoverStatus(stringResource(R.string.detail_episodes_empty), Modifier.fillMaxWidth())
+                            }
+                        }
+                        items(episodes, key = { it.id }) { episode ->
+                            TvEpisodeItem(episode, showDetails = true)
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun TvSeasonDetailContent(
-        tvEpisodeList: List<TvEpisodeDomainModel>,
-        modifier: Modifier = Modifier
-) {
-    LazyColumn(
-            contentPadding = PaddingValues(
-                    vertical = 10.dp,
-                    horizontal = 16.dp
-            ),
-            modifier = modifier
-    ) {
-        items(tvEpisodeList) { tvEpisode ->
-            TvEpisodeItem(
-                    tvEpisodeDomainModel = tvEpisode,
-                    modifier = Modifier.padding(bottom = 16.dp)
-            )
-        }
-    }
+internal fun seasonLabel(season: TvSeasonDomainModel): String = season.seasonName.ifBlank {
+    if (season.seasonNumber == 0) stringResource(R.string.detail_specials)
+    else stringResource(R.string.detail_season_number, season.seasonNumber)
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun TvSeasonDetailContentPreview() {
-    TvSeasonDetailContent(
-            tvEpisodeList = listOf(
-                    TvEpisodeDomainModel(
-                            id = 4755,
-                            name = "The Heirs of the Dragon",
-                            stillPath = null,
-                            runtime = 66,
-                            overview = "Viserys hosts a tournament to celebrate the birth of his second child. Rhaenyra welcomes her uncle Daemon back to the Red Keep.",
-                            voteAverage = 7.9,
-                            episodeNumber = 1,
-                            airDate = "August 21, 2022"
-                    ),
-                    TvEpisodeDomainModel(
-                            id = 4755,
-                            name = "The Heirs of the Dragon",
-                            stillPath = null,
-                            runtime = 66,
-                            overview = "Viserys hosts a tournament to celebrate the birth of his second child. Rhaenyra welcomes her uncle Daemon back to the Red Keep.",
-                            voteAverage = 7.9,
-                            episodeNumber = 1,
-                            airDate = "August 21, 2022"
-                    ),
-                    TvEpisodeDomainModel(
-                            id = 4755,
-                            name = "The Heirs of the Dragon",
-                            stillPath = null,
-                            runtime = 66,
-                            overview = "Viserys hosts a tournament to celebrate the birth of his second child. Rhaenyra welcomes her uncle Daemon back to the Red Keep.",
-                            voteAverage = 7.9,
-                            episodeNumber = 1,
-                            airDate = "August 21, 2022"
-                    ),
-                    TvEpisodeDomainModel(
-                            id = 4755,
-                            name = "The Heirs of the Dragon",
-                            stillPath = null,
-                            runtime = 66,
-                            overview = "Viserys hosts a tournament to celebrate the birth of his second child. Rhaenyra welcomes her uncle Daemon back to the Red Keep.",
-                            voteAverage = 7.9,
-                            episodeNumber = 1,
-                            airDate = "August 21, 2022"
-                    )
-            )
-    )
+internal fun seasonMetadata(season: TvSeasonDomainModel): String {
+    val count = season.totalEpisodes
+    val episodes = pluralStringResource(R.plurals.detail_episode_count, count, count)
+    val year = season.airDateIso?.take(4)?.takeIf { it.length == 4 && it.all(Char::isDigit) }
+    return listOfNotNull(episodes, year).joinToString(" · ")
 }

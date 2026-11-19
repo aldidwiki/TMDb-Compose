@@ -43,8 +43,8 @@ import com.aldiprahasta.tmdb.domain.model.ImageDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
 import com.aldiprahasta.tmdb.ui.components.ShimmerEffect
-import com.aldiprahasta.tmdb.ui.person.PersonStatus
-import com.aldiprahasta.tmdb.ui.person.PersonTopBar
+import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
+import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.UiState
@@ -93,7 +93,7 @@ private fun PhotoGalleryContent(
                     if (selection != null) hideFromAccessibility()
                 },
                 containerColor = MaterialTheme.colorScheme.background,
-                topBar = { PersonTopBar(stringResource(R.string.person_photos_title), onBackPressed) }
+                topBar = { DiscoverTopBar(stringResource(R.string.person_photos_title), onBackPressed) }
         ) { innerPadding ->
             Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 Column(
@@ -114,13 +114,13 @@ private fun PhotoGalleryContent(
 
                 when (images) {
                     UiState.Loading -> PhotoGridLoading()
-                    is UiState.Error -> PersonStatus(
+                    is UiState.Error -> DiscoverStatus(
                             message = stringResource(R.string.person_photos_error),
                             onRetry = onRetry,
                             modifier = Modifier.fillMaxSize()
                     )
                     is UiState.Success -> if (photos.isEmpty()) {
-                        PersonStatus(stringResource(R.string.person_no_photos), Modifier.fillMaxSize())
+                        DiscoverStatus(stringResource(R.string.person_no_photos), Modifier.fillMaxSize())
                     } else {
                         PhotoGrid(
                                 photos = photos,

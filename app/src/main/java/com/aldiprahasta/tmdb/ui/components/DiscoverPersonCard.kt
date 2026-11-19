@@ -54,24 +54,10 @@ internal fun DiscoverPersonCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-            MovieArtwork(
+            DiscoverPersonAvatar(
+                    name = name,
                     imagePath = profilePath,
-                    imageType = ImageType.PROFILE,
-                    modifier = Modifier.size(64.dp).clip(CircleShape),
-                    placeholder = { modifier ->
-                        val initials = name.trim().split(Regex("\\s+")).take(2)
-                                .joinToString("") { it.take(1).uppercase() }
-                        Box(
-                                modifier = modifier.background(colors.primaryContainer),
-                                contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                    text = initials,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = colors.primary
-                            )
-                        }
-                    }
+                    modifier = Modifier.size(64.dp)
             )
             Column(
                     modifier = Modifier.weight(1f),
@@ -94,4 +80,24 @@ internal fun DiscoverPersonCard(
             trailingContent()
         }
     }
+}
+
+@Composable
+internal fun DiscoverPersonAvatar(name: String, imagePath: String?, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
+    MovieArtwork(
+            imagePath = imagePath,
+            imageType = ImageType.PROFILE,
+            modifier = modifier.clip(CircleShape),
+            placeholder = { artworkModifier ->
+                val initials = name.trim().split(Regex("\\s+")).take(2)
+                        .joinToString("") { it.take(1).uppercase() }
+                Box(
+                        modifier = artworkModifier.background(colors.primaryContainer),
+                        contentAlignment = Alignment.Center
+                ) {
+                    Text(initials, style = MaterialTheme.typography.titleMedium, color = colors.primary)
+                }
+            }
+    )
 }

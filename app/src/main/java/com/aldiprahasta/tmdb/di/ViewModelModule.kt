@@ -3,6 +3,7 @@ package com.aldiprahasta.tmdb.di
 import com.aldiprahasta.tmdb.ui.credit.CreditViewModel
 import com.aldiprahasta.tmdb.ui.dashboard.DashboardViewModel
 import com.aldiprahasta.tmdb.ui.details.ContentDetailViewModel
+import com.aldiprahasta.tmdb.ui.details.similar.SimilarContentViewModel
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteViewModel
 import com.aldiprahasta.tmdb.ui.genre.GenreMovieViewModel
 import com.aldiprahasta.tmdb.ui.image.ImageViewModel
@@ -19,6 +20,7 @@ val viewModelModule = module {
     viewModelOf(::GenreMovieViewModel)
     viewModelOf(::MovieViewModel)
     viewModelOf(::ContentDetailViewModel)
+    viewModelOf(::SimilarContentViewModel)
     viewModelOf(::PersonViewModel)
     viewModelOf(::PersonCreditsViewModel)
     viewModelOf(::CreditViewModel)

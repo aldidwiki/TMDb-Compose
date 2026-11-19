@@ -1,4 +1,4 @@
-package com.aldiprahasta.tmdb.ui.person
+package com.aldiprahasta.tmdb.ui.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +31,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.stringResource
@@ -42,9 +43,16 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.aldiprahasta.tmdb.R
 
+internal fun discoverHeroGradient(scrim: Color): Brush = Brush.verticalGradient(
+        0f to scrim.copy(alpha = 0.2f),
+        0.35f to Color.Transparent,
+        0.7f to scrim.copy(alpha = 0.8f),
+        1f to scrim
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PersonTopBar(title: String, onBackPressed: () -> Unit) {
+internal fun DiscoverTopBar(title: String, onBackPressed: () -> Unit) {
     TopAppBar(
             title = { Text(title, style = MaterialTheme.typography.titleLarge) },
             navigationIcon = {
@@ -60,7 +68,12 @@ internal fun PersonTopBar(title: String, onBackPressed: () -> Unit) {
 }
 
 @Composable
-internal fun PersonFavoriteButton(checked: Boolean, enabled: Boolean, onCheckedChange: (Boolean) -> Unit) {
+internal fun AnimatedFavoriteButton(
+        checked: Boolean,
+        enabled: Boolean,
+        onCheckedChange: (Boolean) -> Unit,
+        modifier: Modifier = Modifier
+) {
     val colors = MaterialTheme.colorScheme
     val selection by animateFloatAsState(
             targetValue = if (checked) 1f else 0f,
@@ -72,14 +85,13 @@ internal fun PersonFavoriteButton(checked: Boolean, enabled: Boolean, onCheckedC
             label = "Favorite selection"
     )
     val progress = selection.coerceIn(0f, 1f)
-    val favoriteLabel = stringResource(R.string.person_favorite)
-    val favoritedLabel = stringResource(R.string.person_favorited)
+    val favoriteLabel = stringResource(R.string.detail_favorite)
+    val favoritedLabel = stringResource(R.string.detail_favorited)
     val label = if (checked) favoritedLabel else favoriteLabel
     val shape = RoundedCornerShape(12.dp)
 
     Surface(
-            modifier = Modifier.width(171.dp)
-                    .heightIn(min = 48.dp)
+            modifier = modifier.heightIn(min = 48.dp)
                     .clip(shape)
                     .toggleable(value = checked, enabled = enabled, role = Role.Checkbox, onValueChange = onCheckedChange),
             shape = shape,
@@ -124,7 +136,7 @@ internal fun PersonFavoriteButton(checked: Boolean, enabled: Boolean, onCheckedC
 }
 
 @Composable
-internal fun PersonStatus(message: String, modifier: Modifier = Modifier, onRetry: (() -> Unit)? = null) {
+internal fun DiscoverStatus(message: String, modifier: Modifier = Modifier, onRetry: (() -> Unit)? = null) {
     Box(modifier = modifier.padding(20.dp), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant)

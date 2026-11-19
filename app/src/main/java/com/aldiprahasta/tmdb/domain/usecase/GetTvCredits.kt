@@ -21,7 +21,6 @@ class GetTvCredits(private val tvRepository: TvRepository) {
 
                     is UiState.Success -> UiState.Success(
                             state.data.mapCreditResponseToCastDomainModelList(MediaType.TV_TYPE)
-                                    .sortedByDescending { it.totalEpisodeCount }
                     )
                 }
             }

@@ -25,6 +25,7 @@ import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
 import com.aldiprahasta.tmdb.ui.credit.CreditScreen
 import com.aldiprahasta.tmdb.ui.dashboard.DashboardScreen
 import com.aldiprahasta.tmdb.ui.details.ContentDetailScreen
+import com.aldiprahasta.tmdb.ui.details.similar.SimilarContentScreen
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteScreen
 import com.aldiprahasta.tmdb.ui.genre.GenreMovieScreen
 import com.aldiprahasta.tmdb.ui.image.ImageGalleryScreen
@@ -38,7 +39,6 @@ import com.aldiprahasta.tmdb.ui.tv.tvseason.TvSeasonScreen
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.parcelableArrayList
-import kotlinx.serialization.json.Json
 
 val navigationItem = listOf(
         Dashboard,
@@ -67,13 +67,12 @@ private fun NavHostController.navigateToPersonCredit(contentId: Int, mediaType: 
     }
 }
 
-private fun NavHostController.navigateToCreditDetail(contentId: Int, contentType: String) {
-    navigate("${CreditDetail.route}/$contentId/$contentType")
+private fun NavHostController.navigateToCreditDetail(contentId: Int, mediaType: MediaType, title: String) {
+    navigate("${CreditDetail.route}/$contentId/${mediaType.name}?title=${Uri.encode(title)}")
 }
 
-private fun NavHostController.navigateToTvSeasonScreen(tvId: Int, tvTitle: String, tvSeasonList: List<TvSeasonDomainModel>) {
-    val tvSeasonListJson = Uri.encode(Json.encodeToString(value = tvSeasonList))
-    navigate("${TvSeason.route}/$tvId/$tvTitle/$tvSeasonListJson")
+private fun NavHostController.navigateToSimilarContent(contentId: Int, mediaType: MediaType, title: String, genres: String) {
+    navigate("${SimilarContentListing.route}/$contentId/${mediaType.name}?title=${Uri.encode(title)}&genres=${Uri.encode(genres)}")
 }
 
 private fun NavHostController.navigateToTvSeasonDetailScreen(tvId: Int, tvSeasonNumber: Int) {
@@ -255,22 +254,20 @@ fun TMDbNavHostController(
         ) { navBackStateEntry ->
             navBackStateEntry.arguments?.apply {
                 val contentId = getInt(ContentDetail.CONTENT_ID_ARG, 0)
-                val contentType = getString(ContentDetail.CONTENT_TYPE_ARG, "")
+                val mediaType = if (getString(ContentDetail.CONTENT_TYPE_ARG) == MediaType.TV_TYPE.name) MediaType.TV_TYPE
+                else MediaType.MOVIE_TYPE
 
                 ContentDetailScreen(
-                        contentParam = Pair(contentId, contentType),
-                        onBackPressed = {
-                            navController.navigateUp()
+                        contentId = contentId,
+                        mediaType = mediaType,
+                        onBackPressed = { navController.navigateUp() },
+                        onCastClicked = navController::navigateToPersonDetail,
+                        onFullCastClicked = { title -> navController.navigateToCreditDetail(contentId, mediaType, title) },
+                        onSimilarClicked = { id -> navController.navigateToContentDetail(id, mediaType.name) },
+                        onAllSimilarClicked = { title, genres ->
+                            navController.navigateToSimilarContent(contentId, mediaType, title, genres)
                         },
-                        onCastClicked = { personId ->
-                            navController.navigateToPersonDetail(personId)
-                        },
-                        onViewMoreClicked = {
-                            navController.navigateToCreditDetail(contentId, contentType)
-                        },
-                        onAllSeasonClicked = { tvTitle, tvSeasonList ->
-                            navController.navigateToTvSeasonScreen(contentId, tvTitle, tvSeasonList)
-                        }
+                        onAllEpisodesClicked = { season -> navController.navigateToTvSeasonDetailScreen(contentId, season) }
                 )
             }
         }
@@ -326,25 +323,34 @@ fun TMDbNavHostController(
                 popExitTransition = { exitTransition(true) }
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
-                val contentId = getInt(CreditDetail.CONTENT_ID_ARG)
                 val contentType = getString(CreditDetail.CONTENT_TYPE_ARG, MediaType.MOVIE_TYPE.name)
 
                 CreditScreen(
-                        creditParam = Pair(contentId, contentType),
-                        onBackPressed = {
-                            navController.navigateUp()
-                        },
-                        onItemClicked = { id, mediaType ->
-                            when (contentType) {
-                                MediaType.MOVIE_TYPE.name, MediaType.TV_TYPE.name -> navController.navigateToPersonDetail(id) // movie credit consist people
-                                MediaType.PERSON_TYPE.name -> when (mediaType) {
-                                    Constant.MOVIE_MEDIA_TYPE -> navController.navigateToContentDetail(id, MediaType.MOVIE_TYPE.name)
-                                    Constant.TV_MEDIA_TYPE -> navController.navigateToContentDetail(id, MediaType.TV_TYPE.name)
-                                } // reverse, person credit consist movie/tv
-                            }
-                        }
+                        contentTitle = getString(CreditDetail.CONTENT_TITLE_ARG, ""),
+                        isTv = contentType == MediaType.TV_TYPE.name,
+                        onBackPressed = { navController.navigateUp() },
+                        onPersonClicked = navController::navigateToPersonDetail
                 )
             }
+        }
+
+        composable(
+                route = SimilarContentListing.routeWithArgs,
+                arguments = SimilarContentListing.arguments,
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(false) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(true) }
+        ) { entry ->
+            val args = checkNotNull(entry.arguments)
+            val contentType = args.getString(SimilarContentListing.CONTENT_TYPE_ARG, MediaType.MOVIE_TYPE.name)
+            SimilarContentScreen(
+                    isTv = contentType == MediaType.TV_TYPE.name,
+                    contentTitle = args.getString(SimilarContentListing.CONTENT_TITLE_ARG, ""),
+                    genres = args.getString(SimilarContentListing.GENRES_ARG, ""),
+                    onBackPressed = { navController.navigateUp() },
+                    onItemClicked = { id -> navController.navigateToContentDetail(id, contentType) }
+            )
         }
 
         composable(

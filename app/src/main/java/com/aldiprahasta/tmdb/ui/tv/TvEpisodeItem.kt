@@ -1,94 +1,102 @@
 package com.aldiprahasta.tmdb.ui.tv
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
-import com.aldiprahasta.tmdb.ui.components.ImageLoader
 import com.aldiprahasta.tmdb.ui.components.ImageType
-import com.aldiprahasta.tmdb.ui.components.VoteAverageUi
-import com.aldiprahasta.tmdb.utils.runtimeFormat
+import com.aldiprahasta.tmdb.ui.components.MovieArtwork
+import com.aldiprahasta.tmdb.utils.formatMovieRating
 
 @Composable
-fun TvEpisodeItem(
-        tvEpisodeDomainModel: TvEpisodeDomainModel,
-        modifier: Modifier = Modifier
+internal fun TvEpisodeItem(
+        episode: TvEpisodeDomainModel,
+        modifier: Modifier = Modifier,
+        showDetails: Boolean = false
 ) {
-    Card(
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(6.dp),
-            modifier = modifier.fillMaxWidth()
+    Surface(
+            modifier = modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
-        ImageLoader(
-                imagePath = tvEpisodeDomainModel.stillPath,
-                imageType = ImageType.STILL,
-        )
-
-        Column(modifier = Modifier
-                .padding(10.dp)
-                .padding(bottom = 10.dp)
-                .padding(horizontal = 4.dp)
-        ) {
-            Text(
-                    text = "${tvEpisodeDomainModel.episodeNumber} ${tvEpisodeDomainModel.name}",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-            )
-
-            Spacer(modifier = Modifier.size(4.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                VoteAverageUi(voteAverage = tvEpisodeDomainModel.voteAverage)
-                Spacer(modifier = Modifier.size(6.dp))
-                Text(
-                        text = tvEpisodeDomainModel.airDate,
-                        style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                        text = "\u2022",
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                )
-                Text(
-                        text = tvEpisodeDomainModel.runtime.runtimeFormat(),
-                        style = MaterialTheme.typography.bodySmall
-                )
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(8.dp)
+                ) {
+                    Box(
+                            Modifier.widthIn(min = 44.dp).heightIn(min = 40.dp).padding(horizontal = 6.dp),
+                            contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                                stringResource(R.string.detail_episode_number, episode.episodeNumber),
+                                style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(
+                            text = episode.name.ifBlank {
+                                stringResource(R.string.detail_episode_untitled, episode.episodeNumber)
+                            },
+                            style = MaterialTheme.typography.labelLarge
+                    )
+                    val runtime = if (showDetails && episode.runtime > 0) {
+                        stringResource(R.string.detail_runtime_minutes, episode.runtime)
+                    } else null
+                    val rating = if (showDetails && episode.voteAverage > 0) {
+                        stringResource(R.string.discover_rating_badge, formatMovieRating(episode.voteAverage))
+                    } else null
+                    val metadata = listOfNotNull(episode.airDate.takeIf(String::isNotBlank), runtime, rating)
+                    if (metadata.isNotEmpty()) {
+                        Text(
+                                text = metadata.joinToString(" · "),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.size(10.dp))
-            Text(
-                    text = tvEpisodeDomainModel.overview,
-                    style = MaterialTheme.typography.bodyMedium
-            )
+            if (showDetails) {
+                if (!episode.stillPath.isNullOrBlank()) {
+                    MovieArtwork(
+                            imagePath = episode.stillPath,
+                            imageType = ImageType.STILL,
+                            modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(RoundedCornerShape(8.dp))
+                    )
+                }
+                if (episode.overview.isNotBlank()) {
+                    Text(
+                            text = episode.overview,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TvEpisodeItemPreview() {
-    TvEpisodeItem(tvEpisodeDomainModel = TvEpisodeDomainModel(
-            id = 4755,
-            name = "The Heirs of the Dragon",
-            stillPath = null,
-            runtime = 66,
-            overview = "Viserys hosts a tournament to celebrate the birth of his second child. Rhaenyra welcomes her uncle Daemon back to the Red Keep.",
-            voteAverage = 7.9,
-            episodeNumber = 1,
-            airDate = "August 21, 2022"
-    ))
 }

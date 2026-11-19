@@ -23,5 +23,10 @@ data class ResultsItem(
 data class ReleaseDatesItem(
 
         @SerialName("certification")
-        val certification: String?
+        val certification: String?,
+
+        @SerialName("release_date")
+        val releaseDate: String? = null,
+
+        val type: Int? = null
 )

@@ -45,6 +45,7 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
+import com.aldiprahasta.tmdb.ui.components.discoverHeroGradient
 import com.aldiprahasta.tmdb.ui.components.ShimmerEffect
 import com.aldiprahasta.tmdb.utils.UiState
 import com.aldiprahasta.tmdb.utils.formatMovieRating
@@ -143,12 +144,7 @@ private fun TrendingMovieCard(
         Box(
                 modifier = Modifier
                         .matchParentSize()
-                        .background(Brush.verticalGradient(
-                                0f to scrim.copy(alpha = 0.2f),
-                                0.35f to Color.Transparent,
-                                0.7f to scrim.copy(alpha = 0.8f),
-                                1f to scrim
-                        ))
+                        .background(discoverHeroGradient(scrim))
         )
 
         movie.voteAverage?.let { rating ->
@@ -207,7 +203,7 @@ private fun TrendingMovieCard(
                     )
                 }
                 Spacer(Modifier.width(4.dp))
-                Text(text = stringResource(R.string.dashboard_watch_trailer))
+                Text(text = stringResource(R.string.watch_trailer))
             }
         }
     }

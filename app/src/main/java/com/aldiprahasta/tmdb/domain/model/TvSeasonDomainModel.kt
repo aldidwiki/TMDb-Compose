@@ -13,5 +13,6 @@ data class TvSeasonDomainModel(
         val seasonAirDate: String,
         val seasonVoteAverage: Double,
         val totalEpisodes: Int,
-        val seasonNumber: Int
+        val seasonNumber: Int,
+        val airDateIso: String? = null
 ) : Parcelable

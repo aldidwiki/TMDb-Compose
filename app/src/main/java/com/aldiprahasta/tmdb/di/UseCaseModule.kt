@@ -13,6 +13,7 @@ import com.aldiprahasta.tmdb.domain.usecase.GetPersonImages
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
 import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
 import com.aldiprahasta.tmdb.domain.usecase.GetSearchResult
+import com.aldiprahasta.tmdb.domain.usecase.GetSimilarContent
 import com.aldiprahasta.tmdb.domain.usecase.GetTrendingMovies
 import com.aldiprahasta.tmdb.domain.usecase.GetTvCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetTvDetail
@@ -45,6 +46,7 @@ private val interactionModule = module {
     factoryOf(::GetTvCredits)
     factoryOf(::GetTvSeasonDetail)
     factoryOf(::GetSearchResult)
+    factoryOf(::GetSimilarContent)
     factoryOf(::GetMovieGenreList)
     factoryOf(::GetTvGenreList)
     factoryOf(::InsertFavorite)

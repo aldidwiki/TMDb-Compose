@@ -152,13 +152,39 @@ object CreditDetail : TMDbDestinations {
     override val route: String = "credit_detail"
     const val CONTENT_ID_ARG = "content_id"
     const val CONTENT_TYPE_ARG = "content_type"
-    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_TYPE_ARG}"
+    const val CONTENT_TITLE_ARG = "content_title"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_TYPE_ARG}?title={$CONTENT_TITLE_ARG}"
     val arguments = listOf(
             navArgument(CONTENT_ID_ARG) {
                 type = NavType.IntType
             },
             navArgument(CONTENT_TYPE_ARG) {
                 type = NavType.StringType
+            },
+            navArgument(CONTENT_TITLE_ARG) {
+                type = NavType.StringType
+                defaultValue = ""
+            }
+    )
+}
+
+object SimilarContentListing : TMDbDestinations {
+    override val route: String = "similar_content"
+    const val CONTENT_ID_ARG = "content_id"
+    const val CONTENT_TYPE_ARG = "content_type"
+    const val CONTENT_TITLE_ARG = "content_title"
+    const val GENRES_ARG = "genres"
+    val routeWithArgs = "$route/{$CONTENT_ID_ARG}/{$CONTENT_TYPE_ARG}?title={$CONTENT_TITLE_ARG}&genres={$GENRES_ARG}"
+    val arguments = listOf(
+            navArgument(CONTENT_ID_ARG) { type = NavType.IntType },
+            navArgument(CONTENT_TYPE_ARG) { type = NavType.StringType },
+            navArgument(CONTENT_TITLE_ARG) {
+                type = NavType.StringType
+                defaultValue = ""
+            },
+            navArgument(GENRES_ARG) {
+                type = NavType.StringType
+                defaultValue = ""
             }
     )
 }

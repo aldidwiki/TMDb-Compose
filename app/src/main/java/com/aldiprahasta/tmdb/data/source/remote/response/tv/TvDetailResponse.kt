@@ -87,7 +87,13 @@ data class TvDetailResponse(
 
         @SerialName("seasons")
         val seasons: List<TvSeasonItemResponse>?,
+
+        @SerialName("created_by")
+        val createdBy: List<TvCreatorResponse> = emptyList()
 )
+
+@Serializable
+data class TvCreatorResponse(val name: String? = null)
 
 @Serializable
 data class NetworksItemResponse(

@@ -1,7 +1,9 @@
 package com.aldiprahasta.tmdb.domain.usecase.wrapper
 
 import com.aldiprahasta.tmdb.domain.usecase.GetMovieDetail
+import com.aldiprahasta.tmdb.domain.usecase.GetSimilarContent
 import com.aldiprahasta.tmdb.domain.usecase.GetTvDetail
+import com.aldiprahasta.tmdb.domain.usecase.GetTvSeasonDetail
 import com.aldiprahasta.tmdb.domain.usecase.favorite.DeleteFavorite
 import com.aldiprahasta.tmdb.domain.usecase.favorite.GetFavoriteStatus
 import com.aldiprahasta.tmdb.domain.usecase.favorite.InsertFavorite
@@ -11,5 +13,7 @@ data class DetailWrapper(
         val getTvDetail: GetTvDetail,
         val insertFavorite: InsertFavorite,
         val deleteFavorite: DeleteFavorite,
-        val getFavoriteStatus: GetFavoriteStatus
+        val getFavoriteStatus: GetFavoriteStatus,
+        val getSimilarContent: GetSimilarContent,
+        val getTvSeasonDetail: GetTvSeasonDetail
 )

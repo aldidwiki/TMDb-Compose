@@ -4,8 +4,57 @@
     <string name="person_details_title">Person Details</string>
     <string name="person_details_error">Couldn’t load person details.</string>
     <string name="person_actor">Actor</string>
-    <string name="person_favorite">Favorite</string>
-    <string name="person_favorited">Favorited</string>
+    <string name="detail_favorite">Favorite</string>
+    <string name="detail_favorited">Favorited</string>
+    <string name="detail_movie_title">Movie Details</string>
+    <string name="detail_tv_title">TV Show Details</string>
+    <string name="detail_overview">Overview</string>
+    <string name="detail_top_cast">Top cast</string>
+    <string name="detail_full_cast">Full Cast</string>
+    <string name="detail_cast_empty">No cast available.</string>
+    <string name="detail_series_type">TV series</string>
+    <string name="detail_cast_count">%1$s · %2$s cast</string>
+    <string name="detail_movie_info">Movie info</string>
+    <string name="detail_series_info">Series info</string>
+    <string name="detail_runtime">Runtime</string>
+    <string name="detail_runtime_minutes">%1$d min</string>
+    <string name="detail_director">Director</string>
+    <string name="detail_music">Music</string>
+    <string name="detail_us_release">US release</string>
+    <string name="detail_release">Release date</string>
+    <string name="detail_first_aired">First aired</string>
+    <string name="detail_creator">Creator</string>
+    <string name="detail_executive_producer">Executive producer</string>
+    <string name="detail_status">Status</string>
+    <string name="detail_see_all">See All →</string>
+    <string name="detail_see_all_section">See all %1$s</string>
+    <string name="detail_similar_movies">Similar Movies</string>
+    <string name="detail_similar_shows">Similar Shows</string>
+    <string name="detail_more_like">More like %1$s</string>
+    <string name="detail_similar_empty">No similar titles available.</string>
+    <string name="detail_seasons">Seasons</string>
+    <string name="detail_specials">Specials</string>
+    <string name="detail_season_number">Season %1$d</string>
+    <string name="detail_episodes">Episodes</string>
+    <string name="detail_episode_number">E%1$02d</string>
+    <string name="detail_episode_untitled">Episode %1$d</string>
+    <string name="detail_episodes_empty">No episodes available.</string>
+    <plurals name="detail_season_count">
+        <item quantity="one">%d Season</item>
+        <item quantity="other">%d Seasons</item>
+    </plurals>
+    <plurals name="detail_episode_count">
+        <item quantity="one">%d episode</item>
+        <item quantity="other">%d episodes</item>
+    </plurals>
+    <plurals name="detail_vote_count">
+        <item quantity="one">%s vote</item>
+        <item quantity="other">%s votes</item>
+    </plurals>
+    <plurals name="detail_title_count">
+        <item quantity="one">%s title</item>
+        <item quantity="other">%s titles</item>
+    </plurals>
     <string name="person_instagram">Instagram ↗</string>
     <string name="person_imdb">IMDb ↗</string>
     <string name="person_google">Google ↗</string>
@@ -95,9 +144,9 @@
     </plurals>
     <string name="dashboard_now_playing">Now Playing</string>
     <string name="dashboard_browse_genres">Browse by Genre</string>
-    <string name="dashboard_watch_trailer">Watch Trailer</string>
-    <string name="dashboard_trailers">Trailers</string>
-    <string name="dashboard_choose_trailer">Choose a video to play.</string>
+    <string name="watch_trailer">Watch Trailer</string>
+    <string name="trailer_sheet_title">Watch trailer</string>
+    <string name="trailer_sheet_description">Choose a video to play</string>
     <string name="dashboard_trailer_error">Couldn’t load trailers. Try again.</string>
     <string name="dashboard_trailer_unavailable">No trailer available.</string>
     <string name="discover_rating_badge">★ %1$s</string>

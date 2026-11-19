@@ -34,8 +34,8 @@ import com.aldiprahasta.tmdb.domain.model.CastDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
-import com.aldiprahasta.tmdb.ui.person.PersonStatus
-import com.aldiprahasta.tmdb.ui.person.PersonTopBar
+import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
+import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.person.isScreenCredit
 import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
@@ -58,7 +58,7 @@ fun PersonCreditsScreen(
         Scaffold(
                 modifier = modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.background,
-                topBar = { PersonTopBar(stringResource(R.string.person_all_credits), onBackPressed) }
+                topBar = { DiscoverTopBar(stringResource(R.string.person_all_credits), onBackPressed) }
         ) { innerPadding ->
             Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 Surface(color = MaterialTheme.colorScheme.surface) {
@@ -79,7 +79,7 @@ fun PersonCreditsScreen(
 
                 when (val state = credits) {
                     UiState.Loading -> LoadingScreen(Modifier.fillMaxSize())
-                    is UiState.Error -> PersonStatus(
+                    is UiState.Error -> DiscoverStatus(
                             message = stringResource(R.string.person_credits_error),
                             onRetry = viewModel::retry,
                             modifier = Modifier.fillMaxSize()
@@ -87,7 +87,7 @@ fun PersonCreditsScreen(
                     is UiState.Success -> {
                         val screenCredits = remember(state.data) { state.data.filter { it.isScreenCredit } }
                         if (screenCredits.isEmpty()) {
-                            PersonStatus(stringResource(R.string.person_no_credits), Modifier.fillMaxSize())
+                            DiscoverStatus(stringResource(R.string.person_no_credits), Modifier.fillMaxSize())
                         } else {
                             LazyColumn(
                                     modifier = Modifier.fillMaxSize(),
