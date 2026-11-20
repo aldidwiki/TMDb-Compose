@@ -11,9 +11,6 @@ data class PersonResponse(
         @SerialName("birthday")
         val birthday: String?,
 
-        @SerialName("gender")
-        val gender: Int?,
-
         @SerialName("imdb_id")
         val imdbId: String?,
 

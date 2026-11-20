@@ -2,11 +2,8 @@ package com.aldiprahasta.tmdb.ui.tv
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
-import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
+import com.aldiprahasta.tmdb.domain.usecase.GetTvSeasonDetail
 import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TvViewModel(tvWrapper: TvWrapper) : ViewModel() {
+class TvViewModel(getTvSeasonDetail: GetTvSeasonDetail) : ViewModel() {
     private val tvSeasonDetailParam = MutableStateFlow<SeasonRequest?>(null)
     fun setTvSeasonDetailParam(tvId: Int, tvSeasonNumber: Int) {
         tvSeasonDetailParam.update { previous ->
@@ -35,18 +32,10 @@ class TvViewModel(tvWrapper: TvWrapper) : ViewModel() {
         }
     }
 
-    val popularTv: StateFlow<PagingData<TvDomainModel>> = tvWrapper.getPopularTv()
-            .cachedIn(viewModelScope)
-            .stateIn(
-                    viewModelScope,
-                    SharingStarted.WhileSubscribed(5000),
-                    PagingData.empty()
-            )
-
     val tvSeasonDetail: StateFlow<UiState<TvSeasonDetailDomainModel>> = tvSeasonDetailParam
             .filterNotNull()
             .flatMapLatest { request ->
-                tvWrapper.getTvSeasonDetail(request.tvId, request.seasonNumber).catch { error ->
+                getTvSeasonDetail(request.tvId, request.seasonNumber).catch { error ->
                     Timber.e(error)
                     emit(UiState.Error(error))
                 }

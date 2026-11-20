@@ -1,9 +1,7 @@
 package com.aldiprahasta.tmdb.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,48 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.aldiprahasta.tmdb.R
-
-@Composable
-fun ImageLoader(
-        imagePath: String?,
-        imageType: ImageType,
-        modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-
-    SubcomposeAsyncImage(
-            model = ImageRequest.Builder(context)
-                    .data("https://image.tmdb.org/t/p/${imageType.size}/$imagePath")
-                    .crossfade(300)
-                    .build(),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = modifier.aspectRatio(imageType.aspectRatio),
-            loading = {
-                ShimmerEffect(Modifier.fillMaxSize())
-            },
-            error = {
-                Image(
-                        painter = painterResource(R.drawable.ic_broken_image),
-                        contentDescription = null
-                )
-            }
-    )
-}
 
 @Composable
 fun ErrorScreen(

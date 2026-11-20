@@ -20,7 +20,6 @@ fun PersonResponse.mapPersonResponseToPersonDomainModel(): PersonDomainModel {
             name = name ?: "",
             birthDay = birthDate?.let { formatter.format(it.time) }.orEmpty(),
             deathDay = deathDate?.let { formatter.format(it.time) }.orEmpty(),
-            gender = gender?.formatGender() ?: "-",
             biography = biography ?: "-",
             knownFor = knownForDepartment ?: "-",
             age = if (ageReference != null) birthDate?.ageOn(ageReference) else null,

@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
-import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 import com.aldiprahasta.tmdb.ui.components.ImageType
 import com.aldiprahasta.tmdb.ui.components.MovieArtwork
@@ -82,23 +81,14 @@ internal val detailPreviewSample: ContentDetailDomainModel
             backdropPath = null,
             releaseDate = "March 1, 2024",
             releaseYear = "2024",
-            runtime = "2h 46m",
             runtimeMinutes = 166,
-            tagline = "Long live the fighters.",
             overview = "Paul Atreides joins Chani and the Fremen on a journey across Arrakis.",
             voteAverage = 8.8,
             voteCount = 6500,
             genres = "Science Fiction, Adventure",
-            certification = "PG-13",
-            budget = null,
-            revenue = null,
-            originalLanguage = "English",
             status = "Released",
-            externalId = ExternalIdDomainModel(null, null, null, null),
             casts = emptyList(),
             videos = listOf(VideoDomainModel("1", "Official Trailer", "YouTube", "Trailer", "official", true)),
-            type = null,
-            networks = null,
             directors = listOf("Denis Villeneuve")
     )
 

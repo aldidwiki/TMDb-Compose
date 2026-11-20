@@ -22,9 +22,6 @@ data class ResultsItem(
 @Serializable
 data class ReleaseDatesItem(
 
-        @SerialName("certification")
-        val certification: String?,
-
         @SerialName("release_date")
         val releaseDate: String? = null,
 

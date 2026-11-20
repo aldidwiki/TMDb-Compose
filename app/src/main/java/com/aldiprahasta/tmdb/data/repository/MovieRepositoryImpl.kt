@@ -23,18 +23,6 @@ class MovieRepositoryImpl(
         private val movieRemoteDataSource: MovieRemoteDataSource,
         private val remoteService: RemoteService
 ) : MovieRepository {
-    override fun getPopularMovie(): Flow<PagingData<MovieResponseModel>> {
-        return Pager(
-                config = PagingConfig(pageSize = 10),
-                pagingSourceFactory = {
-                    NumberedPagingSource { page ->
-                        val response = remoteService.getPopularMovies(page)
-                        NumberedPagingSource.Page(response?.movieResponseModelList.orEmpty(), response?.totalPages ?: 0)
-                    }
-                }
-        ).flow
-    }
-
     override fun getMovieDetail(movieId: Int): Flow<UiState<MovieDetailResponse>> {
         return movieRemoteDataSource.getMovieDetail(movieId)
     }

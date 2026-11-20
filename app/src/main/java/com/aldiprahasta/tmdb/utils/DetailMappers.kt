@@ -3,14 +3,12 @@ package com.aldiprahasta.tmdb.utils
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieDetailResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.tv.NetworksItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvEpisodeItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonItemResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import com.aldiprahasta.tmdb.domain.model.ContentDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.ExternalIdDomainModel
-import com.aldiprahasta.tmdb.domain.model.NetworkDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvEpisodeDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDetailDomainModel
 import com.aldiprahasta.tmdb.domain.model.TvSeasonDomainModel
@@ -25,23 +23,14 @@ fun MovieDetailResponse.mapMovieDetailResponseToMovieDetailDomainModel(): Conten
             title = title ?: "",
             posterPath = posterPath,
             releaseDate = releaseDate?.convertDate() ?: "",
-            runtime = runtime.runtimeFormat(),
-            tagline = tagline ?: "",
             overview = overview ?: "",
             voteAverage = voteAverage ?: 0.0,
             genres = genres.convertGenreToSingleText(),
             backdropPath = backdropPath,
             casts = credits?.mapCreditResponseToCastDomainModelList(MediaType.MOVIE_TYPE)
                     ?: emptyList(),
-            certification = usReleases.firstNotNullOfOrNull { it.certification?.takeIf(String::isNotBlank) } ?: "NR",
-            budget = (budget ?: 0L).formatCurrency(),
-            revenue = (revenue ?: 0L).formatCurrency(),
-            originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
             status = status ?: "",
-            externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
             videos = video?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
-            networks = null,
-            type = null,
             voteCount = voteCount,
             releaseYear = releaseDate.releaseYear(),
             runtimeMinutes = runtime?.takeIf { it > 0 },
@@ -56,26 +45,15 @@ fun TvDetailResponse.mapTvDetailResponseToContentDetailDomainModel(): ContentDet
                 title = name ?: "",
                 posterPath = posterPath,
                 releaseDate = firstAirDate?.convertDate() ?: "",
-                runtime = "",
-                tagline = tagline ?: "",
                 overview = overview ?: "",
                 id = id,
                 voteAverage = voteAverage ?: 0.0,
                 genres = genres.convertGenreToSingleText(),
-                certification = contentRatings.results?.firstOrNull {
-                    it.code == "US"
-                }?.rating ?: "NR",
                 backdropPath = backdropPath,
-                budget = null,
-                revenue = null,
-                originalLanguage = (originalLanguage ?: "").getLanguageDisplayName(),
                 status = status ?: "",
-                externalId = externalIds.mapExternalIdResponseToExternalIdDomainModel(),
                 casts = credits?.mapCreditResponseToCastDomainModelList(MediaType.TV_TYPE)
                         ?: emptyList(),
                 videos = videos?.mapVideoResponseToVideoDomainModelList() ?: emptyList(),
-                networks = networks?.mapNetworkItemsToNetworkDomainModel(),
-                type = type,
                 seasons = seasons?.mapTvSeasonItemResponseToDomainModelList(),
                 voteCount = voteCount?.toInt(),
                 seasonCount = numberOfSeasons,
@@ -105,16 +83,6 @@ private fun CreditResponse?.namesForJob(job: String): List<String> = this?.crew.
         .filter { member -> member.job == job || member.jobs.any { it.job == job } }
         .mapNotNull { it.name?.takeIf(String::isNotBlank) }
         .distinct()
-
-private fun List<NetworksItemResponse>.mapNetworkItemsToNetworkDomainModel(): List<NetworkDomainModel> {
-    return map { networksItem ->
-        NetworkDomainModel(
-                networkId = networksItem.id,
-                networkLogoPath = networksItem.logoPath,
-                networkName = networksItem.name ?: ""
-        )
-    }
-}
 
 internal fun ExternalIdResponse.mapExternalIdResponseToExternalIdDomainModel(): ExternalIdDomainModel {
     return ExternalIdDomainModel(

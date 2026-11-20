@@ -5,14 +5,12 @@ import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.SimilarResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.search.SearchResponseModel
-import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponseModel
 import com.aldiprahasta.tmdb.domain.model.ExploreItem
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.domain.model.SearchDomainModel
 import com.aldiprahasta.tmdb.domain.model.SimilarContent
 import com.aldiprahasta.tmdb.domain.model.SimilarPage
-import com.aldiprahasta.tmdb.domain.model.TvDomainModel
 
 fun ExploreResultResponse.mapToExploreItem(mediaType: MediaType): ExploreItem = ExploreItem(
         id = id,
@@ -62,15 +60,6 @@ fun SimilarResponse.mapSimilarResponseToPage(): SimilarPage = SimilarPage(
         totalPages = totalPages,
         totalResults = totalResults
 )
-
-fun TvResponseModel.mapTvResponseToTvDomainModel(): TvDomainModel {
-    return TvDomainModel(
-            posterPath = posterPath,
-            tvId = id,
-            title = name ?: "",
-            releaseDate = firstAirDate?.convertDate() ?: ""
-    )
-}
 
 fun SearchResponseModel.mapSearchResponseToDomainModel(categoryMediaType: String?): SearchDomainModel {
     return SearchDomainModel(

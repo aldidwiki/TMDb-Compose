@@ -11,8 +11,6 @@ import com.aldiprahasta.tmdb.domain.usecase.GetNowPlayingMovies
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonCredits
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonDetail
 import com.aldiprahasta.tmdb.domain.usecase.GetPersonImages
-import com.aldiprahasta.tmdb.domain.usecase.GetPopularMovieList
-import com.aldiprahasta.tmdb.domain.usecase.GetPopularTv
 import com.aldiprahasta.tmdb.domain.usecase.GetSearchResult
 import com.aldiprahasta.tmdb.domain.usecase.GetSimilarContent
 import com.aldiprahasta.tmdb.domain.usecase.GetTrendingMovies
@@ -29,13 +27,11 @@ import com.aldiprahasta.tmdb.domain.usecase.wrapper.CreditWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.DetailWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.FavoriteWrapper
 import com.aldiprahasta.tmdb.domain.usecase.wrapper.PersonDetailWrapper
-import com.aldiprahasta.tmdb.domain.usecase.wrapper.TvWrapper
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 private val interactionModule = module {
     factoryOf(::GetExploreContent)
-    factoryOf(::GetPopularMovieList)
     factoryOf(::GetTrendingMovies)
     factoryOf(::GetNowPlayingMovies)
     factoryOf(::GetMoviesByGenre)
@@ -44,7 +40,6 @@ private val interactionModule = module {
     factoryOf(::GetPersonDetail)
     factoryOf(::GetMovieCredits)
     factoryOf(::GetPersonCredits)
-    factoryOf(::GetPopularTv)
     factoryOf(::GetTvDetail)
     factoryOf(::GetTvCredits)
     factoryOf(::GetTvSeasonDetail)
@@ -64,7 +59,6 @@ private val interactionModule = module {
 private val interactionWrapperModule = module {
     factoryOf(::CreditWrapper)
     factoryOf(::DetailWrapper)
-    factoryOf(::TvWrapper)
     factoryOf(::PersonDetailWrapper)
     factoryOf(::FavoriteWrapper)
 }

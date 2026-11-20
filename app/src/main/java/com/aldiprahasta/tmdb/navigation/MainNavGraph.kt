@@ -13,19 +13,15 @@ import com.aldiprahasta.tmdb.ui.explore.ExploreScreen
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteScreen
 import com.aldiprahasta.tmdb.ui.genre.GenreMovieScreen
 import com.aldiprahasta.tmdb.ui.image.ImageGalleryScreen
-import com.aldiprahasta.tmdb.ui.movie.MovieScreen
 import com.aldiprahasta.tmdb.ui.person.PersonScreen
 import com.aldiprahasta.tmdb.ui.person.credits.PersonCreditsScreen
 import com.aldiprahasta.tmdb.ui.search.SearchScreen
-import com.aldiprahasta.tmdb.ui.tv.TvScreen
 import com.aldiprahasta.tmdb.ui.tv.tvseason.TvSeasonDetailScreen
 import com.aldiprahasta.tmdb.utils.MediaType
 
 val navigationItem = listOf(
         Dashboard,
         Explore,
-        Movie,
-        Tv,
         Favorite,
         Search
 )
@@ -65,18 +61,6 @@ fun TMDbNavHostController(
                         navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
                     }
             )
-        }
-
-        composable(route = Movie.route) {
-            MovieScreen(onMovieClicked = { movieId ->
-                navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
-            })
-        }
-
-        composable(route = Tv.route) {
-            TvScreen(onItemClicked = { tvId ->
-                navController.navigateToContentDetail(tvId, MediaType.TV_TYPE.name)
-            })
         }
 
         composable(route = Favorite.route) {

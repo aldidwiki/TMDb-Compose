@@ -8,7 +8,6 @@ import com.aldiprahasta.tmdb.ui.explore.ExploreViewModel
 import com.aldiprahasta.tmdb.ui.favorite.FavoriteViewModel
 import com.aldiprahasta.tmdb.ui.genre.GenreMovieViewModel
 import com.aldiprahasta.tmdb.ui.image.ImageViewModel
-import com.aldiprahasta.tmdb.ui.movie.MovieViewModel
 import com.aldiprahasta.tmdb.ui.person.PersonViewModel
 import com.aldiprahasta.tmdb.ui.person.credits.PersonCreditsViewModel
 import com.aldiprahasta.tmdb.ui.search.SearchViewModel
@@ -20,7 +19,6 @@ val viewModelModule = module {
     viewModelOf(::ExploreViewModel)
     viewModelOf(::DashboardViewModel)
     viewModelOf(::GenreMovieViewModel)
-    viewModelOf(::MovieViewModel)
     viewModelOf(::ContentDetailViewModel)
     viewModelOf(::SimilarContentViewModel)
     viewModelOf(::PersonViewModel)

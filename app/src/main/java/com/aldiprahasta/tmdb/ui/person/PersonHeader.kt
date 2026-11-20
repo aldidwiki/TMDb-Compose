@@ -142,7 +142,6 @@ internal val personPreviewSample: PersonDomainModel
             name = "Jessica Chastain",
             birthDay = "March 24, 1977",
             deathDay = "",
-            gender = "Female",
             biography = "Jessica Chastain is an American actor and producer. She has appeared in dramas and science fiction films.",
             knownFor = "Acting",
             age = 49,

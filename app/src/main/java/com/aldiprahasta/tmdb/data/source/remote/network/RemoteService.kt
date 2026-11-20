@@ -11,7 +11,6 @@ import com.aldiprahasta.tmdb.data.source.remote.response.movie.MovieResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.person.PersonResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.search.SearchResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvDetailResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.tv.TvSeasonResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -38,9 +37,6 @@ interface RemoteService {
     @GET("trending/person/week")
     suspend fun getExploreTrendingPeople(@Query("page") page: Int): ExploreResponse
 
-    @GET("movie/popular")
-    suspend fun getPopularMovies(@Query("page") page: Int): MovieResponse?
-
     @GET("trending/movie/day")
     suspend fun getTrendingMovies(): MovieResponse?
 
@@ -59,7 +55,7 @@ interface RemoteService {
     @GET("movie/{movie_id}/videos")
     suspend fun getMovieVideos(@Path("movie_id") movieId: Int): VideoResponse?
 
-    @GET("movie/{movie_id}?append_to_response=release_dates,credits,external_ids,videos")
+    @GET("movie/{movie_id}?append_to_response=release_dates,credits,videos")
     suspend fun getMovieDetail(@Path("movie_id") movieId: Int): MovieDetailResponse?
 
     @GET("person/{person_id}?append_to_response=external_ids,combined_credits")
@@ -74,10 +70,7 @@ interface RemoteService {
     @GET("person/{person_id}/combined_credits")
     suspend fun getPersonCredits(@Path("person_id") personId: Int): CreditResponse?
 
-    @GET("tv/popular")
-    suspend fun getPopularTv(@Query("page") page: Int): TvResponse?
-
-    @GET("tv/{tv_id}?append_to_response=videos,external_ids,content_ratings,aggregate_credits")
+    @GET("tv/{tv_id}?append_to_response=videos,aggregate_credits")
     suspend fun getTvDetail(@Path("tv_id") tvId: Int): TvDetailResponse?
 
     @GET("tv/{tv_id}/aggregate_credits")

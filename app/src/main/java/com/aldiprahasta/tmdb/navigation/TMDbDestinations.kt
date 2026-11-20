@@ -31,14 +31,6 @@ object GenreMovieListing : TMDbDestinations {
     )
 }
 
-object Movie : TMDbDestinations {
-    override val route: String = "movie"
-}
-
-object Tv : TMDbDestinations {
-    override val route: String = "tv_show"
-}
-
 object Search : TMDbDestinations {
     override val route: String = "search"
 }

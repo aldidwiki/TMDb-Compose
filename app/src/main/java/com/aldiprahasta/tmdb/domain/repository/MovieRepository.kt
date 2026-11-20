@@ -13,7 +13,6 @@ import com.aldiprahasta.tmdb.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    fun getPopularMovie(): Flow<PagingData<MovieResponseModel>>
     fun getTrendingMovies(): Flow<UiState<MovieResponse>>
     fun getNowPlayingMovies(region: String): Flow<UiState<MovieResponse>>
     fun getMoviesByGenre(query: GenreMovieQuery): Flow<PagingData<MovieResponseModel>>

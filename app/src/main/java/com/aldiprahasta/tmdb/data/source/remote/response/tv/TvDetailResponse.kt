@@ -1,7 +1,6 @@
 package com.aldiprahasta.tmdb.data.source.remote.response.tv
 
 import com.aldiprahasta.tmdb.data.source.remote.response.CreditResponse
-import com.aldiprahasta.tmdb.data.source.remote.response.ExternalIdResponse
 import com.aldiprahasta.tmdb.data.source.remote.response.GenreResponseModel
 import com.aldiprahasta.tmdb.data.source.remote.response.VideoResponse
 import kotlinx.serialization.SerialName
@@ -16,20 +15,8 @@ data class TvDetailResponse(
         @SerialName("overview")
         val overview: String?,
 
-        @SerialName("original_language")
-        val originalLanguage: String?,
-
         @SerialName("number_of_episodes")
         val numberOfEpisodes: Int?,
-
-        @SerialName("languages")
-        val languages: List<String>?,
-
-        @SerialName("networks")
-        val networks: List<NetworksItemResponse>?,
-
-        @SerialName("type")
-        val type: String?,
 
         @SerialName("poster_path")
         val posterPath: String?,
@@ -52,9 +39,6 @@ data class TvDetailResponse(
         @SerialName("name")
         val name: String?,
 
-        @SerialName("tagline")
-        val tagline: String?,
-
         @SerialName("id")
         val id: Int,
 
@@ -76,12 +60,6 @@ data class TvDetailResponse(
         @SerialName("videos")
         val videos: VideoResponse?,
 
-        @SerialName("external_ids")
-        val externalIds: ExternalIdResponse,
-
-        @SerialName("content_ratings")
-        val contentRatings: ContentRatingResponse,
-
         @SerialName("aggregate_credits")
         val credits: CreditResponse?,
 
@@ -94,37 +72,6 @@ data class TvDetailResponse(
 
 @Serializable
 data class TvCreatorResponse(val name: String? = null)
-
-@Serializable
-data class NetworksItemResponse(
-
-        @SerialName("logo_path")
-        val logoPath: String?,
-
-        @SerialName("name")
-        val name: String?,
-
-        @SerialName("id")
-        val id: Int,
-
-        @SerialName("origin_country")
-        val originCountry: String?
-)
-
-@Serializable
-data class ContentRatingResponse(
-        @SerialName("results")
-        val results: List<ContentRatingResponseModel>?
-)
-
-@Serializable
-data class ContentRatingResponseModel(
-        @SerialName("iso_3166_1")
-        val code: String?,
-
-        @SerialName("rating")
-        val rating: String?
-)
 
 @Serializable
 data class TvSeasonItemResponse(

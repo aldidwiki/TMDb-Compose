@@ -6,7 +6,6 @@ data class PersonDomainModel(
         val name: String,
         val birthDay: String,
         val deathDay: String,
-        val gender: String,
         val biography: String,
         val knownFor: String,
         val age: Int?,
