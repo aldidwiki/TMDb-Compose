@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,23 +64,44 @@ internal fun PersonPersonalInfo(person: PersonDomainModel) {
                 color = MaterialTheme.colorScheme.surface,
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
         ) {
-            Column(
+            val fieldSpacing = Arrangement.spacedBy(16.dp)
+            Row(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    PersonInfoField(R.string.person_known_for, person.knownFor, Modifier.weight(1f))
-                    PersonInfoField(R.string.person_birth_date, person.birthDay, Modifier.weight(1f))
+                Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = fieldSpacing
+                ) {
+                    PersonInfoField(R.string.person_known_for, person.knownFor)
+                    PersonInfoField(R.string.person_birth_place, person.placeOfBirth)
+                    PersonInfoField(R.string.person_also_known_as, person.alsoKnownAs.joinToString("\n"))
                 }
-                PersonInfoField(R.string.person_birth_place, person.placeOfBirth)
-                if (person.deathDay.isNotBlank()) {
-                    PersonInfoField(R.string.person_death_date, person.deathDay)
+                Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = fieldSpacing
+                ) {
+                    val hasDeathDate = person.deathDay.isNotBlank()
+                    PersonInfoField(
+                            label = R.string.person_birth_date,
+                            value = dateWithAge(person.birthDay, person.age.takeUnless { hasDeathDate })
+                    )
+                    if (hasDeathDate) {
+                        PersonInfoField(
+                                label = R.string.person_death_date,
+                                value = dateWithAge(person.deathDay, person.age)
+                        )
+                    }
                 }
-                PersonInfoField(R.string.person_also_known_as, person.alsoKnownAs.joinToString("\n"))
             }
         }
     }
 }
+
+@Composable
+private fun dateWithAge(date: String, age: Int?): String =
+        if (age == null || date.isBlank()) date
+        else pluralStringResource(R.plurals.person_date_with_age, age, date, age)
 
 @Composable
 private fun PersonInfoField(label: Int, value: String, modifier: Modifier = Modifier) {
@@ -109,5 +131,17 @@ private fun PersonBiographyPreview() {
 private fun PersonPersonalInfoPreview() {
     DiscoverPreview {
         PersonPersonalInfo(personPreviewSample)
+    }
+}
+
+@Preview(widthDp = 390)
+@Composable
+private fun PersonPersonalInfoWithDeathDatePreview() {
+    DiscoverPreview {
+        PersonPersonalInfo(personPreviewSample.copy(
+                birthDay = "January 10, 1950",
+                deathDay = "June 05, 2017",
+                age = 67
+        ))
     }
 }

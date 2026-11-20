@@ -9,7 +9,7 @@ data class PersonDomainModel(
         val gender: String,
         val biography: String,
         val knownFor: String,
-        val age: String,
+        val age: Int?,
         val placeOfBirth: String,
         val externalIds: ExternalIdDomainModel,
         val credits: List<CastDomainModel>,

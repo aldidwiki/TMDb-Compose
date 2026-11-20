@@ -1,6 +1,5 @@
 package com.aldiprahasta.tmdb.utils
 
-import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -18,18 +17,13 @@ fun String.convertDate(
     } ?: this
 }
 
-fun getAge(birthday: String, deathDay: String?): String {
-    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).calendar
-    date.time = Date.valueOf(birthday)
-
-    val currentDate = Calendar.getInstance()
-    deathDay?.let { currentDate.time = Date.valueOf(it) }
-    var age = currentDate.get(Calendar.YEAR) - date.get(Calendar.YEAR)
-
-    if (currentDate.get(Calendar.DAY_OF_YEAR) < date.get(Calendar.DAY_OF_YEAR))
-        age -= 1
-
-    return age.toString()
+internal fun Calendar.ageOn(referenceDate: Calendar): Int? {
+    val birthMonth = get(Calendar.MONTH)
+    val referenceMonth = referenceDate.get(Calendar.MONTH)
+    val hasReachedBirthday = referenceMonth > birthMonth ||
+            (referenceMonth == birthMonth && referenceDate.get(Calendar.DAY_OF_MONTH) >= get(Calendar.DAY_OF_MONTH))
+    val yearDifference = referenceDate.get(Calendar.YEAR) - get(Calendar.YEAR)
+    return (if (hasReachedBirthday) yearDifference else yearDifference - 1).takeIf { it >= 0 }
 }
 
 fun getCharacterAge(birthday: String, releaseDate: String?): String {

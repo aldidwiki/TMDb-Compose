@@ -145,7 +145,7 @@ internal val personPreviewSample: PersonDomainModel
             gender = "Female",
             biography = "Jessica Chastain is an American actor and producer. She has appeared in dramas and science fiction films.",
             knownFor = "Acting",
-            age = "49",
+            age = 49,
             placeOfBirth = "Sacramento, California, USA",
             externalIds = ExternalIdDomainModel("jessicachastain", null, "nm1567113", null),
             credits = listOf(

@@ -91,6 +91,10 @@
     <string name="gallery_viewer_image">Zoomable photo</string>
     <string name="gallery_zoom">Zoom %1$d%%</string>
 
+    <plurals name="person_date_with_age">
+        <item quantity="one">%1$s (%2$d year)</item>
+        <item quantity="other">%1$s (%2$d years)</item>
+    </plurals>
     <plurals name="person_photo_count">
         <item quantity="one">%1$d photo</item>
         <item quantity="other">%1$d photos</item>
