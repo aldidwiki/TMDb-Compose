@@ -1,14 +1,19 @@
 package com.aldiprahasta.tmdb.ui.home
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,12 +21,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.aldiprahasta.tmdb.BuildConfig
 import com.aldiprahasta.tmdb.R
@@ -40,21 +53,26 @@ import com.aldiprahasta.tmdb.ui.dashboard.DashboardTab
 fun HomeScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val currentRoute = navController.currentDestination()?.route
-    val isDashboard = currentRoute == Dashboard.route
-    val isExplore = currentRoute == Explore.route
-    val isSearch = currentRoute == Search.route
-    val isFavorites = currentRoute == Favorite.route
-    val showTopBar = !isDashboard && !isExplore && !isSearch && !isFavorites && navigationItem.any { it.route == currentRoute }
-    val showBottomBar = isDashboard || isExplore || isFavorites || (isSearch && WindowInsets.ime.getBottom(LocalDensity.current) == 0)
-    val activeTab = when {
-        isExplore -> DashboardTab.EXPLORE
-        isSearch -> DashboardTab.SEARCH
-        isFavorites -> DashboardTab.FAVORITES
-        else -> DashboardTab.HOME
+    val currentTab = when (currentRoute) {
+        Dashboard.route -> DashboardTab.HOME
+        Explore.route -> DashboardTab.EXPLORE
+        Search.route -> DashboardTab.SEARCH
+        Favorite.route -> DashboardTab.FAVORITES
+        else -> null
     }
+    var lastSelectedTab by rememberSaveable { mutableStateOf(DashboardTab.HOME) }
+    SideEffect {
+        if (currentTab != null) lastSelectedTab = currentTab
+    }
+    val showTopBar = currentTab == null && navigationItem.any { it.route == currentRoute }
+    val showBottomBar = currentTab != null &&
+            (currentTab != DashboardTab.SEARCH || WindowInsets.ime.getBottom(LocalDensity.current) == 0)
+
+    NavigationStatusBar(useDarkIcons = !showTopBar)
 
     Scaffold(
             modifier = modifier,
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 AnimatedVisibility(
                         visible = showTopBar,
@@ -67,13 +85,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             bottomBar = {
                 AnimatedVisibility(
                         visible = showBottomBar,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
+                        enter = expandVertically(tween(220, easing = FastOutSlowInEasing)) + fadeIn(tween(180)),
+                        exit = shrinkVertically(tween(200, easing = FastOutSlowInEasing)) + fadeOut(tween(180))
                 ) {
                     DashboardBottomNavigation(
-                            selectedTab = activeTab,
+                            selectedTab = currentTab ?: lastSelectedTab,
                             onTabSelected = { tab ->
-                                if (tab != activeTab) {
+                                if (showBottomBar && tab != currentTab) {
                                     val route = when (tab) {
                                         DashboardTab.HOME -> Dashboard.route
                                         DashboardTab.EXPLORE -> Explore.route
@@ -89,11 +107,17 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         TMDbNavHostController(
                 navController = navController,
-                modifier = Modifier.padding(
-                        top = if (showTopBar) innerPadding.calculateTopPadding() else 0.dp,
-                        bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp
-                )
+                modifier = Modifier.padding(innerPadding).clipToBounds()
         )
+    }
+}
+
+@Composable
+private fun NavigationStatusBar(useDarkIcons: Boolean) {
+    val view = LocalView.current
+    val window = (view.context as? Activity)?.window ?: return
+    SideEffect {
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIcons
     }
 }
 

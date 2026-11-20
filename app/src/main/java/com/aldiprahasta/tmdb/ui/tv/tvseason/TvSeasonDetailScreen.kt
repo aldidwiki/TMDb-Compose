@@ -14,7 +14,6 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.ui.tv.TvViewModel
 import com.aldiprahasta.tmdb.utils.UiState
@@ -32,7 +31,6 @@ fun TvSeasonDetailScreen(
 
     LaunchedEffect(tvId, tvSeasonNumber) { viewModel.setTvSeasonDetailParam(tvId, tvSeasonNumber) }
 
-    DiscoverSystemBars()
     DiscoverTheme {
         Scaffold(
                 modifier = modifier.fillMaxSize(),

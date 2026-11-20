@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aldiprahasta.tmdb.R
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.UiState
 import org.koin.androidx.compose.koinViewModel
@@ -41,7 +40,6 @@ fun SearchScreen(
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         SearchContent(
                 uiState = uiState,

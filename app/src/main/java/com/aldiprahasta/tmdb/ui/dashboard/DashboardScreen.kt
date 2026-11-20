@@ -31,7 +31,6 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.GenreDomainModel
 import com.aldiprahasta.tmdb.domain.model.VideoDomainModel
 import com.aldiprahasta.tmdb.ui.components.TrailerSheet
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.UiState
@@ -50,7 +49,6 @@ fun DashboardScreen(
     val viewModel: DashboardViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         DashboardContent(
                 uiState = uiState,

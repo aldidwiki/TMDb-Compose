@@ -29,7 +29,6 @@ import com.aldiprahasta.tmdb.domain.model.SimilarContent
 import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.UiState
 import java.text.NumberFormat
@@ -47,7 +46,6 @@ fun SimilarContentScreen(
     val viewModel: SimilarContentViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         val title = stringResource(similarTitle(isTv))
         Scaffold(

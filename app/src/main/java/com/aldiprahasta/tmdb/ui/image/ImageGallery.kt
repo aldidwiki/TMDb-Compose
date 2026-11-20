@@ -31,7 +31,6 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ImageDomainModel
 import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
@@ -46,7 +45,6 @@ fun ImageGalleryScreen(
     val viewModel: ImageViewModel = koinViewModel()
     val images by viewModel.images.collectAsStateWithLifecycle()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         PhotoGalleryContent(
                 contentName = contentName,

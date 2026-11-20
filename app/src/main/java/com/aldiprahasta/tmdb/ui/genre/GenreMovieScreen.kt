@@ -37,7 +37,6 @@ import com.aldiprahasta.tmdb.domain.model.MovieDomainModel
 import com.aldiprahasta.tmdb.ui.components.DiscoverMediaCard
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.components.setupPagingLoadState
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -52,7 +51,6 @@ fun GenreMovieScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val movies = viewModel.movies.collectAsLazyPagingItems()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         GenreMovieContent(
                 genreName = genreName,

@@ -25,7 +25,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.domain.model.ExploreQuery
 import com.aldiprahasta.tmdb.domain.model.ExploreTab
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.MediaType
 import kotlinx.coroutines.launch
@@ -48,7 +47,6 @@ fun ExploreScreen(onItemClicked: (Int, MediaType) -> Unit, modifier: Modifier = 
         if (event != ExploreEvent.RetryGenres) scope.launch { listState.scrollToItem(0) }
     }
 
-    DiscoverSystemBars()
     DiscoverTheme {
         Surface(
                 modifier = modifier.fillMaxSize(),

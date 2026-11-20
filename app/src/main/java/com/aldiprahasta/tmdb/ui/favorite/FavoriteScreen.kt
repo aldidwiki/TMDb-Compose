@@ -32,7 +32,6 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.ui.components.DiscoverOptionsSheet
 import com.aldiprahasta.tmdb.ui.components.ErrorScreen
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
@@ -69,7 +68,6 @@ fun FavoriteScreen(
         }
     }
 
-    DiscoverSystemBars()
     DiscoverTheme {
         FavoriteContent(
                 uiState = uiState,

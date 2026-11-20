@@ -1,19 +1,15 @@
 package com.aldiprahasta.tmdb.ui.theme
 
-import android.app.Activity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.aldiprahasta.tmdb.R
 
 private val DiscoverPrimary = Color(0xFF3B4CCA)
@@ -69,20 +65,4 @@ fun DiscoverTheme(content: @Composable () -> Unit) {
             typography = DiscoverTypography,
             content = content
     )
-}
-
-@Composable
-fun DiscoverSystemBars() {
-    val view = LocalView.current
-    val window = (view.context as? Activity)?.window
-    if (window != null && !view.isInEditMode) {
-        LifecycleResumeEffect(window, view) {
-            val controller = WindowCompat.getInsetsController(window, view)
-            val previousAppearance = controller.isAppearanceLightStatusBars
-            controller.isAppearanceLightStatusBars = true
-            onPauseOrDispose {
-                controller.isAppearanceLightStatusBars = previousAppearance
-            }
-        }
-    }
 }

@@ -13,7 +13,6 @@ import com.aldiprahasta.tmdb.R
 import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.UiState
 import org.koin.androidx.compose.koinViewModel
@@ -29,7 +28,6 @@ fun CreditScreen(
     val viewModel: CreditViewModel = koinViewModel()
     val credits by viewModel.credits.collectAsStateWithLifecycle()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         Scaffold(
                 modifier = modifier.fillMaxSize(),

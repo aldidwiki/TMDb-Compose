@@ -40,7 +40,6 @@ import com.aldiprahasta.tmdb.ui.components.MovieArtwork
 import com.aldiprahasta.tmdb.ui.person.isScreenCredit
 import com.aldiprahasta.tmdb.ui.person.personPreviewSample
 import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.Constant
 import com.aldiprahasta.tmdb.utils.UiState
@@ -56,7 +55,6 @@ fun PersonCreditsScreen(
     val viewModel: PersonCreditsViewModel = koinViewModel()
     val credits by viewModel.credits.collectAsStateWithLifecycle()
 
-    DiscoverSystemBars()
     DiscoverTheme {
         Scaffold(
                 modifier = modifier.fillMaxSize(),

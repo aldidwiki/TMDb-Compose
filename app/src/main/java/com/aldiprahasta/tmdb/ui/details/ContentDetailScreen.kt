@@ -24,7 +24,6 @@ import com.aldiprahasta.tmdb.ui.components.DiscoverStatus
 import com.aldiprahasta.tmdb.ui.components.DiscoverTopBar
 import com.aldiprahasta.tmdb.ui.components.LoadingScreen
 import com.aldiprahasta.tmdb.ui.details.similar.SimilarContentRail
-import com.aldiprahasta.tmdb.ui.theme.DiscoverSystemBars
 import com.aldiprahasta.tmdb.ui.theme.DiscoverTheme
 import com.aldiprahasta.tmdb.utils.MediaType
 import com.aldiprahasta.tmdb.utils.UiState
@@ -56,7 +55,6 @@ fun ContentDetailScreen(
         viewModel.favoriteErrors.collect { snackbarHostState.showSnackbar(favoriteError) }
     }
 
-    DiscoverSystemBars()
     DiscoverTheme {
         Scaffold(
                 modifier = modifier.fillMaxSize(),

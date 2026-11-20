@@ -1,20 +1,7 @@
 package com.aldiprahasta.tmdb.navigation
 
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,50 +30,6 @@ val navigationItem = listOf(
         Search
 )
 
-private val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.(Boolean) -> EnterTransition = { isPop ->
-    fadeIn(
-            animationSpec = tween(delayMillis = 200, easing = LinearEasing)
-    ) + slideIntoContainer(
-            animationSpec = tween(delayMillis = 100, easing = EaseIn),
-            towards = if (isPop) AnimatedContentTransitionScope.SlideDirection.End
-            else AnimatedContentTransitionScope.SlideDirection.Start
-    )
-}
-
-private val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.(Boolean) -> ExitTransition = { isPop ->
-    fadeOut(
-            animationSpec = tween(delayMillis = 200, easing = LinearEasing)
-    ) + slideOutOfContainer(
-            animationSpec = tween(delayMillis = 100, easing = EaseOut),
-            towards = if (isPop) AnimatedContentTransitionScope.SlideDirection.Start
-            else AnimatedContentTransitionScope.SlideDirection.End
-    )
-}
-
-private val dashboardItemEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
-    fadeIn(animationSpec = tween(500, easing = LinearEasing))
-}
-
-private val dashboardItemExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
-    fadeOut(animationSpec = tween(500, easing = LinearEasing))
-}
-
-private fun NavGraphBuilder.detailDestination(
-        route: String,
-        arguments: List<NamedNavArgument>,
-        content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
-) {
-    composable(
-            route = route,
-            arguments = arguments,
-            enterTransition = { enterTransition(false) },
-            exitTransition = { exitTransition(false) },
-            popEnterTransition = { enterTransition(true) },
-            popExitTransition = { exitTransition(true) },
-            content = content
-    )
-}
-
 @Composable
 fun TMDbNavHostController(
         navController: NavHostController,
@@ -95,15 +38,13 @@ fun TMDbNavHostController(
     NavHost(
             navController = navController,
             startDestination = Dashboard.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            enterTransition = { enterPage() },
+            exitTransition = { exitPage() },
+            popEnterTransition = { revealPreviousPage() },
+            popExitTransition = { leavePage() },
             modifier = modifier
     ) {
-        composable(
-                route = Dashboard.route,
-                enterTransition = dashboardItemEnterTransition,
-                exitTransition = dashboardItemExitTransition
-        ) {
+        composable(route = Dashboard.route) {
             DashboardScreen(
                     onMovieClicked = { movieId ->
                         navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
@@ -112,15 +53,11 @@ fun TMDbNavHostController(
             )
         }
 
-        composable(
-                route = Explore.route,
-                enterTransition = dashboardItemEnterTransition,
-                exitTransition = dashboardItemExitTransition
-        ) {
+        composable(route = Explore.route) {
             ExploreScreen(onItemClicked = navController::navigateToDetail)
         }
 
-        detailDestination(GenreMovieListing.routeWithArgs, GenreMovieListing.arguments) { navBackStackEntry ->
+        composable(route = GenreMovieListing.routeWithArgs, arguments = GenreMovieListing.arguments) { navBackStackEntry ->
             GenreMovieScreen(
                     genreName = navBackStackEntry.arguments?.getString(GenreMovieListing.GENRE_NAME_ARG).orEmpty(),
                     onBackPressed = { navController.navigateUp() },
@@ -130,43 +67,27 @@ fun TMDbNavHostController(
             )
         }
 
-        composable(
-                route = Movie.route,
-                enterTransition = dashboardItemEnterTransition,
-                exitTransition = dashboardItemExitTransition
-        ) {
+        composable(route = Movie.route) {
             MovieScreen(onMovieClicked = { movieId ->
                 navController.navigateToContentDetail(movieId, MediaType.MOVIE_TYPE.name)
             })
         }
 
-        composable(
-                route = Tv.route,
-                enterTransition = dashboardItemEnterTransition,
-                exitTransition = dashboardItemExitTransition
-        ) {
+        composable(route = Tv.route) {
             TvScreen(onItemClicked = { tvId ->
                 navController.navigateToContentDetail(tvId, MediaType.TV_TYPE.name)
             })
         }
 
-        composable(
-                route = Favorite.route,
-                enterTransition = dashboardItemEnterTransition,
-                exitTransition = dashboardItemExitTransition
-        ) {
+        composable(route = Favorite.route) {
             FavoriteScreen(onItemClicked = navController::navigateToDetail)
         }
 
-        composable(
-                route = Search.route,
-                enterTransition = dashboardItemEnterTransition,
-                exitTransition = dashboardItemExitTransition
-        ) {
+        composable(route = Search.route) {
             SearchScreen(onItemClicked = navController::navigateToDetail)
         }
 
-        detailDestination(ImageGallery.routeWithArgs, ImageGallery.arguments) { navBackStackEntry ->
+        composable(route = ImageGallery.routeWithArgs, arguments = ImageGallery.arguments) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val contentName = getString(ImageGallery.CONTENT_NAME_ARG, "")
 
@@ -179,7 +100,7 @@ fun TMDbNavHostController(
             }
         }
 
-        detailDestination(ContentDetail.routeWithArgs, ContentDetail.arguments) { navBackStateEntry ->
+        composable(route = ContentDetail.routeWithArgs, arguments = ContentDetail.arguments) { navBackStateEntry ->
             navBackStateEntry.arguments?.apply {
                 val contentId = getInt(ContentDetail.CONTENT_ID_ARG, 0)
                 val mediaType = if (getString(ContentDetail.CONTENT_TYPE_ARG) == MediaType.TV_TYPE.name) MediaType.TV_TYPE
@@ -201,7 +122,7 @@ fun TMDbNavHostController(
             }
         }
 
-        detailDestination(PersonDetail.routeWithArgs, PersonDetail.arguments) { navBackStackEntry ->
+        composable(route = PersonDetail.routeWithArgs, arguments = PersonDetail.arguments) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val personId = getInt(PersonDetail.PERSON_ID_ARG, 0)
 
@@ -221,7 +142,7 @@ fun TMDbNavHostController(
             }
         }
 
-        detailDestination(PersonCredits.routeWithArgs, PersonCredits.arguments) { navBackStackEntry ->
+        composable(route = PersonCredits.routeWithArgs, arguments = PersonCredits.arguments) { navBackStackEntry ->
             PersonCreditsScreen(
                     personName = navBackStackEntry.arguments?.getString(PersonCredits.PERSON_NAME_ARG).orEmpty(),
                     onBackPressed = { navController.navigateUp() },
@@ -229,7 +150,7 @@ fun TMDbNavHostController(
             )
         }
 
-        detailDestination(CreditDetail.routeWithArgs, CreditDetail.arguments) { navBackStackEntry ->
+        composable(route = CreditDetail.routeWithArgs, arguments = CreditDetail.arguments) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val contentType = getString(CreditDetail.CONTENT_TYPE_ARG, MediaType.MOVIE_TYPE.name)
 
@@ -242,7 +163,7 @@ fun TMDbNavHostController(
             }
         }
 
-        detailDestination(SimilarContentListing.routeWithArgs, SimilarContentListing.arguments) { entry ->
+        composable(route = SimilarContentListing.routeWithArgs, arguments = SimilarContentListing.arguments) { entry ->
             val args = checkNotNull(entry.arguments)
             val contentType = args.getString(SimilarContentListing.CONTENT_TYPE_ARG, MediaType.MOVIE_TYPE.name)
             SimilarContentScreen(
@@ -254,7 +175,7 @@ fun TMDbNavHostController(
             )
         }
 
-        detailDestination(TvSeasonDetail.routeWithArgs, TvSeasonDetail.arguments) { navBackStackEntry ->
+        composable(route = TvSeasonDetail.routeWithArgs, arguments = TvSeasonDetail.arguments) { navBackStackEntry ->
             navBackStackEntry.arguments?.apply {
                 val tvId = getInt(TvSeasonDetail.TV_ID_ARG, 0)
                 val tvSeasonNumber = getInt(TvSeasonDetail.TV_SEASON_NUMBER_ARG, 0)
