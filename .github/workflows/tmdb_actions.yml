@@ -1,9 +1,12 @@
 name: TMDbBuild
 
 on:
-  push:
-    tags:
-      - v[0-9].[0-9]+.[0-9]+*
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'GitHub release tag (for example, v1.0.11)'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -12,6 +15,29 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.0
+
+      - name: Validate release tag
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          tag_ref="refs/tags/$RELEASE_TAG"
+          if ! git check-ref-format "$tag_ref"; then
+            echo "::error::Enter a valid Git tag for the release."
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --tags --refs origin "$tag_ref" >/dev/null; then
+            git fetch --no-tags --depth=1 origin "$tag_ref"
+            tagged_commit=$(git rev-parse 'FETCH_HEAD^{commit}')
+            if [[ "$tagged_commit" != "$GITHUB_SHA" ]]; then
+              echo "::error::The release tag points to a different commit than the selected ref."
+              exit 1
+            fi
+          elif [[ $? -ne 2 ]]; then
+            echo "::error::Could not verify the release tag on origin."
+            exit 1
+          fi
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -41,7 +67,9 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          name: TMDb Release ${{ github.ref_name }}
+          name: TMDb Release ${{ inputs.release_tag }}
+          tag: ${{ inputs.release_tag }}
+          commit: ${{ github.sha }}
           token: ${{ secrets.MY_TOKEN }}
           artifacts: "app/build/outputs/apk/release/TMDb.apk"
           body: "Optimizing the app"
