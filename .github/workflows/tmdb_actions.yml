@@ -1,43 +1,18 @@
 name: TMDbBuild
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_tag:
-        description: 'GitHub release tag (for example, v1.0.11)'
-        required: true
-        type: string
+  push:
+    tags:
+      - '**'
 
 jobs:
   build:
+    if: ${{ !github.event.deleted }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.0
-
-      - name: Validate release tag
-        shell: bash
-        env:
-          RELEASE_TAG: ${{ inputs.release_tag }}
-        run: |
-          tag_ref="refs/tags/$RELEASE_TAG"
-          if ! git check-ref-format "$tag_ref"; then
-            echo "::error::Enter a valid Git tag for the release."
-            exit 1
-          fi
-
-          if git ls-remote --exit-code --tags --refs origin "$tag_ref" >/dev/null; then
-            git fetch --no-tags --depth=1 origin "$tag_ref"
-            tagged_commit=$(git rev-parse 'FETCH_HEAD^{commit}')
-            if [[ "$tagged_commit" != "$GITHUB_SHA" ]]; then
-              echo "::error::The release tag points to a different commit than the selected ref."
-              exit 1
-            fi
-          elif [[ $? -ne 2 ]]; then
-            echo "::error::Could not verify the release tag on origin."
-            exit 1
-          fi
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -67,12 +42,11 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          name: TMDb Release ${{ inputs.release_tag }}
-          tag: ${{ inputs.release_tag }}
-          commit: ${{ github.sha }}
+          name: TMDb Release ${{ github.ref_name }}
+          tag: ${{ github.ref_name }}
           token: ${{ secrets.MY_TOKEN }}
           artifacts: "app/build/outputs/apk/release/TMDb.apk"
-          body: "Optimizing the app"
+          body: "Revamp and refactor the app"
 
       - name: Upload Build Artifact
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
