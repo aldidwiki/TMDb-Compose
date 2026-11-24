@@ -30,7 +30,7 @@ class ExploreRepositoryImpl(private val remoteService: RemoteService) : ExploreR
             config = PagingConfig(
                     pageSize = 20,
                     initialLoadSize = 20,
-                    prefetchDistance = if (query.tab == ExploreTab.PEOPLE) 1 else 5,
+                    prefetchDistance = 5,
                     enablePlaceholders = false
             ),
             pagingSourceFactory = {

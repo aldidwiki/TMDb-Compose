@@ -263,7 +263,6 @@
     <string name="explore_year_four_digits">Enter a four-digit year.</string>
     <string name="explore_year_range_help">Enter four-digit years. From cannot exceed To.</string>
     <string name="explore_year_order_error">From cannot exceed To.</string>
-    <string name="explore_more_people">Load more people</string>
     <string name="explore_loading_more_people">Loading more people…</string>
     <string name="explore_loading_more">Loading more results…</string>
     <string name="explore_more_people_error">Couldn’t load more people.</string>

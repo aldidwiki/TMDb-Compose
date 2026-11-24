@@ -88,8 +88,7 @@ internal fun ExploreResults(
             }
             else -> {
                 items(count = results.itemCount, key = results.itemKey { it.key }) { index ->
-                    val item = if (isPeople) results.peek(index) else results[index]
-                    item?.let {
+                    results[index]?.let {
                         ExploreResultCard(
                                 item = it,
                                 genreNames = if (it.mediaType == MediaType.TV_TYPE) shows else movies,
@@ -97,7 +96,7 @@ internal fun ExploreResults(
                         )
                     }
                 }
-                when (val append = results.loadState.append) {
+                when (results.loadState.append) {
                     LoadState.Loading -> item {
                         Column(
                                 modifier = Modifier.fillMaxWidth().padding(12.dp),
@@ -118,15 +117,7 @@ internal fun ExploreResults(
                                 onAction = results::retry
                         )
                     }
-                    is LoadState.NotLoading -> if (isPeople && !append.endOfPaginationReached) {
-                        item {
-                            OutlinedButton(
-                                    onClick = { if (results.itemCount > 0) results[results.itemCount - 1] },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(12.dp)
-                            ) { Text(stringResource(R.string.explore_more_people)) }
-                        }
-                    }
+                    is LoadState.NotLoading -> Unit
                 }
             }
         }
