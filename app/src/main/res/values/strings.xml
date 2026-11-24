@@ -123,7 +123,7 @@
     <string name="search_type_movie">Movie</string>
     <string name="search_type_person">Person</string>
     <string name="search_result_subtitle">%1$s · %2$s</string>
-    <string name="search_chip_count">%1$s %2$s</string>
+    <string name="search_chip_count">%1$s (%2$s)</string>
     <string name="search_no_results">No matches found.</string>
     <string name="search_load_error">Couldn’t load search results.</string>
 
