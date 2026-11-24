@@ -46,7 +46,7 @@ jobs:
           tag: ${{ github.ref_name }}
           token: ${{ secrets.MY_TOKEN }}
           artifacts: "app/build/outputs/apk/release/TMDb.apk"
-          body: "Revamp and refactor the app"
+          body: "Optimize some codes"
 
       - name: Upload Build Artifact
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1

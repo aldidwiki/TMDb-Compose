@@ -5,7 +5,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
@@ -16,14 +15,18 @@ plugins {
 
 android {
     namespace = "com.aldiprahasta.tmdb"
-    compileSdk = 36
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "com.aldiprahasta.tmdb"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
-        versionName = "1.0.10"
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -70,12 +73,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 
-    kotlin {
-        compilerOptions {
-            optIn.add("kotlin.RequiresOptIn")
-        }
-    }
-
     buildFeatures {
         compose = true
         buildConfig = true
@@ -94,6 +91,12 @@ android {
         }
     }
     ndkVersion = "28.2.13676358"
+}
+
+kotlin {
+    compilerOptions {
+        optIn.add("kotlin.RequiresOptIn")
+    }
 }
 
 abstract class RenameApk : DefaultTask() {
@@ -122,6 +125,7 @@ abstract class RenameApk : DefaultTask() {
 androidComponents.onVariants { variant ->
     val variantName = variant.name.replaceFirstChar { it.uppercaseChar() }
     val apkTask = tasks.register<RenameApk>("rename${variantName}Apk") {
+        description = "Renaming APK for debug"
         apkName.set(if (variant.buildType == "debug") "TMDb-debug.apk" else "TMDb.apk")
     }
     val transformation = variant.artifacts.use(apkTask)
@@ -132,8 +136,19 @@ androidComponents.onVariants { variant ->
     }
 }
 
+val composeBom = configurations.create("composeBom") {
+    isCanBeConsumed = false
+    isCanBeResolved = false
+}
+configurations.implementation {
+    extendsFrom(composeBom)
+}
+configurations.androidTestImplementation {
+    extendsFrom(composeBom)
+}
+
 dependencies {
-    implementation(platform(libs.compose.bom))
+    add(composeBom.name, platform(libs.compose.bom))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -155,7 +170,6 @@ dependencies {
     implementation(libs.firebase.crashlytics)
 
     testImplementation(libs.junit4)
-    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.bundles.android.test)
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.ui.tooling.preview)

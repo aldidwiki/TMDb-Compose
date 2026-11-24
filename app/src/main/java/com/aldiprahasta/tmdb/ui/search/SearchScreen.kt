@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,8 +19,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -60,6 +63,13 @@ private fun SearchContent(
 ) {
     val focusManager = LocalFocusManager.current
     val activeFeed = uiState.feeds[uiState.category]
+    val queryState = rememberTextFieldState(initialText = uiState.query)
+
+    LaunchedEffect(queryState, onEvent) {
+        snapshotFlow { queryState.text.toString() }.collect { query ->
+            onEvent(SearchEvent.OnSearchQueryChanged(query))
+        }
+    }
 
     Scaffold(
             modifier = modifier.fillMaxSize().imePadding(),
@@ -88,8 +98,7 @@ private fun SearchContent(
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             SearchField(
-                    query = uiState.query,
-                    onQueryChanged = { onEvent(SearchEvent.OnSearchQueryChanged(it)) },
+                    state = queryState,
                     onSearch = { focusManager.clearFocus() },
                     modifier = Modifier.padding(start = 18.dp, top = 12.dp, end = 18.dp, bottom = 6.dp)
             )

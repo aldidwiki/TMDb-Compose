@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
@@ -114,6 +115,7 @@ private fun KnownForCard(
         onClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val media = stringResource(
             if (credit.mediaType == Constant.TV_MEDIA_TYPE) R.string.search_category_tv else R.string.search_type_movie
     )
@@ -124,7 +126,7 @@ private fun KnownForCard(
         {
             val age = runCatching { getCharacterAge(birthDay, releaseDate) }.getOrNull()
             if (age?.toIntOrNull()?.let { it >= 0 } == true) {
-                Toast.makeText(context, context.getString(R.string.person_age_in_credit, personName, age), Toast.LENGTH_LONG).show()
+                Toast.makeText(context, resources.getString(R.string.person_age_in_credit, personName, age), Toast.LENGTH_LONG).show()
             }
         }
     } else null

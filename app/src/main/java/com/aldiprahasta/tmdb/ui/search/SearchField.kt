@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Search
@@ -35,24 +38,23 @@ import com.aldiprahasta.tmdb.ui.theme.DiscoverPreview
 
 @Composable
 internal fun SearchField(
-        query: String,
-        onQueryChanged: (String) -> Unit,
+        state: TextFieldState,
         onSearch: () -> Unit,
         modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.colorScheme
     val fieldLabel = stringResource(R.string.search_hint)
+    val isEmpty = state.text.isEmpty()
 
     BasicTextField(
-            value = query,
-            onValueChange = onQueryChanged,
+            state = state,
             modifier = modifier.fillMaxWidth().semantics { contentDescription = fieldLabel },
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             textStyle = MaterialTheme.typography.labelLarge.copy(color = colors.onSurface),
             cursorBrush = SolidColor(colors.primary),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-            decorationBox = { input ->
+            onKeyboardAction = { onSearch() },
+            decorator = { input ->
                 Surface(
                         shape = RoundedCornerShape(14.dp),
                         border = BorderStroke(1.dp, colors.outline),
@@ -69,8 +71,8 @@ internal fun SearchField(
                                 tint = colors.onSurfaceVariant,
                                 modifier = Modifier.size(18.dp)
                         )
-                        Box(modifier = Modifier.weight(1f).padding(end = if (query.isEmpty()) 14.dp else 0.dp)) {
-                            if (query.isEmpty()) {
+                        Box(modifier = Modifier.weight(1f).padding(end = if (isEmpty) 14.dp else 0.dp)) {
+                            if (isEmpty) {
                                 Text(
                                         text = fieldLabel,
                                         style = MaterialTheme.typography.labelLarge,
@@ -79,8 +81,8 @@ internal fun SearchField(
                             }
                             input()
                         }
-                        if (query.isNotEmpty()) {
-                            IconButton(onClick = { onQueryChanged("") }) {
+                        if (!isEmpty) {
+                            IconButton(onClick = { state.clearText() }) {
                                 Icon(
                                         imageVector = Icons.Default.Close,
                                         contentDescription = stringResource(R.string.search_clear),
@@ -99,6 +101,6 @@ internal fun SearchField(
 @Composable
 private fun SearchFieldPreview() {
     DiscoverPreview {
-        SearchField(query = "tom", onQueryChanged = {}, onSearch = {})
+        SearchField(state = rememberTextFieldState(initialText = "tom"), onSearch = {})
     }
 }
